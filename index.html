@@ -9,24 +9,29 @@
 
     <link rel="stylesheet" href="style.css">
 </head>
+<script>
+const menuToggle = document.getElementById("menuToggle");
+const navMenu = document.getElementById("navMenu");
+
+menuToggle.addEventListener("click", () => {
+    navMenu.classList.toggle("show");
+});
+</script>
 
 <body>
 
     <!-- NAVBAR -->
-    <header class="navbar">
+   <header class="navbar">
+  <div class="logo">Ruang<span>Nalar</span></div>
 
-        <div class="logo">
-            Ruang<span>Nalar</span>
-        </div>
+  <button class="menu-toggle" id="menuToggle">☰</button>
 
-        <nav>
-            <a href="index.html" class="active">Beranda</a>
-            <a href="tanya.html">Tanya Nalar</a>
-            <a href="admin.html">Chat Admin</a>
-        </nav>
-
-    </header>
-
+  <nav id="navMenu">
+    <a href="index.html" class="active">Beranda</a>
+    <a href="tanya.html">Tanya Nalar</a>
+    <a href="admin.html">Chat Admin</a>
+  </nav>
+</header>
 
     <!-- HERO -->
     <section class="hero">
