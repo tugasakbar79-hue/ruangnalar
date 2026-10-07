@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tanya Nalar | Ruang Nalar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f8fafc;
+            color: #172033;
+        }
+
+        /* =========================
+           NAVBAR
+        ========================= */
+
+        .navbar {
+            min-height: 70px;
+            padding: 0 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 800;
+        }
+
+        .logo span {
+            color: #c89b3c;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #172033;
+            font-weight: 600;
+        }
+
+        nav a:hover,
+        nav a.active {
+            color: #c89b3c;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            text-align: center;
+            padding: 70px 20px 40px;
+        }
+
+        .eyebrow {
+            color: #c89b3c;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 3px;
+        }
+
+        .hero h1 {
+            font-size: clamp(38px, 6vw, 60px);
+            margin: 15px auto;
+            max-width: 750px;
+            line-height: 1.1;
+        }
+
+        .hero h1 span {
+            color: #c89b3c;
+        }
+
+        .hero p {
+            max-width: 650px;
+            margin: auto;
+            color: #687080;
+            line-height: 1.7;
+            font-size: 17px;
+        }
+
+        /* =========================
+           QUESTION
+        ========================= */
+
+        .question-section {
+            padding: 20px 20px 80px;
+        }
+
+        .question-container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 15px 40px rgba(23, 32, 51, 0.08);
+        }
+
+        .question-container h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .question-container > p {
+            color: #687080;
+            margin-bottom: 25px;
+        }
+
+        #questionInput {
+            width: 100%;
+            min-height: 140px;
+            resize: vertical;
+            padding: 16px;
+            border: 1px solid #d8dde5;
+            border-radius: 12px;
+            outline: none;
+            font-family: inherit;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        #questionInput:focus {
+            border-color: #c89b3c;
+        }
+
+        /* =========================
+           BUTTON
+        ========================= */
+
+        .send-button {
+            margin-top: 15px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: #c89b3c;
+            color: #172033;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .send-button:hover {
+            background: #b18632;
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        #statusBox {
+            display: none;
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff8e7;
+            border: 1px solid #ead8a6;
+            color: #66501c;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           ANSWER
+        ========================= */
+
+        #answerBox {
+            display: none;
+            margin-top: 25px;
+            padding: 22px;
+            border-radius: 15px;
+            background: #f7f3ea;
+            border: 1px solid #e5dfd2;
+        }
+
+        #answerBox.show {
+            display: block;
+        }
+
+        .answer-title {
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: #c89b3c;
+        }
+
+        #adminAnswer {
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* =========================
+           ERROR
+        ========================= */
+
+        #errorBox {
+            display: none;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            line-height: 1.5;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            background: #172033;
+            color: white;
+            text-align: center;
+            padding: 35px 20px;
+        }
+
+        .footer-logo {
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .footer-logo span {
+            color: #c89b3c;
+        }
+
+        footer p {
+            color: #d8dde5;
+        }
+
+        footer small {
+            color: #9ca3af;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                padding: 12px 5%;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo {
+                font-size: 23px;
+            }
+
+            nav {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav a {
+                font-size: 13px;
+            }
+
+            .hero {
+                padding: 55px 20px 30px;
+            }
+
+            .hero h1 {
+                font-size: 40px;
+            }
+
+            .hero p {
+                font-size: 15px;
+            }
+
+            .question-section {
+                padding: 15px 12px 60px;
+            }
+
+            .question-container {
+                padding: 22px 18px;
+            }
+
+            #questionInput {
+                min-height: 130px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================
+         NAVBAR
+    ========================= -->
+
+    <header class="navbar">
+
+        <div class="logo">
+            Ruang<span>Nalar</span>
+        </div>
+
+        <nav>
+
+            <a href="index.html">
+                Beranda
+            </a>
+
+            <a
+                href="tanya.html"
+                class="active"
+            >
+                Tanya Nalar
+            </a>
+
+            <a href="admin.html">
+                Chat Admin
+            </a>
+
+        </nav>
+
+    </header>
+
+
+    <!-- =========================
+         HERO
+    ========================= -->
+
+    <section class="hero">
+
+        <div class="eyebrow">
+            TANYA NALAR
+        </div>
+
+        <h1>
+            Apa yang sedang
+            <span>kamu pikirkan?</span>
+        </h1>
+
+        <p>
+            Tuliskan pertanyaan atau pemikiranmu.
+            Pertanyaanmu akan dibaca oleh admin Ruang Nalar
+            dan dijawab berdasarkan sudut pandang nalar
+            serta nilai-nilai Islam.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         QUESTION
+    ========================= -->
+
+    <section class="question-section">
+
+        <div class="question-container">
+
+            <h2>
+                Sampaikan Pertanyaanmu
+            </h2>
+
+            <p>
+                Tidak perlu takut bertanya.
+                Setiap pertanyaan adalah awal dari sebuah pemikiran.
+            </p>
+
+
+            <textarea
+                id="questionInput"
+                placeholder="Contoh: Mengapa manusia diberikan akal?"
+            ></textarea>
+
+
+            <button
+                id="sendButton"
+                class="send-button"
+                type="button"
+            >
+                Kirim Pertanyaan
+            </button>
+
+
+            <!-- STATUS -->
+
+            <div id="statusBox">
+
+                ⏳ Pertanyaanmu sudah dikirim.
+
+                <br>
+
+                Silakan tunggu jawaban dari admin Ruang Nalar.
+
+            </div>
+
+
+            <!-- ERROR -->
+
+            <div id="errorBox"></div>
+
+
+            <!-- JAWABAN -->
+
+            <div id="answerBox">
+
+                <div class="answer-title">
+                    🧠 Jawaban Admin
+                </div>
+
+                <div id="adminAnswer"></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         FOOTER
+    ========================= -->
+
+    <footer>
+
+        <div class="footer-logo">
+            Ruang<span>Nalar</span>
+        </div>
+
+        <p>
+            Nalar Manusia dalam Islam
+        </p>
+
+        <small>
+            © 2026 Ruang Nalar
+        </small>
+
+    </footer>
+
+
+    <!-- =========================
+         FIREBASE
+    ========================= -->
+
+    <script type="module">
+
+        import {
+            db,
+            collection,
+            addDoc,
+            onSnapshot,
+            serverTimestamp
+        } from "./firebase.js";
+
+
+        // ==========================================
+        // ELEMENT
+        // ==========================================
+
+        const input =
+            document.getElementById(
+                "questionInput"
+            );
+
+
+        const sendButton =
+            document.getElementById(
+                "sendButton"
+            );
+
+
+        const statusBox =
+            document.getElementById(
+                "statusBox"
+            );
+
+
+        const answerBox =
+            document.getElementById(
+                "answerBox"
+            );
+
+
+        const adminAnswer =
+            document.getElementById(
+                "adminAnswer"
+            );
+
+
+        const errorBox =
+            document.getElementById(
+                "errorBox"
+            );
+
+
+        // ==========================================
+        // ID PERTANYAAN
+        // ==========================================
+
+        let currentQuestionId = null;
+
+
+        // Menyimpan listener jawaban
+        let unsubscribeAnswer = null;
+
+
+        // ==========================================
+        // FUNGSI MENAMPILKAN ERROR
+        // ==========================================
+
+        function showError(message) {
+
+            errorBox.textContent =
+                message;
+
+            errorBox.style.display =
+                "block";
+
+        }
+
+
+        // ==========================================
+        // FUNGSI SEMBUNYIKAN ERROR
+        // ==========================================
+
+        function hideError() {
+
+            errorBox.textContent =
+                "";
+
+            errorBox.style.display =
+                "none";
+
+        }
+
+
+        // ==========================================
+        // KIRIM PERTANYAAN
+        // ==========================================
+
+        async function sendQuestion() {
+
+            const question =
+                input.value.trim();
+
+
+            // Jangan kirim kosong
+            if (question === "") {
+
+                alert(
+                    "Silakan tulis pertanyaan terlebih dahulu."
+                );
+
+                input.focus();
+
+                return;
+
+            }
+
+
+            hideError();
+
+
+            // Disable tombol
+            sendButton.disabled =
+                true;
+
+
+            sendButton.textContent =
+                "Mengirim...";
+
+
+            try {
+
+                // ==================================
+                // SIMPAN KE FIRESTORE
+                // ==================================
+
+                const docRef =
+                    await addDoc(
+
+                        collection(
+                            db,
+                            "pertanyaan"
+                        ),
+
+                        {
+
+                            pertanyaan:
+                                question,
+
+                            status:
+                                "belum_dijawab",
+
+                            waktu:
+                                serverTimestamp()
+
+                        }
+
+                    );
+
+
+                // Simpan ID pertanyaan
+                currentQuestionId =
+                    docRef.id;
+
+
+                console.log(
+                    "Pertanyaan berhasil dikirim:",
+                    currentQuestionId
+                );
+
+
+                // Kosongkan textarea
+                input.value =
+                    "";
+
+
+                // Tampilkan status
+                statusBox.style.display =
+                    "block";
+
+
+                // Hilangkan jawaban lama
+                answerBox.classList.remove(
+                    "show"
+                );
+
+
+                adminAnswer.textContent =
+                    "";
+
+
+                // ==================================
+                // MULAI MENDENGARKAN JAWABAN
+                // ==================================
+
+                listenForAnswer(
+                    currentQuestionId
+                );
+
+
+                sendButton.textContent =
+                    "Pertanyaan Terkirim ✓";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Firebase Error:",
+                    error
+                );
+
+
+                showError(
+                    "Pertanyaan gagal dikirim: " +
+                    error.message
+                );
+
+
+                sendButton.textContent =
+                    "Kirim Pertanyaan";
+
+            }
+
+
+            sendButton.disabled =
+                false;
+
+        }
+
+
+        // ==========================================
+        // MENDENGARKAN JAWABAN ADMIN
+        // ==========================================
+
+        function listenForAnswer(
+            questionId
+        ) {
+
+            // Matikan listener lama
+            if (
+                unsubscribeAnswer
+            ) {
+
+                unsubscribeAnswer();
+
+                unsubscribeAnswer =
+                    null;
+
+            }
+
+
+            console.log(
+                "Mendengarkan jawaban:",
+                questionId
+            );
+
+
+            // Collection:
+            // pertanyaan / ID / jawaban
+
+            const answerCollection =
+                collection(
+
+                    db,
+
+                    "pertanyaan",
+
+                    questionId,
+
+                    "jawaban"
+
+                );
+
+
+            // ==================================
+            // LISTENER REALTIME
+            // ==================================
+
+            unsubscribeAnswer =
+                onSnapshot(
+
+                    answerCollection,
+
+
+                    function(snapshot) {
+
+                        console.log(
+                            "Jumlah jawaban:",
+                            snapshot.size
+                        );
+
+
+                        // Belum ada jawaban
+                        if (
+                            snapshot.empty
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        // ==================================
+                        // AMBIL JAWABAN TERAKHIR
+                        // ==================================
+
+                        let lastAnswer =
+                            null;
+
+
+                        snapshot.forEach(
+                            function(doc) {
+
+                                lastAnswer =
+                                    doc.data();
+
+                            }
+                        );
+
+
+                        if (
+                            !lastAnswer
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        console.log(
+                            "Jawaban admin:",
+                            lastAnswer
+                        );
+
+
+                        // ==================================
+                        // TAMPILKAN JAWABAN
+                        // ==================================
+
+                        adminAnswer.textContent =
+                            lastAnswer.jawaban ||
+                            "Belum ada jawaban.";
+
+
+                        answerBox.classList.add(
+                            "show"
+                        );
+
+
+                        statusBox.style.display =
+                            "none";
+
+                    },
+
+
+                    function(error) {
+
+                        console.error(
+                            "Error membaca jawaban:",
+                            error
+                        );
+
+
+                        showError(
+                            "Jawaban gagal dimuat: " +
+                            error.message
+                        );
+
+                    }
+
+                );
+
+        }
+
+
+        // ==========================================
+        // EVENT TOMBOL
+        // ==========================================
+
+        sendButton.addEventListener(
+            "click",
+            sendQuestion
+        );
+
+
+        // ==========================================
+        // CTRL + ENTER
+        // ==========================================
+
+        input.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.ctrlKey &&
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    sendQuestion();
+
+                }
+
+            }
+        );
+
+
+    </script>
+
+</body>
+
+</html>

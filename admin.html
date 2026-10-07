@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin | Ruang Nalar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f6f8;
+            color: #172033;
+        }
+
+        .navbar {
+            background: white;
+            padding: 18px 8%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+        }
+
+        .logo span {
+            color: #c89b3c;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #172033;
+            font-weight: bold;
+        }
+
+        .admin-hero {
+            text-align: center;
+            padding: 55px 20px 30px;
+        }
+
+        .admin-hero h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .admin-hero span {
+            color: #c89b3c;
+        }
+
+        .admin-hero p {
+            color: #687080;
+        }
+
+        .chat-container {
+            width: 90%;
+            max-width: 850px;
+            margin: 20px auto 70px;
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .chat-header {
+            background: #172033;
+            color: white;
+            padding: 20px 25px;
+            font-weight: bold;
+        }
+
+        .chat-body {
+            min-height: 450px;
+            max-height: 600px;
+            padding: 25px;
+            overflow-y: auto;
+            background: #f7f3ea;
+        }
+
+        .question-box {
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e5dfd2;
+        }
+
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .status {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status.answered {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .answer-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .answer-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .answer-area input:focus {
+            border-color: #c89b3c;
+        }
+
+        .answer-area button {
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            background: #c89b3c;
+            color: #172033;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .answer-area button:hover {
+            background: #b18632;
+        }
+
+        .answer-area button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            padding: 80px 20px;
+        }
+
+        .error {
+            text-align: center;
+            color: #b42318;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 5%;
+            }
+
+            .logo {
+                font-size: 22px;
+            }
+
+            .admin-hero {
+                padding: 40px 15px 20px;
+            }
+
+            .admin-hero h1 {
+                font-size: 34px;
+            }
+
+            .chat-container {
+                width: 94%;
+                margin-top: 15px;
+            }
+
+            .chat-body {
+                padding: 15px;
+            }
+
+            .question-box {
+                padding: 15px;
+            }
+
+            .answer-area {
+                flex-direction: column;
+            }
+
+            .answer-area input {
+                width: 100%;
+                min-height: 45px;
+            }
+
+            .answer-area button {
+                height: 45px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="navbar">
+
+        <div class="logo">
+            Ruang<span>Nalar</span>
+        </div>
+
+        <a href="index.html">
+            Beranda
+        </a>
+
+    </header>
+
+
+    <section class="admin-hero">
+
+        <h1>
+            Panel <span>Admin</span>
+        </h1>
+
+        <p>
+            Jawab pertanyaan pengguna Ruang Nalar secara manual.
+        </p>
+
+    </section>
+
+
+    <div class="chat-container">
+
+        <div class="chat-header">
+            🧠 Pertanyaan Pengunjung
+        </div>
+
+        <div
+            class="chat-body"
+            id="questionList"
+        >
+
+            <div class="empty">
+                Memuat pertanyaan...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script type="module">
+
+        import {
+            db,
+            collection,
+            addDoc,
+            onSnapshot,
+            serverTimestamp,
+            doc,
+            updateDoc
+        } from "./firebase.js";
+
+
+        const questionList =
+            document.getElementById("questionList");
+
+
+        // ==========================================
+        // AMBIL DATA PERTANYAAN
+        // ==========================================
+
+        const questionsCollection =
+            collection(db, "pertanyaan");
+
+
+        onSnapshot(
+
+            questionsCollection,
+
+            function(snapshot) {
+
+                questionList.innerHTML = "";
+
+
+                if (snapshot.empty) {
+
+                    questionList.innerHTML = `
+                        <div class="empty">
+                            Belum ada pertanyaan dari pengunjung.
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                snapshot.forEach(function(docSnapshot) {
+
+                    const data =
+                        docSnapshot.data();
+
+
+                    // ==============================
+                    // KOTAK PERTANYAAN
+                    // ==============================
+
+                    const questionBox =
+                        document.createElement("div");
+
+                    questionBox.className =
+                        "question-box";
+
+
+                    // ==============================
+                    // JUDUL
+                    // ==============================
+
+                    const title =
+                        document.createElement("div");
+
+                    title.className =
+                        "question-title";
+
+                    title.textContent =
+                        "👤 Pengunjung";
+
+
+                    // ==============================
+                    // PERTANYAAN
+                    // ==============================
+
+                    const question =
+                        document.createElement("div");
+
+                    question.className =
+                        "question-text";
+
+                    question.textContent =
+                        data.pertanyaan ||
+                        "(Pertanyaan kosong)";
+
+
+                    // ==============================
+                    // STATUS
+                    // ==============================
+
+                    const status =
+                        document.createElement("div");
+
+                    status.className =
+                        "status";
+
+
+                    if (
+                        data.status ===
+                        "sudah_dijawab"
+                    ) {
+
+                        status.classList.add(
+                            "answered"
+                        );
+
+                        status.textContent =
+                            "✓ Sudah dijawab";
+
+                    } else {
+
+                        status.textContent =
+                            "Belum dijawab";
+
+                    }
+
+
+                    // ==============================
+                    // AREA JAWABAN
+                    // ==============================
+
+                    const answerArea =
+                        document.createElement("div");
+
+                    answerArea.className =
+                        "answer-area";
+
+
+                    const input =
+                        document.createElement("input");
+
+                    input.type =
+                        "text";
+
+                    input.placeholder =
+                        "Tulis jawaban admin...";
+
+
+                    const button =
+                        document.createElement("button");
+
+                    button.type =
+                        "button";
+
+                    button.textContent =
+                        "Jawab";
+
+
+                    // ==============================
+                    // KIRIM JAWABAN
+                    // ==============================
+
+                    button.addEventListener(
+                        "click",
+                        function() {
+
+                            sendAnswer(
+                                docSnapshot.id,
+                                input,
+                                button,
+                                status
+                            );
+
+                        }
+                    );
+
+
+                    // ENTER UNTUK KIRIM
+                    input.addEventListener(
+                        "keydown",
+                        function(event) {
+
+                            if (
+                                event.key === "Enter"
+                            ) {
+
+                                event.preventDefault();
+
+                                sendAnswer(
+                                    docSnapshot.id,
+                                    input,
+                                    button,
+                                    status
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    answerArea.appendChild(input);
+
+                    answerArea.appendChild(button);
+
+
+                    questionBox.appendChild(title);
+
+                    questionBox.appendChild(question);
+
+                    questionBox.appendChild(status);
+
+                    questionBox.appendChild(answerArea);
+
+
+                    questionList.appendChild(
+                        questionBox
+                    );
+
+                });
+
+            },
+
+
+            // ==========================================
+            // ERROR
+            // ==========================================
+
+            function(error) {
+
+                console.error(
+                    "Firebase Error:",
+                    error
+                );
+
+
+                questionList.innerHTML = `
+                    <div class="error">
+
+                        <strong>
+                            Gagal memuat pertanyaan.
+                        </strong>
+
+                        <br><br>
+
+                        ${error.message}
+
+                        <br><br>
+
+                        <small>
+                            Periksa Firestore Rules dan koneksi Firebase.
+                        </small>
+
+                    </div>
+                `;
+
+            }
+
+        );
+
+
+        // ==========================================
+        // FUNGSI KIRIM JAWABAN
+        // ==========================================
+
+        async function sendAnswer(
+            questionId,
+            input,
+            button,
+            status
+        ) {
+
+            const answer =
+                input.value.trim();
+
+
+            if (answer === "") {
+
+                alert(
+                    "Silakan tulis jawaban terlebih dahulu."
+                );
+
+                input.focus();
+
+                return;
+            }
+
+
+            button.disabled =
+                true;
+
+            button.textContent =
+                "Mengirim...";
+
+
+            try {
+
+                // ==============================
+                // SIMPAN JAWABAN
+                // ==============================
+
+                await addDoc(
+
+                    collection(
+                        db,
+                        "pertanyaan",
+                        questionId,
+                        "jawaban"
+                    ),
+
+                    {
+                        jawaban: answer,
+                        waktu: serverTimestamp(),
+                        pengirim: "admin"
+                    }
+
+                );
+
+
+                // ==============================
+                // UPDATE STATUS
+                // ==============================
+
+                const questionRef =
+                    doc(
+                        db,
+                        "pertanyaan",
+                        questionId
+                    );
+
+
+                await updateDoc(
+                    questionRef,
+                    {
+                        status: "sudah_dijawab"
+                    }
+                );
+
+
+                // ==============================
+                // BERHASIL
+                // ==============================
+
+                input.value = "";
+
+                status.classList.add(
+                    "answered"
+                );
+
+                status.textContent =
+                    "✓ Sudah dijawab";
+
+                button.textContent =
+                    "Terkirim";
+
+
+                setTimeout(
+                    function() {
+
+                        button.textContent =
+                            "Jawab";
+
+                    },
+                    1500
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error mengirim jawaban:",
+                    error
+                );
+
+
+                alert(
+                    "Jawaban gagal dikirim.\n\n" +
+                    error.message
+                );
+
+
+                button.textContent =
+                    "Jawab";
+
+            }
+
+
+            button.disabled =
+                false;
+
+        }
+
+    </script>
+
+</body>
+
+</html>
