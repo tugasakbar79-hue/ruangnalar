@@ -1,1 +1,0 @@
-# Ruang Nalar - Kolaborasi
