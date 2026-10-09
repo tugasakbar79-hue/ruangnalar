@@ -679,50 +679,49 @@ menuToggle.addEventListener("click", () => {
 
                     console.log("API response:", data);
 
-
                     // ==================================
-                    // TAMPILKAN JAWABAN PER SECTION
+                    // PARSE JAWABAN DARI STRING ANSWER
                     // ==================================
 
-                    const sections = data.sections || {};
+                    const answer = data.answer || "";
 
-                    // 🧠 PENJELASAN
-                    if (sections.reason) {
+                    // Parse 4 section dari answer string pake regex
+                    // Format: 🧠 PENJELASAN: ... ☪️ DALAM ISLAM: ... 💭 REFLEKSI: ... 📜 DALIL: ...
+                    // Bisa pakai **bold** atau gak, bisa pake : atau gak
+                    const a = answer;
+                    const reasonMatch  = a.match(/🧠\s*\*{0,2}PENJELASAN\*{0,2}\s*:?\s*([\s\S]*?)(?=☪️|$)/);
+                    const islamMatch   = a.match(/☪️\s*\*{0,2}DALAM ISLAM\*{0,2}\s*:?\s*([\s\S]*?)(?=💭|📜|$)/);
+                    const reflectMatch = a.match(/💭\s*\*{0,2}REFLEKSI\*{0,2}\s*:?\s*([\s\S]*?)(?=📜|$)/);
+                    const dalilMatch   = a.match(/📜\s*\*{0,2}DALIL\*{0,2}\s*:?\s*([\s\S]*?)$/);
 
-                        document.getElementById("reasonAnswer").textContent = sections.reason;
-                        document.getElementById("reasonSection").style.display = "block";
+                    const hasReason = reasonMatch && reasonMatch[1].trim();
+                    const hasIslam = islamMatch && islamMatch[1].trim();
+                    const hasDalil = dalilMatch && dalilMatch[1].trim();
+                    const hasReflect = reflectMatch && reflectMatch[1].trim();
 
-                    }
+                    if (hasReason || hasIslam || hasDalil || hasReflect) {
 
-                    // ☪️ DALAM ISLAM
-                    if (sections.islam) {
+                        if (hasReason) {
+                            document.getElementById("reasonAnswer").textContent = reasonMatch[1].trim();
+                            document.getElementById("reasonSection").style.display = "block";
+                        }
+                        if (hasIslam) {
+                            document.getElementById("islamAnswer").textContent = islamMatch[1].trim();
+                            document.getElementById("islamSection").style.display = "block";
+                        }
+                        if (hasDalil) {
+                            document.getElementById("dalilAnswer").textContent = dalilMatch[1].trim();
+                            document.getElementById("dalilSection").style.display = "block";
+                        }
+                        if (hasReflect) {
+                            document.getElementById("reflectionAnswer").textContent = reflectMatch[1].trim();
+                            document.getElementById("reflectionSection").style.display = "block";
+                        }
 
-                        document.getElementById("islamAnswer").textContent = sections.islam;
-                        document.getElementById("islamSection").style.display = "block";
+                    } else {
 
-                    }
-
-                    // 📜 DALIL
-                    if (sections.dalil) {
-
-                        document.getElementById("dalilAnswer").textContent = sections.dalil;
-                        document.getElementById("dalilSection").style.display = "block";
-
-                    }
-
-                    // 💭 REFLEKSI
-                    if (sections.reflection) {
-
-                        document.getElementById("reflectionAnswer").textContent = sections.reflection;
-                        document.getElementById("reflectionSection").style.display = "block";
-
-                    }
-
-
-                    // Fallback: kalau ga punya sections, tampilkan raw answer
-                    if (!sections.reason && !sections.islam && !sections.dalil && !sections.reflection) {
-
-                        adminAnswer.textContent = data.answer || "(tidak ada jawaban)";
+                        // Fallback: tampilkan mentahan
+                        adminAnswer.textContent = answer || "(tidak ada jawaban)";
                         document.getElementById("adminAnswer").style.display = "block";
 
                     }
