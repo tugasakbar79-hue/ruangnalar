@@ -464,6 +464,11 @@ menuToggle.addEventListener("click", () => {
                         <div class="section-content" id="reflectionAnswer"></div>
                     </div>
 
+                    <div class="ai-section" id="dalilSection" style="display:none">
+                        <div class="section-icon">📜 DALIL</div>
+                        <div class="section-content" id="dalilAnswer"></div>
+                    </div>
+
                     <div id="adminAnswer" style="display:none"></div>
 
                 </div>
@@ -500,459 +505,289 @@ menuToggle.addEventListener("click", () => {
          FIREBASE
     ========================= -->
 
-    <script type="module">
+    <script>
 
-        import {
-            db,
-            collection,
-            addDoc,
-            onSnapshot,
-            serverTimestamp
-        } from "./firebase.js";
+            // ==========================================
+            // KONFIGURASI
+            // ==========================================
 
+            const API_URL = "https://discharge-temperature-asked-merge.trycloudflare.com";
 
-        // ==========================================
-        // ELEMENT
-        // ==========================================
+            // ==========================================
+            // ELEMENT
+            // ==========================================
 
-        const input =
-            document.getElementById(
-                "questionInput"
-            );
-
-
-        const sendButton =
-            document.getElementById(
-                "sendButton"
-            );
-
-
-        const statusBox =
-            document.getElementById(
-                "statusBox"
-            );
-
-
-        const answerBox =
-            document.getElementById(
-                "answerBox"
-            );
-
-
-        const adminAnswer =
-            document.getElementById(
-                "adminAnswer"
-            );
-
-
-        const errorBox =
-            document.getElementById(
-                "errorBox"
-            );
-
-
-        // ==========================================
-        // ID PERTANYAAN
-        // ==========================================
-
-        let currentQuestionId = null;
-
-
-        // Menyimpan listener jawaban
-        let unsubscribeAnswer = null;
-
-
-        // ==========================================
-        // FUNGSI MENAMPILKAN ERROR
-        // ==========================================
-
-        function showError(message) {
-
-            errorBox.textContent =
-                message;
-
-            errorBox.style.display =
-                "block";
-
-        }
-
-
-        // ==========================================
-        // FUNGSI SEMBUNYIKAN ERROR
-        // ==========================================
-
-        function hideError() {
-
-            errorBox.textContent =
-                "";
-
-            errorBox.style.display =
-                "none";
-
-        }
-
-
-        // ==========================================
-        // KIRIM PERTANYAAN
-        // ==========================================
-
-        async function sendQuestion() {
-
-            const question =
-                input.value.trim();
-
-
-            // Jangan kirim kosong
-            if (question === "") {
-
-                alert(
-                    "Silakan tulis pertanyaan terlebih dahulu."
+            const input =
+                document.getElementById(
+                    "questionInput"
                 );
 
-                input.focus();
 
-                return;
+            const sendButton =
+                document.getElementById(
+                    "sendButton"
+                );
+
+
+            const statusBox =
+                document.getElementById(
+                    "statusBox"
+                );
+
+
+            const answerBox =
+                document.getElementById(
+                    "answerBox"
+                );
+
+
+            const adminAnswer =
+                document.getElementById(
+                    "adminAnswer"
+                );
+
+
+            const errorBox =
+                document.getElementById(
+                    "errorBox"
+                );
+
+
+            // ==========================================
+            // UTILITY
+            // ==========================================
+
+            function showError(message) {
+
+                errorBox.textContent = message;
+                errorBox.style.display = "block";
+
+            }
+
+            function hideError() {
+
+                errorBox.textContent = "";
+                errorBox.style.display = "none";
+
+            }
+
+            function hideAllSections() {
+
+                const sections = [
+                    "reasonSection", "islamSection",
+                    "dalilSection", "reflectionSection", "adminAnswer"
+                ];
+
+                sections.forEach(function(id) {
+
+                    const el = document.getElementById(id);
+
+                    if (el) el.style.display = "none";
+
+                });
+
+                // Kosongkan konten
+                [
+                    "reasonAnswer", "islamAnswer",
+                    "dalilAnswer", "reflectionAnswer"
+                ].forEach(function(id) {
+
+                    const el = document.getElementById(id);
+
+                    if (el) el.textContent = "";
+
+                });
+
+                adminAnswer.textContent = "";
 
             }
 
 
-            hideError();
+            // ==========================================
+            // KIRIM PERTANYAAN
+            // ==========================================
+
+            async function sendQuestion() {
+
+                const question =
+                    input.value.trim();
 
 
-            // Disable tombol
-            sendButton.disabled =
-                true;
+                // Jangan kirim kosong
+                if (question === "") {
+
+                    alert(
+                        "Silakan tulis pertanyaan terlebih dahulu."
+                    );
+
+                    input.focus();
+
+                    return;
+
+                }
 
 
-            sendButton.textContent =
-                "Mengirim...";
+                hideError();
+                hideAllSections();
 
 
-            try {
+                // Disable tombol
+                sendButton.disabled = true;
+                sendButton.textContent = "Mengirim...";
 
-                // ==================================
-                // SIMPAN KE FIRESTORE
-                // ==================================
 
-                const docRef =
-                    await addDoc(
+                // Tampilkan status loading
+                statusBox.style.display = "block";
+                answerBox.classList.remove("show");
 
-                        collection(
-                            db,
-                            "pertanyaan"
-                        ),
 
+                // Kosongkan input
+                input.value = "";
+
+
+                try {
+
+                    // ==================================
+                    // CALL API LANGSUNG
+                    // ==================================
+
+                    const response = await fetch(
+                        API_URL + "/api/ask",
                         {
-
-                            pertanyaan:
-                                question,
-
-                            status:
-                                "belum_dijawab",
-
-                            waktu:
-                                serverTimestamp()
-
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                question: question
+                            })
                         }
-
                     );
 
 
-                // Simpan ID pertanyaan
-                currentQuestionId =
-                    docRef.id;
+                    if (!response.ok) {
 
-
-                console.log(
-                    "Pertanyaan berhasil dikirim:",
-                    currentQuestionId
-                );
-
-
-                // Kosongkan textarea
-                input.value =
-                    "";
-
-
-                // Tampilkan status
-                statusBox.style.display =
-                    "block";
-
-
-                // Hilangkan jawaban lama
-                answerBox.classList.remove(
-                    "show"
-                );
-
-                // Sembunyikan semua section
-                document.getElementById("reasonSection").style.display = "none";
-                document.getElementById("islamSection").style.display = "none";
-                document.getElementById("reflectionSection").style.display = "none";
-                document.getElementById("adminAnswer").style.display = "none";
-                document.getElementById("reasonAnswer").textContent = "";
-                document.getElementById("islamAnswer").textContent = "";
-                document.getElementById("reflectionAnswer").textContent = "";
-                adminAnswer.textContent =
-                    "";
-
-
-                // ==================================
-                // MULAI MENDENGARKAN JAWABAN
-                // ==================================
-
-                listenForAnswer(
-                    currentQuestionId
-                );
-
-
-                sendButton.textContent =
-                    "Pertanyaan Terkirim ✓";
-
-
-            } catch (error) {
-
-                console.error(
-                    "Firebase Error:",
-                    error
-                );
-
-
-                showError(
-                    "Pertanyaan gagal dikirim: " +
-                    error.message
-                );
-
-
-                sendButton.textContent =
-                    "Kirim Pertanyaan";
-
-            }
-
-
-            sendButton.disabled =
-                false;
-
-        }
-
-
-        // ==========================================
-        // EKSPOS KE GLOBAL (biar script.js bisa panggil)
-        // ==========================================
-
-        window.kirimKeFirebase = sendQuestion;
-
-
-        // ==========================================
-        // MENDENGARKAN JAWABAN ADMIN
-        // ==========================================
-
-        function listenForAnswer(
-            questionId
-        ) {
-
-            // Matikan listener lama
-            if (
-                unsubscribeAnswer
-            ) {
-
-                unsubscribeAnswer();
-
-                unsubscribeAnswer =
-                    null;
-
-            }
-
-
-            console.log(
-                "Mendengarkan jawaban:",
-                questionId
-            );
-
-
-            // Collection:
-            // pertanyaan / ID / jawaban
-
-            const answerCollection =
-                collection(
-
-                    db,
-
-                    "pertanyaan",
-
-                    questionId,
-
-                    "jawaban"
-
-                );
-
-
-            // ==================================
-            // LISTENER REALTIME
-            // ==================================
-
-            unsubscribeAnswer =
-                onSnapshot(
-
-                    answerCollection,
-
-
-                    function(snapshot) {
-
-                        console.log(
-                            "Jumlah jawaban:",
-                            snapshot.size
-                        );
-
-
-                        // Belum ada jawaban
-                        if (
-                            snapshot.empty
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        // ==================================
-                        // AMBIL JAWABAN TERAKHIR
-                        // ==================================
-
-                        let lastAnswer =
-                            null;
-
-
-                        snapshot.forEach(
-                            function(doc) {
-
-                                lastAnswer =
-                                    doc.data();
-
-                            }
-                        );
-
-
-                        if (
-                            !lastAnswer
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        console.log(
-                            "Jawaban admin:",
-                            lastAnswer
-                        );
-
-
-                        // ==================================
-                        // TAMPILKAN JAWABAN
-                        // ==================================
-
-                        const fullAnswer = lastAnswer.jawaban || "Belum ada jawaban.";
-                        
-                        // Coba parse ke 3 section
-                        const reasonMatch = fullAnswer.match(/🧠\s*PENJELASAN\s*:?([\s\S]*?)(?=☪️|$)/);
-                        const islamMatch = fullAnswer.match(/☪️\s*DALAM ISLAM\s*:?([\s\S]*?)(?=💭|$)/);
-                        const reflectMatch = fullAnswer.match(/💭\s*REFLEKSI\s*:?([\s\S]*?)$/);
-                        
-                        const hasReason = reasonMatch && reasonMatch[1].trim();
-                        const hasIslam = islamMatch && islamMatch[1].trim();
-                        const hasReflect = reflectMatch && reflectMatch[1].trim();
-                        
-                        if (hasReason || hasIslam || hasReflect) {
-                            // Parse berhasil — tampilkan per section
-                            document.getElementById("adminAnswer").style.display = "none";
-                            
-                            if (hasReason) {
-                                document.getElementById("reasonAnswer").textContent = reasonMatch[1].trim();
-                                document.getElementById("reasonSection").style.display = "block";
-                            }
-                            if (hasIslam) {
-                                document.getElementById("islamAnswer").textContent = islamMatch[1].trim();
-                                document.getElementById("islamSection").style.display = "block";
-                            }
-                            if (hasReflect) {
-                                document.getElementById("reflectionAnswer").textContent = reflectMatch[1].trim();
-                                document.getElementById("reflectionSection").style.display = "block";
-                            }
-                        } else {
-                            // Fallback — tampilkan mentahan
-                            document.getElementById("reasonSection").style.display = "none";
-                            document.getElementById("islamSection").style.display = "none";
-                            document.getElementById("reflectionSection").style.display = "none";
-                            adminAnswer.textContent = fullAnswer;
-                            document.getElementById("adminAnswer").style.display = "block";
-                        }
-
-                        answerBox.classList.add(
-                            "show"
-                        );
-
-
-                        statusBox.style.display =
-                            "none";
-
-                    },
-
-
-                    function(error) {
-
-                        console.error(
-                            "Error membaca jawaban:",
-                            error
-                        );
-
-
-                        showError(
-                            "Jawaban gagal dimuat: " +
-                            error.message
+                        throw new Error(
+                            "Server error: " + response.status
                         );
 
                     }
 
-                );
 
-        }
-
-
-        // ==========================================
-        // EVENT TOMBOL
-        // ==========================================
-
-        sendButton.addEventListener(
-            "click",
-            sendQuestion
-        );
+                    const data = await response.json();
 
 
-        // ==========================================
-        // CTRL + ENTER
-        // ==========================================
+                    console.log("API response:", data);
 
-        input.addEventListener(
-            "keydown",
-            function(event) {
 
-                if (
-                    event.ctrlKey &&
-                    event.key === "Enter"
-                ) {
+                    // ==================================
+                    // TAMPILKAN JAWABAN PER SECTION
+                    // ==================================
 
-                    event.preventDefault();
+                    const sections = data.sections || {};
 
-                    sendQuestion();
+                    // 🧠 PENJELASAN
+                    if (sections.reason) {
+
+                        document.getElementById("reasonAnswer").textContent = sections.reason;
+                        document.getElementById("reasonSection").style.display = "block";
+
+                    }
+
+                    // ☪️ DALAM ISLAM
+                    if (sections.islam) {
+
+                        document.getElementById("islamAnswer").textContent = sections.islam;
+                        document.getElementById("islamSection").style.display = "block";
+
+                    }
+
+                    // 📜 DALIL
+                    if (sections.dalil) {
+
+                        document.getElementById("dalilAnswer").textContent = sections.dalil;
+                        document.getElementById("dalilSection").style.display = "block";
+
+                    }
+
+                    // 💭 REFLEKSI
+                    if (sections.reflection) {
+
+                        document.getElementById("reflectionAnswer").textContent = sections.reflection;
+                        document.getElementById("reflectionSection").style.display = "block";
+
+                    }
+
+
+                    // Fallback: kalau ga punya sections, tampilkan raw answer
+                    if (!sections.reason && !sections.islam && !sections.dalil && !sections.reflection) {
+
+                        adminAnswer.textContent = data.answer || "(tidak ada jawaban)";
+                        document.getElementById("adminAnswer").style.display = "block";
+
+                    }
+
+
+                    answerBox.classList.add("show");
+                    statusBox.style.display = "none";
+                    sendButton.textContent = "Kirim Pertanyaan";
+
+
+                } catch (error) {
+
+                    console.error("API Error:", error);
+
+                    showError(
+                        "Pertanyaan gagal: " + error.message +
+                        " — Coba beberapa saat lagi."
+                    );
+
+                    sendButton.textContent = "Kirim Pertanyaan";
+
+
+                } finally {
+
+                    sendButton.disabled = false;
 
                 }
 
             }
-        );
 
 
-    </script>
+            // ==========================================
+            // EVENT TOMBOL
+            // ==========================================
 
-</body>
+            sendButton.addEventListener(
+                "click",
+                sendQuestion
+            );
 
-</html>
+
+            // ==========================================
+            // CTRL + ENTER
+            // ==========================================
+
+            input.addEventListener(
+                "keydown",
+                function(event) {
+
+                    if (
+                        event.ctrlKey &&
+                        event.key === "Enter"
+                    ) {
+
+                        event.preventDefault();
+                        sendQuestion();
+
+                    }
+
+                }
+            );
+
+
+        </script>
+
+    </body>
+
+    </html>
