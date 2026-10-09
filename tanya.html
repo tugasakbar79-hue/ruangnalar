@@ -210,6 +210,35 @@
             word-break: break-word;
         }
 
+        .ai-section {
+            margin-bottom: 18px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            background: #fff;
+            border: 1px solid #e8e2d6;
+        }
+        .ai-section:last-child {
+            margin-bottom: 0;
+        }
+        .ai-section .section-icon {
+            font-size: 14px;
+            font-weight: 800;
+            color: #c89b3c;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ai-section .section-content {
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .ai-section .section-content p {
+            margin: 6px 0;
+        }
+
         /* =========================
            ERROR
         ========================= */
@@ -415,10 +444,29 @@ menuToggle.addEventListener("click", () => {
             <div id="answerBox">
 
                 <div class="answer-title">
-                    🧠 Jawaban Admin
+                    🤖 Jawaban Ruang Nalar AI
                 </div>
 
-                <div id="adminAnswer"></div>
+                <div id="answerSections">
+
+                    <div class="ai-section" id="reasonSection" style="display:none">
+                        <div class="section-icon">🧠 PENJELASAN</div>
+                        <div class="section-content" id="reasonAnswer"></div>
+                    </div>
+
+                    <div class="ai-section" id="islamSection" style="display:none">
+                        <div class="section-icon">☪️ DALAM ISLAM</div>
+                        <div class="section-content" id="islamAnswer"></div>
+                    </div>
+
+                    <div class="ai-section" id="reflectionSection" style="display:none">
+                        <div class="section-icon">💭 REFLEKSI</div>
+                        <div class="section-content" id="reflectionAnswer"></div>
+                    </div>
+
+                    <div id="adminAnswer" style="display:none"></div>
+
+                </div>
 
             </div>
 
@@ -636,7 +684,14 @@ menuToggle.addEventListener("click", () => {
                     "show"
                 );
 
-
+                // Sembunyikan semua section
+                document.getElementById("reasonSection").style.display = "none";
+                document.getElementById("islamSection").style.display = "none";
+                document.getElementById("reflectionSection").style.display = "none";
+                document.getElementById("adminAnswer").style.display = "none";
+                document.getElementById("reasonAnswer").textContent = "";
+                document.getElementById("islamAnswer").textContent = "";
+                document.getElementById("reflectionAnswer").textContent = "";
                 adminAnswer.textContent =
                     "";
 
@@ -678,6 +733,13 @@ menuToggle.addEventListener("click", () => {
                 false;
 
         }
+
+
+        // ==========================================
+        // EKSPOS KE GLOBAL (biar script.js bisa panggil)
+        // ==========================================
+
+        window.kirimKeFirebase = sendQuestion;
 
 
         // ==========================================
@@ -789,10 +851,41 @@ menuToggle.addEventListener("click", () => {
                         // TAMPILKAN JAWABAN
                         // ==================================
 
-                        adminAnswer.textContent =
-                            lastAnswer.jawaban ||
-                            "Belum ada jawaban.";
-
+                        const fullAnswer = lastAnswer.jawaban || "Belum ada jawaban.";
+                        
+                        // Coba parse ke 3 section
+                        const reasonMatch = fullAnswer.match(/🧠\s*PENJELASAN\s*:?([\s\S]*?)(?=☪️|$)/);
+                        const islamMatch = fullAnswer.match(/☪️\s*DALAM ISLAM\s*:?([\s\S]*?)(?=💭|$)/);
+                        const reflectMatch = fullAnswer.match(/💭\s*REFLEKSI\s*:?([\s\S]*?)$/);
+                        
+                        const hasReason = reasonMatch && reasonMatch[1].trim();
+                        const hasIslam = islamMatch && islamMatch[1].trim();
+                        const hasReflect = reflectMatch && reflectMatch[1].trim();
+                        
+                        if (hasReason || hasIslam || hasReflect) {
+                            // Parse berhasil — tampilkan per section
+                            document.getElementById("adminAnswer").style.display = "none";
+                            
+                            if (hasReason) {
+                                document.getElementById("reasonAnswer").textContent = reasonMatch[1].trim();
+                                document.getElementById("reasonSection").style.display = "block";
+                            }
+                            if (hasIslam) {
+                                document.getElementById("islamAnswer").textContent = islamMatch[1].trim();
+                                document.getElementById("islamSection").style.display = "block";
+                            }
+                            if (hasReflect) {
+                                document.getElementById("reflectionAnswer").textContent = reflectMatch[1].trim();
+                                document.getElementById("reflectionSection").style.display = "block";
+                            }
+                        } else {
+                            // Fallback — tampilkan mentahan
+                            document.getElementById("reasonSection").style.display = "none";
+                            document.getElementById("islamSection").style.display = "none";
+                            document.getElementById("reflectionSection").style.display = "none";
+                            adminAnswer.textContent = fullAnswer;
+                            document.getElementById("adminAnswer").style.display = "block";
+                        }
 
                         answerBox.classList.add(
                             "show"
