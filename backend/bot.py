@@ -59,8 +59,8 @@ def is_admin(user_id: int) -> bool:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Welcome message."""
     await update.message.reply_text(
-        "🌙 **Selamat datang di Ruang Nalar AI**\n\n"
-        "Aku adalah asisten yang siap menjawab pertanyaanmu seputar "
+        "🌙 **Selamat datang! Saya 'Aqli'**\n\n"
+        "Aku adalah AI Ruang Nalar yang siap menjawab pertanyaanmu seputar "
         "nalar, filsafat, dan perspektif Islam.\n\n"
         "**Cara pakai:**\n"
         "• Ketik `?` diikuti pertanyaan — contoh:\n"
