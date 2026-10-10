@@ -15,20 +15,23 @@
         ========================= */
 
         html, body {
-            height: 100%;
             margin: 0;
-            overflow: hidden;
+            padding: 0;
         }
 
         body {
-            display: flex;
-            flex-direction: column;
             background: #f8fafc;
         }
 
-        /* navbar override: tetap di atas */
+        /* navbar jadi relative supaya gak konflik sticky */
         .navbar {
-            flex-shrink: 0;
+            position: relative !important;
+            top: auto !important;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         /* =========================
