@@ -7,153 +7,174 @@
 
     <title>Tanya 'Aqli | Ruang Nalar</title>
 
+    <link rel="stylesheet" href="style.css">
+
     <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f8fafc;
-            color: #172033;
-        }
-
         /* =========================
-           NAVBAR
-        ========================= */
-
-        .navbar {
-            min-height: 70px;
-            padding: 0 8%;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: white;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .logo {
-            font-size: 27px;
-            font-weight: 800;
-        }
-
-        .logo span {
-            color: #c89b3c;
-        }
-
-        nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #172033;
-            font-weight: 600;
-        }
-
-        nav a:hover,
-        nav a.active {
-            color: #c89b3c;
-        }
-
-        /* =========================
-           HERO
+           OVERRIDE / EXTRA STYLE
         ========================= */
 
         .hero {
             text-align: center;
-            padding: 70px 20px 40px;
-        }
-
-        .eyebrow {
-            color: #c89b3c;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 3px;
+            padding: 40px 20px 8px;
         }
 
         .hero h1 {
-            font-size: clamp(38px, 6vw, 60px);
-            margin: 15px auto;
-            max-width: 750px;
-            line-height: 1.1;
-        }
-
-        .hero h1 span {
-            color: #c89b3c;
+            font-size: clamp(24px, 4vw, 38px);
+            margin: 8px auto;
+            max-width: 650px;
         }
 
         .hero p {
-            max-width: 650px;
-            margin: auto;
+            font-size: 14px;
             color: #687080;
-            line-height: 1.7;
-            font-size: 17px;
         }
 
         /* =========================
-           QUESTION
+           CHAT
         ========================= */
 
-        .question-section {
-            padding: 20px 20px 80px;
+        .chat-section {
+            padding: 10px 20px 20px;
         }
 
-        .question-container {
-            width: 100%;
+        .chat-container {
             max-width: 800px;
             margin: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chatMessages {
+            flex: 1;
+            min-height: 200px;
+            padding: 10px 0;
+            overflow-y: auto;
+        }
+
+        .msg {
+            margin-bottom: 14px;
+            padding: 0;
+        }
+
+        .msg-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: #8b6f47;
+            margin-bottom: 4px;
+        }
+
+        .msg-bubble {
+            padding: 12px 16px;
+            border-radius: 14px;
+            line-height: 1.6;
+            word-break: break-word;
+        }
+
+        .user-bubble {
+            background: #c89b3c;
+            color: #172033;
+            align-self: flex-end;
+        }
+
+        .user-bubble .msg-text {
+            white-space: pre-wrap;
+            font-weight: 500;
+        }
+
+        .ai-bubble {
+            background: #f7f3ea;
+            border: 1px solid #e5dfd2;
+            color: #333;
+        }
+
+        .ai-bubble .ai-section {
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: #fff;
+            border: 1px solid #e8e2d6;
+        }
+
+        .ai-bubble .ai-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-bubble .section-icon {
+            font-size: 13px;
+            font-weight: 800;
+            color: #c89b3c;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ai-bubble .section-content {
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .ai-bubble .section-content p {
+            margin: 4px 0;
+        }
+
+        /* fallback */
+        .ai-bubble .msg-text {
+            line-height: 1.7;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        /* =========================
+           INPUT AREA
+        ========================= */
+
+        .input-area {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
+            border-radius: 16px;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 15px 40px rgba(23, 32, 51, 0.08);
-        }
-
-        .question-container h2 {
-            margin-top: 0;
-            margin-bottom: 8px;
-        }
-
-        .question-container > p {
-            color: #687080;
-            margin-bottom: 25px;
+            padding: 16px 18px;
+            margin-top: 10px;
+            box-shadow: 0 4px 20px rgba(23, 32, 51, 0.06);
         }
 
         #questionInput {
             width: 100%;
-            min-height: 140px;
+            min-height: 64px;
             resize: vertical;
-            padding: 16px;
+            padding: 12px;
             border: 1px solid #d8dde5;
-            border-radius: 12px;
+            border-radius: 10px;
             outline: none;
             font-family: inherit;
             font-size: 15px;
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         #questionInput:focus {
             border-color: #c89b3c;
         }
 
-        /* =========================
-           BUTTON
-        ========================= */
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 8px;
+            align-items: center;
+        }
 
         .send-button {
-            margin-top: 15px;
-            width: 100%;
-            padding: 15px;
+            padding: 10px 24px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             background: #c89b3c;
             color: #172033;
             font-size: 15px;
-            font-weight: 800;
+            font-weight: 700;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         .send-button:hover {
@@ -165,121 +186,42 @@
             cursor: not-allowed;
         }
 
-        /* =========================
-           STATUS
-        ========================= */
+        .new-chat-btn {
+            background: none;
+            border: 1px solid #d8dde5;
+            border-radius: 8px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: #687080;
+            cursor: pointer;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .new-chat-btn:hover {
+            background: #f0f0f0;
+        }
 
         #statusBox {
             display: none;
-            margin-top: 20px;
-            padding: 16px;
-            border-radius: 12px;
+            margin-top: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             background: #fff8e7;
             border: 1px solid #ead8a6;
             color: #66501c;
-            line-height: 1.6;
+            font-size: 13px;
         }
-
-        /* =========================
-           ANSWER
-        ========================= */
-
-        #answerBox {
-            display: none;
-            margin-top: 25px;
-            padding: 22px;
-            border-radius: 15px;
-            background: #f7f3ea;
-            border: 1px solid #e5dfd2;
-        }
-
-        #answerBox.show {
-            display: block;
-        }
-
-        .answer-title {
-            font-weight: 800;
-            margin-bottom: 12px;
-            color: #c89b3c;
-        }
-
-        #adminAnswer {
-            line-height: 1.7;
-            color: #333;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-
-        .ai-section {
-            margin-bottom: 18px;
-            padding: 14px 16px;
-            border-radius: 10px;
-            background: #fff;
-            border: 1px solid #e8e2d6;
-        }
-        .ai-section:last-child {
-            margin-bottom: 0;
-        }
-        .ai-section .section-icon {
-            font-size: 14px;
-            font-weight: 800;
-            color: #c89b3c;
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .ai-section .section-content {
-            line-height: 1.7;
-            color: #333;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-        .ai-section .section-content p {
-            margin: 6px 0;
-        }
-
-        /* =========================
-           ERROR
-        ========================= */
 
         #errorBox {
             display: none;
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 10px;
+            margin-top: 6px;
+            padding: 8px 12px;
+            border-radius: 8px;
             background: #fee2e2;
             border: 1px solid #fecaca;
             color: #991b1b;
-            line-height: 1.5;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-            background: #172033;
-            color: white;
-            text-align: center;
-            padding: 35px 20px;
-        }
-
-        .footer-logo {
-            font-size: 25px;
-            font-weight: 800;
-        }
-
-        .footer-logo span {
-            color: #c89b3c;
-        }
-
-        footer p {
-            color: #d8dde5;
-        }
-
-        footer small {
-            color: #9ca3af;
+            font-size: 13px;
         }
 
         /* =========================
@@ -288,59 +230,41 @@
 
         @media (max-width: 700px) {
 
-            .navbar {
-                padding: 12px 5%;
-                flex-direction: column;
-                gap: 10px;
-            }
-
-            .logo {
-                font-size: 23px;
-            }
-
-            nav {
-                gap: 12px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            nav a {
-                font-size: 13px;
-            }
-
             .hero {
-                padding: 55px 20px 30px;
+                padding: 30px 12px 4px;
             }
 
             .hero h1 {
-                font-size: 40px;
+                font-size: 26px;
             }
 
-            .hero p {
-                font-size: 15px;
-            }
-
-            .question-section {
-                padding: 15px 12px 60px;
-            }
-
-            .question-container {
-                padding: 22px 18px;
+            .chat-section {
+                padding: 4px 10px 16px;
             }
 
             #questionInput {
-                min-height: 130px;
+                min-height: 56px;
+                font-size: 14px;
+            }
+
+            .input-area {
+                padding: 12px 14px;
+            }
+
+            .msg-bubble {
+                padding: 10px 14px;
             }
         }
     </style>
 </head>
-<script>
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
 
-menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("show");
-});
+<script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+
+    menuToggle.addEventListener("click", () => {
+        navMenu.classList.toggle("show");
+    });
 </script>
 
 
@@ -350,17 +274,17 @@ menuToggle.addEventListener("click", () => {
          NAVBAR
     ========================= -->
 
-   <header class="navbar">
-  <div class="logo">Ruang<span>Nalar</span></div>
+    <header class="navbar">
+        <div class="logo">Ruang<span>Nalar</span></div>
 
-  <button class="menu-toggle" id="menuToggle">☰</button>
+        <button class="menu-toggle" id="menuToggle">☰</button>
 
-  <nav id="navMenu">
-    <a href="index.html">Beranda</a>
-    <a href="tanya.html" class="active">Tanya 'Aqli</a>
-    <a href="admin.html">Chat Admin</a>
-  </nav>
-</header>
+        <nav id="navMenu">
+            <a href="index.html">Beranda</a>
+            <a href="tanya.html" class="active">Tanya 'Aqli</a>
+            <a href="admin.html">Chat Admin</a>
+        </nav>
+    </header>
 
 
     <!-- =========================
@@ -369,109 +293,65 @@ menuToggle.addEventListener("click", () => {
 
     <section class="hero">
 
-        <div class="eyebrow">
-            TANYA 'AQLI
-        </div>
-
         <h1>
-            Apa yang sedang
-            <span>kamu pikirkan?</span>
+            Tanya <span>'Aqli</span>
         </h1>
 
         <p>
-            Tulis apa yang ingin kamu ketahui atau renungkan.
-            <b>'Aqli</b> — Ruang Nalar AI — akan menjawabnya
-            dengan pendekatan nalar dan perspektif Islam
-            yang mencerahkan.
+            Ngobrol santai. Tanya apa pun tentang nalar, Islam, atau kehidupan.
+            'Aqli jawab dengan dalil.
         </p>
 
     </section>
 
 
     <!-- =========================
-         QUESTION
+         CHAT
     ========================= -->
 
-    <section class="question-section">
+    <section class="chat-section">
 
-        <div class="question-container">
+        <div class="chat-container">
 
-            <h2>
-                Sampaikan Pertanyaanmu
-            </h2>
-
-            <p>
-                Tidak perlu takut bertanya.
-                Setiap pertanyaan adalah awal dari sebuah pemikiran.
-            </p>
-
-
-            <textarea
-                id="questionInput"
-                placeholder="Contoh: Mengapa manusia diberikan akal?"
-            ></textarea>
-
-
-            <button
-                id="sendButton"
-                class="send-button"
-                type="button"
-            >
-                Kirim Pertanyaan
-            </button>
-
-
-            <!-- STATUS -->
-
-            <div id="statusBox">
-
-                ⏳ 'Aqli sedang memikirkan jawaban...
-
-                <br>
-
-                Sebentar ya, sedang dirangkai.
-
+            <!-- PESAN -->
+            <div id="chatMessages">
+                <!-- Chat bubbles muncul di sini -->
             </div>
 
+            <!-- INPUT -->
+            <div class="input-area">
 
-            <!-- ERROR -->
+                <textarea
+                    id="questionInput"
+                    placeholder="Tanya 'Aqli..."
+                    rows="2"
+                ></textarea>
 
-            <div id="errorBox"></div>
+                <div class="input-row">
+                    <button
+                        id="sendButton"
+                        class="send-button"
+                        type="button"
+                    >
+                        Kirim
+                    </button>
 
-
-            <!-- JAWABAN -->
-
-            <div id="answerBox">
-
-                <div class="answer-title">
-                    🤖 Jawaban 'Aqli
+                    <button
+                        id="newChatBtn"
+                        class="new-chat-btn"
+                        type="button"
+                    >
+                        + Obrolan Baru
+                    </button>
                 </div>
 
-                <div id="answerSections">
-
-                    <div class="ai-section" id="reasonSection" style="display:none">
-                        <div class="section-icon">🧠 PENJELASAN</div>
-                        <div class="section-content" id="reasonAnswer"></div>
-                    </div>
-
-                    <div class="ai-section" id="islamSection" style="display:none">
-                        <div class="section-icon">☪️ DALAM ISLAM</div>
-                        <div class="section-content" id="islamAnswer"></div>
-                    </div>
-
-                    <div class="ai-section" id="reflectionSection" style="display:none">
-                        <div class="section-icon">💭 REFLEKSI</div>
-                        <div class="section-content" id="reflectionAnswer"></div>
-                    </div>
-
-                    <div class="ai-section" id="dalilSection" style="display:none">
-                        <div class="section-icon">📜 DALIL</div>
-                        <div class="section-content" id="dalilAnswer"></div>
-                    </div>
-
-                    <div id="adminAnswer" style="display:none"></div>
-
+                <!-- STATUS -->
+                <div id="statusBox">
+                    ⏳ 'Aqli sedang memikirkan jawaban...
                 </div>
+
+                <!-- ERROR -->
+                <div id="errorBox"></div>
 
             </div>
 
@@ -502,291 +382,269 @@ menuToggle.addEventListener("click", () => {
 
 
     <!-- =========================
-         FIREBASE
+         SCRIPT
     ========================= -->
 
     <script>
 
-            // ==========================================
-            // KONFIGURASI
-            // ==========================================
+        // ==========================================
+        // KONFIGURASI
+        // ==========================================
 
-            const API_URL = "https://discharge-temperature-asked-merge.trycloudflare.com";
+        const API_URL = "https://discharge-temperature-asked-merge.trycloudflare.com";
 
-            // ==========================================
-            // ELEMENT
-            // ==========================================
+        // ==========================================
+        // STATE
+        // ==========================================
 
-            const input =
-                document.getElementById(
-                    "questionInput"
-                );
+        let conversationId = "";
+        let isAsking = false;
 
+        // ==========================================
+        // ELEMENT
+        // ==========================================
 
-            const sendButton =
-                document.getElementById(
-                    "sendButton"
-                );
-
-
-            const statusBox =
-                document.getElementById(
-                    "statusBox"
-                );
+        const input = document.getElementById("questionInput");
+        const sendButton = document.getElementById("sendButton");
+        const newChatBtn = document.getElementById("newChatBtn");
+        const statusBox = document.getElementById("statusBox");
+        const errorBox = document.getElementById("errorBox");
+        const chatMessages = document.getElementById("chatMessages");
 
 
-            const answerBox =
-                document.getElementById(
-                    "answerBox"
-                );
+        // ==========================================
+        // UTILITY
+        // ==========================================
 
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.style.display = "block";
+        }
 
-            const adminAnswer =
-                document.getElementById(
-                    "adminAnswer"
-                );
+        function hideError() {
+            errorBox.textContent = "";
+            errorBox.style.display = "none";
+        }
 
-
-            const errorBox =
-                document.getElementById(
-                    "errorBox"
-                );
-
-
-            // ==========================================
-            // UTILITY
-            // ==========================================
-
-            function showError(message) {
-
-                errorBox.textContent = message;
-                errorBox.style.display = "block";
-
-            }
-
-            function hideError() {
-
-                errorBox.textContent = "";
-                errorBox.style.display = "none";
-
-            }
-
-            function hideAllSections() {
-
-                const sections = [
-                    "reasonSection", "islamSection",
-                    "dalilSection", "reflectionSection", "adminAnswer"
-                ];
-
-                sections.forEach(function(id) {
-
-                    const el = document.getElementById(id);
-
-                    if (el) el.style.display = "none";
-
+        function scrollToBottom() {
+            // scroll the page to show newest message
+            setTimeout(function () {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth"
                 });
+            }, 50);
+        }
 
-                // Kosongkan konten
-                [
-                    "reasonAnswer", "islamAnswer",
-                    "dalilAnswer", "reflectionAnswer"
-                ].forEach(function(id) {
 
-                    const el = document.getElementById(id);
+        // ==========================================
+        // RENDER PESAN
+        // ==========================================
 
-                    if (el) el.textContent = "";
+        function renderSections(answer) {
+            const a = answer;
+            const reasonMatch = a.match(/🧠\s*\*{0,2}PENJELASAN\*{0,2}\s*:?\s*([\s\S]*?)(?=☪️|$)/);
+            const islamMatch = a.match(/☪️\s*\*{0,2}DALAM ISLAM\*{0,2}\s*:?\s*([\s\S]*?)(?=💭|📜|$)/);
+            const reflectMatch = a.match(/💭\s*\*{0,2}REFLEKSI\*{0,2}\s*:?\s*([\s\S]*?)(?=📜|$)/);
+            const dalilMatch = a.match(/📜\s*\*{0,2}DALIL\*{0,2}\s*:?\s*([\s\S]*?)$/);
 
-                });
+            const hasReason = reasonMatch && reasonMatch[1].trim();
+            const hasIslam = islamMatch && islamMatch[1].trim();
+            const hasDalil = dalilMatch && dalilMatch[1].trim();
+            const hasReflect = reflectMatch && reflectMatch[1].trim();
 
-                adminAnswer.textContent = "";
+            let html = "";
+
+            if (hasReason || hasIslam || hasDalil || hasReflect) {
+                if (hasReason) {
+                    html += '<div class="ai-section">' +
+                        '<div class="section-icon">🧠 PENJELASAN</div>' +
+                        '<div class="section-content">' + escapeHtml(reasonMatch[1].trim()) + '</div></div>';
+                }
+                if (hasIslam) {
+                    html += '<div class="ai-section">' +
+                        '<div class="section-icon">☪️ DALAM ISLAM</div>' +
+                        '<div class="section-content">' + escapeHtml(islamMatch[1].trim()) + '</div></div>';
+                }
+                if (hasDalil) {
+                    html += '<div class="ai-section">' +
+                        '<div class="section-icon">📜 DALIL</div>' +
+                        '<div class="section-content">' + escapeHtml(dalilMatch[1].trim()) + '</div></div>';
+                }
+                if (hasReflect) {
+                    html += '<div class="ai-section">' +
+                        '<div class="section-icon">💭 REFLEKSI</div>' +
+                        '<div class="section-content">' + escapeHtml(reflectMatch[1].trim()) + '</div></div>';
+                }
+            } else {
+                html = '<div class="msg-text">' + escapeHtml(answer) + '</div>';
+            }
+
+            return html;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\n/g, "<br>");
+        }
+
+        function appendMessage(role, text, answerRaw) {
+            const div = document.createElement("div");
+            div.className = "msg";
+
+            let header = role === "user" ? "Kamu" : "'Aqli";
+            let bubbleClass = role === "user" ? "user-bubble" : "ai-bubble";
+
+            let contentHtml = "";
+
+            if (role === "user") {
+                contentHtml = '<div class="msg-text">' + escapeHtml(text) + '</div>';
+            } else {
+                // AI — render sections or fallback
+                if (answerRaw) {
+                    contentHtml = renderSections(answerRaw);
+                } else {
+                    contentHtml = '<div class="msg-text">' + escapeHtml(text) + '</div>';
+                }
+            }
+
+            div.innerHTML =
+                '<div class="msg-header">' + header + '</div>' +
+                '<div class="msg-bubble ' + bubbleClass + '">' +
+                contentHtml +
+                '</div>';
+
+            chatMessages.appendChild(div);
+            scrollToBottom();
+        }
+
+
+        // ==========================================
+        // KIRIM PERTANYAAN
+        // ==========================================
+
+        async function sendQuestion() {
+
+            const question = input.value.trim();
+
+            if (question === "") {
+                alert("Tulis pertanyaan dulu.");
+                input.focus();
+                return;
+            }
+
+            if (isAsking) return;
+
+            hideError();
+            isAsking = true;
+
+            // Disable input
+            sendButton.disabled = true;
+            sendButton.textContent = "⋯";
+            statusBox.style.display = "block";
+
+            // Tampilkan pertanyaan user
+            appendMessage("user", question);
+
+            // Kosongkan input
+            input.value = "";
+
+            try {
+
+                const response = await fetch(
+                    API_URL + "/api/ask", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        question: question,
+                        conversation_id: conversationId
+                    })
+                }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Server error: " + response.status);
+                }
+
+                const data = await response.json();
+
+                // Simpan conversationId untuk follow-up
+                if (data.conversation_id) {
+                    conversationId = data.conversation_id;
+                }
+
+                // Tampilkan jawaban AI
+                const answerText = data.answer || "(tidak ada jawaban)";
+                appendMessage("ai", answerText, answerText);
+
+            } catch (error) {
+
+                console.error("API Error:", error);
+                showError("Gagal: " + error.message);
+
+            } finally {
+
+                isAsking = false;
+                sendButton.disabled = false;
+                sendButton.textContent = "Kirim";
+                statusBox.style.display = "none";
 
             }
 
-
-            // ==========================================
-            // KIRIM PERTANYAAN
-            // ==========================================
-
-            async function sendQuestion() {
-
-                const question =
-                    input.value.trim();
+        }
 
 
-                // Jangan kirim kosong
-                if (question === "") {
+        // ==========================================
+        // OBROLAN BARU
+        // ==========================================
 
-                    alert(
-                        "Silakan tulis pertanyaan terlebih dahulu."
-                    );
+        function newChat() {
+            conversationId = "";
+            chatMessages.innerHTML = "";
+            hideError();
+            statusBox.style.display = "none";
+            input.value = "";
+            input.focus();
 
-                    input.focus();
-
-                    return;
-
-                }
-
-
-                hideError();
-                hideAllSections();
-
-
-                // Disable tombol
-                sendButton.disabled = true;
-                sendButton.textContent = "Mengirim...";
-
-
-                // Tampilkan status loading
-                statusBox.style.display = "block";
-                answerBox.classList.remove("show");
+            // Tambah pesan sambutan
+            const div = document.createElement("div");
+            div.className = "msg";
+            div.innerHTML =
+                '<div class="msg-header">\'Aqli</div>' +
+                '<div class="msg-bubble ai-bubble">' +
+                '<div class="msg-text">Halo! Tanya apa pun tentang nalar, Islam, atau kehidupan. Saya jawab dengan dalil Al-Quran dan Hadis.</div>' +
+                '</div>';
+            chatMessages.appendChild(div);
+        }
 
 
-                // Kosongkan input
-                input.value = "";
+        // ==========================================
+        // EVENT
+        // ==========================================
 
+        sendButton.addEventListener("click", sendQuestion);
 
-                try {
+        newChatBtn.addEventListener("click", newChat);
 
-                    // ==================================
-                    // CALL API LANGSUNG
-                    // ==================================
-
-                    const response = await fetch(
-                        API_URL + "/api/ask",
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({
-                                question: question
-                            })
-                        }
-                    );
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            "Server error: " + response.status
-                        );
-
-                    }
-
-
-                    const data = await response.json();
-
-
-                    console.log("API response:", data);
-
-                    // ==================================
-                    // PARSE JAWABAN DARI STRING ANSWER
-                    // ==================================
-
-                    const answer = data.answer || "";
-
-                    // Parse 4 section dari answer string pake regex
-                    // Format: 🧠 PENJELASAN: ... ☪️ DALAM ISLAM: ... 💭 REFLEKSI: ... 📜 DALIL: ...
-                    // Bisa pakai **bold** atau gak, bisa pake : atau gak
-                    const a = answer;
-                    const reasonMatch  = a.match(/🧠\s*\*{0,2}PENJELASAN\*{0,2}\s*:?\s*([\s\S]*?)(?=☪️|$)/);
-                    const islamMatch   = a.match(/☪️\s*\*{0,2}DALAM ISLAM\*{0,2}\s*:?\s*([\s\S]*?)(?=💭|📜|$)/);
-                    const reflectMatch = a.match(/💭\s*\*{0,2}REFLEKSI\*{0,2}\s*:?\s*([\s\S]*?)(?=📜|$)/);
-                    const dalilMatch   = a.match(/📜\s*\*{0,2}DALIL\*{0,2}\s*:?\s*([\s\S]*?)$/);
-
-                    const hasReason = reasonMatch && reasonMatch[1].trim();
-                    const hasIslam = islamMatch && islamMatch[1].trim();
-                    const hasDalil = dalilMatch && dalilMatch[1].trim();
-                    const hasReflect = reflectMatch && reflectMatch[1].trim();
-
-                    if (hasReason || hasIslam || hasDalil || hasReflect) {
-
-                        if (hasReason) {
-                            document.getElementById("reasonAnswer").textContent = reasonMatch[1].trim();
-                            document.getElementById("reasonSection").style.display = "block";
-                        }
-                        if (hasIslam) {
-                            document.getElementById("islamAnswer").textContent = islamMatch[1].trim();
-                            document.getElementById("islamSection").style.display = "block";
-                        }
-                        if (hasDalil) {
-                            document.getElementById("dalilAnswer").textContent = dalilMatch[1].trim();
-                            document.getElementById("dalilSection").style.display = "block";
-                        }
-                        if (hasReflect) {
-                            document.getElementById("reflectionAnswer").textContent = reflectMatch[1].trim();
-                            document.getElementById("reflectionSection").style.display = "block";
-                        }
-
-                    } else {
-
-                        // Fallback: tampilkan mentahan
-                        adminAnswer.textContent = answer || "(tidak ada jawaban)";
-                        document.getElementById("adminAnswer").style.display = "block";
-
-                    }
-
-
-                    answerBox.classList.add("show");
-                    statusBox.style.display = "none";
-                    sendButton.textContent = "Kirim Pertanyaan";
-
-
-                } catch (error) {
-
-                    console.error("API Error:", error);
-
-                    showError(
-                        "Pertanyaan gagal: " + error.message +
-                        " — Coba beberapa saat lagi."
-                    );
-
-                    sendButton.textContent = "Kirim Pertanyaan";
-
-
-                } finally {
-
-                    sendButton.disabled = false;
-
-                }
-
+        input.addEventListener("keydown", function (event) {
+            if (event.ctrlKey && event.key === "Enter") {
+                event.preventDefault();
+                sendQuestion();
             }
+        });
 
 
-            // ==========================================
-            // EVENT TOMBOL
-            // ==========================================
+        // ==========================================
+        // INIT — sambutan pertama
+        // ==========================================
 
-            sendButton.addEventListener(
-                "click",
-                sendQuestion
-            );
+        newChat();
 
+    </script>
 
-            // ==========================================
-            // CTRL + ENTER
-            // ==========================================
+</body>
 
-            input.addEventListener(
-                "keydown",
-                function(event) {
-
-                    if (
-                        event.ctrlKey &&
-                        event.key === "Enter"
-                    ) {
-
-                        event.preventDefault();
-                        sendQuestion();
-
-                    }
-
-                }
-            );
-
-
-        </script>
-
-    </body>
-
-    </html>
+</html>
