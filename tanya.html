@@ -1,905 +1,250 @@
+
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Tanya 'Aqli | Ruang Nalar</title>
+    <title>Tanya Akhlak | Ruang Nalar</title>
 
     <link rel="stylesheet" href="style.css">
-
-    <style>
-        /* =========================
-           OVERRIDE / CHAT LAYOUT
-        ========================= */
-
-        html, body {
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background: #f8fafc;
-        }
-
-        /* navbar jadi relative supaya gak konflik sticky */
-        .navbar {
-            position: relative !important;
-            top: auto !important;
-        }
-
-        .chat-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* =========================
-           HERO — minimal
-        ========================= */
-
-        .hero {
-            text-align: center;
-            padding: 16px 16px 4px;
-            flex-shrink: 0;
-        }
-
-        .hero .eyebrow {
-            font-size: 11px;
-            color: #c89b3c;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 4px;
-        }
-
-        .hero h1 {
-            font-size: clamp(18px, 3.5vw, 30px);
-            margin: 6px auto;
-            line-height: 1.2;
-        }
-
-        .hero h1 span {
-            color: #c89b3c;
-        }
-
-        .hero p {
-            font-size: 13px;
-            color: #687080;
-            max-width: 600px;
-            margin: 4px auto 0;
-            line-height: 1.4;
-        }
-
-        /* =========================
-           CHAT — isi utama
-        ========================= */
-
-        .chat-section {
-            padding: 0 16px;
-        }
-
-        .chat-container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        #chatMessages {
-            min-height: 150px;
-            padding: 8px 0;
-        }
-
-        .msg {
-            margin-bottom: 12px;
-        }
-
-        .msg-header {
-            font-size: 11px;
-            font-weight: 700;
-            color: #8b6f47;
-            margin-bottom: 2px;
-        }
-
-        .msg-bubble {
-            padding: 10px 14px;
-            border-radius: 12px;
-            line-height: 1.5;
-            word-break: break-word;
-        }
-
-        .user-bubble {
-            background: #c89b3c;
-            color: #172033;
-        }
-
-        .user-bubble .msg-text {
-            white-space: pre-wrap;
-            font-weight: 500;
-        }
-
-        .ai-bubble {
-            background: #f7f3ea;
-            border: 1px solid #e5dfd2;
-            color: #333;
-        }
-
-        .ai-bubble .ai-section {
-            margin-bottom: 12px;
-            padding: 8px 12px;
-            border-radius: 8px;
-            background: #fff;
-            border: 1px solid #e8e2d6;
-        }
-
-        .ai-bubble .ai-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .ai-bubble .section-icon {
-            font-size: 12px;
-            font-weight: 800;
-            color: #c89b3c;
-            margin-bottom: 3px;
-        }
-
-        .ai-bubble .section-content {
-            line-height: 1.6;
-            color: #333;
-            white-space: pre-wrap;
-            word-break: break-word;
-            font-size: 14px;
-        }
-
-        .ai-bubble .msg-text {
-            line-height: 1.6;
-            color: #333;
-            white-space: pre-wrap;
-        }
-
-        /* =========================
-           INPUT — sticky bawah
-        ========================= */
-
-        .input-area {
-            flex-shrink: 0;
-            background: white;
-            border-radius: 14px 14px 0 0;
-            border-top: 1px solid #e5e7eb;
-            padding: 10px 14px;
-            box-shadow: 0 -2px 12px rgba(23, 32, 51, 0.04);
-        }
-
-        #questionInput {
-            width: 100%;
-            min-height: 44px;
-            resize: none;
-            padding: 10px 12px;
-            border: 1px solid #d8dde5;
-            border-radius: 10px;
-            outline: none;
-            font-family: inherit;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        #questionInput:focus {
-            border-color: #c89b3c;
-        }
-
-        .input-row {
-            display: flex;
-            gap: 6px;
-            margin-top: 6px;
-            align-items: center;
-        }
-
-        .send-button {
-            padding: 8px 20px;
-            border: none;
-            border-radius: 10px;
-            background: #c89b3c;
-            color: #172033;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        .send-button:hover {
-            background: #b18632;
-        }
-
-        .send-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .new-chat-btn {
-            background: none;
-            border: 1px solid #d8dde5;
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 12px;
-            color: #687080;
-            cursor: pointer;
-            flex-shrink: 0;
-            white-space: nowrap;
-        }
-
-        .new-chat-btn:hover {
-            background: #f0f0f0;
-        }
-
-        #statusBox {
-            display: none;
-            margin-top: 4px;
-            padding: 6px 10px;
-            border-radius: 6px;
-            background: #fff8e7;
-            border: 1px solid #ead8a6;
-            color: #66501c;
-            font-size: 12px;
-        }
-
-        #errorBox {
-            display: none;
-            margin-top: 4px;
-            padding: 6px 10px;
-            border-radius: 6px;
-            background: #fee2e2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            font-size: 12px;
-        }
-
-        /* =========================
-           PERKENALAN RESPONDEN
-        ========================= */
-
-        .responden-panel {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 14px 16px;
-            margin: 10px 0;
-            box-shadow: 0 2px 12px rgba(23, 32, 51, 0.05);
-        }
-
-        .responden-title {
-            font-size: 15px;
-            font-weight: 800;
-            color: #172033;
-        }
-
-        .responden-sub {
-            font-size: 12px;
-            color: #687080;
-            margin: 4px 0 10px;
-            line-height: 1.4;
-        }
-
-        .responden-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-
-        .responden-input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d8dde5;
-            border-radius: 10px;
-            outline: none;
-            font-family: inherit;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-
-        .responden-input:focus {
-            border-color: #c89b3c;
-        }
-
-        .responden-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .responden-save-btn {
-            padding: 9px 22px;
-            border: none;
-            border-radius: 10px;
-            background: #c89b3c;
-            color: #172033;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            flex: 1;
-        }
-
-        .responden-save-btn:hover {
-            background: #b18632;
-        }
-
-        .responden-skip-btn {
-            padding: 9px 14px;
-            border: 1px solid #d8dde5;
-            border-radius: 10px;
-            background: #fff;
-            color: #687080;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .responden-skip-btn:hover {
-            background: #f0f0f0;
-        }
-
-        .responden-badge {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f7f3ea;
-            border: 1px solid #e5dfd2;
-            border-radius: 999px;
-            padding: 6px 14px;
-            margin: 8px 0;
-            font-size: 13px;
-            color: #5b4a26;
-            font-weight: 600;
-        }
-
-        .responden-badge button {
-            background: none;
-            border: none;
-            color: #c89b3c;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        @media (min-width: 600px) {
-            .responden-fields {
-                flex-direction: row;
-            }
-            .responden-input {
-                flex: 1;
-            }
-        }
-
-        /* =========================
-           FOOTER — minimal
-        ========================= */
-
-        footer {
-            flex-shrink: 0;
-            padding: 8px 16px;
-            text-align: center;
-            background: #172033;
-            color: white;
-            font-size: 11px;
-        }
-
-        footer .footer-logo {
-            font-size: 18px;
-            font-weight: 800;
-        }
-
-        footer .footer-logo span {
-            color: #c89b3c;
-        }
 </head>
-
-<script>
-    const menuToggle = document.getElementById("menuToggle");
-    const navMenu = document.getElementById("navMenu");
-
-    menuToggle.addEventListener("click", () => {
-        navMenu.classList.toggle("show");
-    });
-</script>
-
 
 <body>
 
-    <!-- =========================
-         NAVBAR
-    ========================= -->
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
 
-    <header class="navbar">
-        <div class="logo">Ruang<span>Nalar</span></div>
+            <a href="index.html" class="logo">Ruang Nalar</a>
 
-        <button class="menu-toggle" id="menuToggle">☰</button>
+            <button
+                class="menu-toggle"
+                id="menuToggle"
+                aria-label="Buka menu"
+                aria-expanded="false">
+                ☰
+            </button>
 
-        <nav id="navMenu">
-            <a href="index.html">Beranda</a>
-            <a href="tanya.html" class="active">Tanya 'Aqli</a>
-            <a href="admin.html">Chat Admin</a>
-        </nav>
-    </header>
+            
+<div class="nav-menu" id="navMenu">
+  <a href="index.html">Beranda</a>
+  <a href="index.html#kenali-akhlak">Kenali Akhlak</a>
+  <a href="index.html#praktik-akhlak">Praktik Akhlak</a>
+  <a href="index.html#studi-kasus">Studi Kasus</a>
+  <a href="index.html#refleksi-diri">Refleksi Diri</a>
+  <a href="tanya.html" class="active">Tanya Akhlak</a>
+</div>
 
 
-    <!-- =========================
-         HERO
-    ========================= -->
 
-    <section class="hero">
-
-        <div class="eyebrow">
-            TANYA 'AQLI
         </div>
-
-        <h1>
-            Apa yang sedang
-            <span>kamu pikirkan?</span>
-        </h1>
-
-        <p>
-            Tulis apa yang ingin kamu ketahui atau renungkan.
-            <b>'Aqli</b> — Ruang Nalar AI — akan menjawabnya
-            dengan pendekatan nalar dan perspektif Islam
-            yang mencerahkan.
-        </p>
-
-    </section>
+    </nav>
 
 
-    <!-- =========================
-         CHAT
-    ========================= -->
+    <!-- HEADER HALAMAN -->
+    <main class="akhlak-page">
 
-    <section class="chat-section">
+        <section class="akhlak-heading">
 
-        <div class="chat-container">
+            <span class="akhlak-eyebrow">RUANG NALAR · RUANG REFLEKSI</span>
 
-            <!-- PERKENALAN RESPONDEN -->
-            <div id="respondenPanel" class="responden-panel">
-                <div class="responden-title">👋 Halo! Kenalan dulu yuk</div>
-                <p class="responden-sub">Perkenalan ini dicatat sebagai sumber riset. Jawabanmu anonim untuk publik.</p>
-                <div class="responden-fields">
-                    <input
-                        type="text"
-                        id="respondenNama"
-                        placeholder="Nama kamu (boleh inisial)"
-                        class="responden-input"
-                        maxlength="60"
-                    />
-                    <input
-                        type="text"
-                        id="respondenAsal"
-                        placeholder="Asal / kelas (contoh: XI MIPA 2)"
-                        class="responden-input"
-                        maxlength="80"
-                    />
-                </div>
-                <div class="responden-actions">
-                    <button
-                        id="respondenSaveBtn"
-                        class="responden-save-btn"
-                        type="button"
-                    >
-                        Mulai Ngobrol
-                    </button>
-                    <button
-                        id="respondenSkipBtn"
-                        class="responden-skip-btn"
-                        type="button"
-                    >
-                        Lewati (anonim)
-                    </button>
+            <h1>
+                Memahami Akhlak,<br>
+                <span>Memperbaiki Diri.</span>
+            </h1>
+
+            <p>
+                Setiap persoalan memiliki pelajaran.
+                Mari memahami kehidupan siswa melalui
+                pemikiran, nilai-nilai Islam, dan refleksi diri.
+            </p>
+
+        </section>
+
+
+        <!-- PILIH PERTANYAAN -->
+        <section class="akhlak-question-section">
+
+            <div class="akhlak-section-title">
+                <div>
+                    <span class="akhlak-eyebrow">MULAI DARI SINI</span>
+                    <h2>Pertanyaan untuk Dipikirkan</h2>
+                    <p>
+                        Pilih topik yang ingin kamu pahami lebih dalam.
+                    </p>
                 </div>
             </div>
 
-            <!-- BADGE IDENTITAS (setelah simpan) -->
-            <div id="respondenBadge" class="responden-badge" style="display:none;">
-                <span id="respondenLabel"></span>
-                <button id="respondenEditBtn" type="button">Ganti</button>
+
+            <div class="akhlak-question-grid">
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">01</span>
+                    <span class="question-text">
+                        Mengapa siswa harus memiliki akhlak yang baik?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">02</span>
+                    <span class="question-text">
+                        Bagaimana cara menghormati guru?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">03</span>
+                    <span class="question-text">
+                        Apa yang harus dilakukan ketika melihat teman dibully?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">04</span>
+                    <span class="question-text">
+                        Mengapa kejujuran penting bagi siswa?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">05</span>
+                    <span class="question-text">
+                        Bagaimana cara menjaga adab di media sosial?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
+                <button class="akhlak-question"
+                    onclick="selectQuestion(this)">
+                    <span class="question-number">06</span>
+                    <span class="question-text">
+                        Bagaimana cara meminta maaf ketika melakukan kesalahan?
+                    </span>
+                    <span class="question-arrow">↗</span>
+                </button>
+
             </div>
 
-            <!-- PESAN -->
-            <div id="chatMessages">
-                <!-- Chat bubbles muncul di sini -->
+        </section>
+
+
+        <!-- FORM PERTANYAAN -->
+        <section class="akhlak-form-section">
+
+            <div class="akhlak-form-info">
+                <span class="akhlak-eyebrow">RUANG BERTANYA</span>
+
+                <h2>Apa yang sedang kamu pikirkan?</h2>
+
+                <p>
+                    Tidak menemukan pertanyaan yang sesuai?
+                    Tuliskan persoalanmu sendiri di sini.
+                </p>
             </div>
 
-            <!-- INPUT -->
-            <div class="input-area">
+
+            <form class="akhlak-form"
+                onsubmit="event.preventDefault(); answerQuestion();">
+
+                <label for="questionInput">
+                    Tuliskan pertanyaanmu
+                </label>
 
                 <textarea
                     id="questionInput"
-                    placeholder="Contoh: Bagaimana sains menjelaskan peristiwa Isra' Mi'raj?"
-                    rows="2"
-                ></textarea>
+                    placeholder="Ceritakan pertanyaan atau persoalan yang ingin kamu pahami..."
+                    rows="5"
+                    required></textarea>
 
-                <div class="input-row">
-                    <button
-                        id="sendButton"
-                        class="send-button"
-                        type="button"
-                    >
-                        Kirim
+                <div class="akhlak-form-bottom">
+
+                    <span>
+                        Gunakan bahasa yang jelas dan sopan.
+                    </span>
+
+                    <button type="submit" class="akhlak-submit">
+                        Temukan Jawaban <span>→</span>
                     </button>
 
-                    <button
-                        id="newChatBtn"
-                        class="new-chat-btn"
-                        type="button"
-                    >
-                        + Obrolan Baru
-                    </button>
                 </div>
 
-                <!-- STATUS -->
-                <div id="statusBox">
-                    ⏳ 'Aqli sedang memikirkan jawaban...
-                </div>
+            </form>
 
-                <!-- ERROR -->
-                <div id="errorBox"></div>
+        </section>
+
+
+        <!-- HASIL JAWABAN -->
+        <section id="answerBox" class="akhlak-answer-section">
+
+            <div class="akhlak-answer-heading">
+                <span class="akhlak-eyebrow">HASIL PEMIKIRAN</span>
+                <h2>Memahami dan Merefleksikan</h2>
+                <p>
+                    Mari melihat persoalan dari beberapa sudut pandang.
+                </p>
+            </div>
+
+
+            <div class="akhlak-answer-card">
+
+                <span class="answer-label">PERTANYAAN</span>
+                <h3 id="answerQuestion"></h3>
 
             </div>
 
-        </div>
 
-    </section>
+            <div class="akhlak-answer-grid">
+
+                <div class="akhlak-answer-card">
+                    <span class="answer-label">01 · PENJELASAN</span>
+                    <h3>Alasan dan Penjelasan</h3>
+                    <p id="reasonAnswer"></p>
+                </div>
+
+                <div class="akhlak-answer-card">
+                    <span class="answer-label">02 · PERSPEKTIF ISLAM</span>
+                    <h3>Nilai-Nilai Islam</h3>
+                    <p id="islamAnswer"></p>
+                </div>
+
+            </div>
 
 
-    <!-- =========================
-         FOOTER
-    ========================= -->
+            <div class="akhlak-reflection-card">
 
-    <footer>
+                <span class="answer-label">03 · REFLEKSI DIRI</span>
 
-        <div class="footer-logo">
-            Ruang<span>Nalar</span>
-        </div>
+                <h3>Saatnya Mengenali Diri</h3>
 
+                <p id="reflectionAnswer"></p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
         <p>
-            Nalar Manusia dalam Islam
+            © 2026 Ruang Nalar.
+            Membangun Nalar, Membentuk Akhlak.
         </p>
-
-        <small>
-            © 2026 Ruang Nalar
-        </small>
-
     </footer>
 
 
-    <!-- =========================
-         SCRIPT
-    ========================= -->
-
-    <script>
-
-        // ==========================================
-        // KONFIGURASI
-        // ==========================================
-
-        const API_URL = "https://discharge-temperature-asked-merge.trycloudflare.com";
-
-        // ==========================================
-        // STATE
-        // ==========================================
-
-        let conversationId = "";
-        let isAsking = false;
-
-        // ==========================================
-        // ELEMENT
-        // ==========================================
-
-        const input = document.getElementById("questionInput");
-        const sendButton = document.getElementById("sendButton");
-        const newChatBtn = document.getElementById("newChatBtn");
-        const statusBox = document.getElementById("statusBox");
-        const errorBox = document.getElementById("errorBox");
-        const chatMessages = document.getElementById("chatMessages");
-
-        // Elemen perkenalan responden
-        const respondenPanel = document.getElementById("respondenPanel");
-        const respondenBadge = document.getElementById("respondenBadge");
-        const respondenLabel = document.getElementById("respondenLabel");
-        const respondenNama = document.getElementById("respondenNama");
-        const respondenAsal = document.getElementById("respondenAsal");
-        const respondenSaveBtn = document.getElementById("respondenSaveBtn");
-        const respondenSkipBtn = document.getElementById("respondenSkipBtn");
-        const respondenEditBtn = document.getElementById("respondenEditBtn");
-
-        // ==========================================
-        // IDENTITAS RESPONDEN (localStorage)
-        // ==========================================
-
-        function getResponden() {
-            try {
-                return JSON.parse(localStorage.getItem("rn_responden") || "null");
-            } catch (e) {
-                return null;
-            }
-        }
-
-        function setResponden(data) {
-            localStorage.setItem("rn_responden", JSON.stringify(data));
-            renderResponden();
-        }
-
-        function renderResponden() {
-            const r = getResponden();
-            if (r && r.nama) {
-                respondenPanel.style.display = "none";
-                respondenBadge.style.display = "flex";
-                const asalPart = r.asal ? " · " + r.asal : "";
-                respondenLabel.textContent = "👤 Responden: " + r.nama + asalPart;
-            } else if (r && r.anonim) {
-                respondenPanel.style.display = "none";
-                respondenBadge.style.display = "flex";
-                respondenLabel.textContent = "👤 Responden anonim (tanpa nama)";
-            } else {
-                respondenPanel.style.display = "block";
-                respondenBadge.style.display = "none";
-            }
-        }
-
-        respondenSaveBtn.addEventListener("click", () => {
-            const nama = respondenNama.value.trim();
-            const asal = respondenAsal.value.trim();
-            if (!nama) {
-                respondenNama.focus();
-                respondenNama.style.borderColor = "#c89b3c";
-                return;
-            }
-            setResponden({ nama: nama, asal: asal });
-        });
-
-        respondenSkipBtn.addEventListener("click", () => {
-            setResponden({ anonim: true });
-        });
-
-        respondenEditBtn.addEventListener("click", () => {
-            const r = getResponden() || {};
-            respondenNama.value = r.nama || "";
-            respondenAsal.value = r.asal || "";
-            respondenPanel.style.display = "block";
-            respondenBadge.style.display = "none";
-        });
-
-        // Render identitas saat halaman dimuat
-        renderResponden();
-
-
-        // ==========================================
-        // UTILITY
-        // ==========================================
-
-        function showError(message) {
-            errorBox.textContent = message;
-            errorBox.style.display = "block";
-        }
-
-        function hideError() {
-            errorBox.textContent = "";
-            errorBox.style.display = "none";
-        }
-
-        function scrollToBottom() {
-            // scroll the page to show newest message
-            setTimeout(function () {
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: "smooth"
-                });
-            }, 50);
-        }
-
-
-        // ==========================================
-        // RENDER PESAN
-        // ==========================================
-
-        function renderSections(answer) {
-            const a = answer;
-            const reasonMatch = a.match(/🧠\s*\*{0,2}PENJELASAN\*{0,2}\s*:?\s*([\s\S]*?)(?=☪️|$)/);
-            const islamMatch = a.match(/☪️\s*\*{0,2}DALAM ISLAM\*{0,2}\s*:?\s*([\s\S]*?)(?=💭|📜|$)/);
-            const reflectMatch = a.match(/💭\s*\*{0,2}REFLEKSI\*{0,2}\s*:?\s*([\s\S]*?)(?=📜|$)/);
-            const dalilMatch = a.match(/📜\s*\*{0,2}DALIL\*{0,2}\s*:?\s*([\s\S]*?)$/);
-
-            const hasReason = reasonMatch && reasonMatch[1].trim();
-            const hasIslam = islamMatch && islamMatch[1].trim();
-            const hasDalil = dalilMatch && dalilMatch[1].trim();
-            const hasReflect = reflectMatch && reflectMatch[1].trim();
-
-            let html = "";
-
-            if (hasReason || hasIslam || hasDalil || hasReflect) {
-                if (hasReason) {
-                    html += '<div class="ai-section">' +
-                        '<div class="section-icon">🧠 PENJELASAN</div>' +
-                        '<div class="section-content">' + escapeHtml(reasonMatch[1].trim()) + '</div></div>';
-                }
-                if (hasIslam) {
-                    html += '<div class="ai-section">' +
-                        '<div class="section-icon">☪️ DALAM ISLAM</div>' +
-                        '<div class="section-content">' + escapeHtml(islamMatch[1].trim()) + '</div></div>';
-                }
-                if (hasDalil) {
-                    html += '<div class="ai-section">' +
-                        '<div class="section-icon">📜 DALIL</div>' +
-                        '<div class="section-content">' + escapeHtml(dalilMatch[1].trim()) + '</div></div>';
-                }
-                if (hasReflect) {
-                    html += '<div class="ai-section">' +
-                        '<div class="section-icon">💭 REFLEKSI</div>' +
-                        '<div class="section-content">' + escapeHtml(reflectMatch[1].trim()) + '</div></div>';
-                }
-            } else {
-                html = '<div class="msg-text">' + escapeHtml(answer) + '</div>';
-            }
-
-            return html;
-        }
-
-        function escapeHtml(text) {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\n/g, "<br>");
-        }
-
-        function appendMessage(role, text, answerRaw) {
-            const div = document.createElement("div");
-            div.className = "msg";
-
-            let header = role === "user" ? "Kamu" : "'Aqli";
-            let bubbleClass = role === "user" ? "user-bubble" : "ai-bubble";
-
-            let contentHtml = "";
-
-            if (role === "user") {
-                contentHtml = '<div class="msg-text">' + escapeHtml(text) + '</div>';
-            } else {
-                // AI — render sections or fallback
-                if (answerRaw) {
-                    contentHtml = renderSections(answerRaw);
-                } else {
-                    contentHtml = '<div class="msg-text">' + escapeHtml(text) + '</div>';
-                }
-            }
-
-            div.innerHTML =
-                '<div class="msg-header">' + header + '</div>' +
-                '<div class="msg-bubble ' + bubbleClass + '">' +
-                contentHtml +
-                '</div>';
-
-            chatMessages.appendChild(div);
-            scrollToBottom();
-        }
-
-
-        // ==========================================
-        // KIRIM PERTANYAAN
-        // ==========================================
-
-        async function sendQuestion() {
-
-            const question = input.value.trim();
-
-            if (question === "") {
-                alert("Tulis pertanyaan dulu.");
-                input.focus();
-                return;
-            }
-
-            if (isAsking) return;
-
-            hideError();
-            isAsking = true;
-
-            // Disable input
-            sendButton.disabled = true;
-            sendButton.textContent = "⋯";
-            statusBox.style.display = "block";
-
-            // Tampilkan pertanyaan user
-            appendMessage("user", question);
-
-            // Kosongkan input
-            input.value = "";
-
-            try {
-
-                const response = await fetch(
-                    API_URL + "/api/ask", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        question: question,
-                        conversation_id: conversationId,
-                        responden_nama: (getResponden() || {}).nama || "",
-                        responden_asal: (getResponden() || {}).asal || ""
-                    })
-                }
-                );
-
-                if (!response.ok) {
-                    throw new Error("Server error: " + response.status);
-                }
-
-                const data = await response.json();
-
-                // Simpan conversationId untuk follow-up
-                if (data.conversation_id) {
-                    conversationId = data.conversation_id;
-                }
-
-                // Tampilkan jawaban AI
-                const answerText = data.answer || "(tidak ada jawaban)";
-                appendMessage("ai", answerText, answerText);
-
-            } catch (error) {
-
-                console.error("API Error:", error);
-                showError("Gagal: " + error.message);
-
-            } finally {
-
-                isAsking = false;
-                sendButton.disabled = false;
-                sendButton.textContent = "Kirim";
-                statusBox.style.display = "none";
-
-            }
-
-        }
-
-
-        // ==========================================
-        // OBROLAN BARU
-        // ==========================================
-
-        function newChat() {
-            conversationId = "";
-            chatMessages.innerHTML = "";
-            hideError();
-            statusBox.style.display = "none";
-            input.value = "";
-            input.focus();
-
-            // Tambah pesan sambutan
-            const div = document.createElement("div");
-            div.className = "msg";
-            div.innerHTML =
-                '<div class="msg-header">\'Aqli</div>' +
-                '<div class="msg-bubble ai-bubble">' +
-                '<div class="msg-text">Halo! Ada yang ingin kamu tanyakan? Ayo, tulis pertanyaanmu.</div>' +
-                '</div>';
-            chatMessages.appendChild(div);
-        }
-
-
-        // ==========================================
-        // EVENT
-        // ==========================================
-
-        sendButton.addEventListener("click", sendQuestion);
-
-        newChatBtn.addEventListener("click", newChat);
-
-        input.addEventListener("keydown", function (event) {
-            if (event.ctrlKey && event.key === "Enter") {
-                event.preventDefault();
-                sendQuestion();
-            }
-        });
-
-
-        // ==========================================
-        // INIT — sambutan pertama
-        // ==========================================
-
-        newChat();
-
-    </script>
+    <script src="script.js" defer></script>
 
 </body>
-
 </html>

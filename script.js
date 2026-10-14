@@ -1,131 +1,543 @@
+/* =====================================
+   1. DATA JAWABAN TANYA AKHLAK
+===================================== */
+
 const answers = {
-    "Mengapa manusia diberikan akal?": {
-        reason: "Akal membantu manusia berpikir, memahami sesuatu, mempertimbangkan pilihan, dan mengambil keputusan.",
-
-        islam: "Dalam Islam, akal merupakan anugerah Allah kepada manusia. Akal digunakan untuk memahami kehidupan dan mencari kebenaran, dengan tetap menjadikan ajaran Islam sebagai pedoman.",
-
-        reflection: "Apakah selama ini akal yang kamu miliki sudah digunakan untuk mencari ilmu dan mengambil keputusan yang baik?"
+    "Mengapa siswa harus memiliki akhlak yang baik?": {
+        reason: "Akhlak membantu siswa membangun hubungan yang baik dengan orang lain, menjaga perilaku, dan bertanggung jawab atas tindakannya.",
+        islam: "Islam mengajarkan bahwa akhlak mulia merupakan bagian penting dari kehidupan seorang muslim. Ilmu dan kecerdasan sebaiknya disertai perilaku yang baik.",
+        reflection: "Apakah perilakumu di sekolah sudah mencerminkan akhlak yang baik?"
     },
 
-    "Kalau sudah ditakdirkan, mengapa manusia harus berusaha?": {
-        reason: "Manusia tidak mengetahui apa yang akan terjadi di masa depan. Karena itu, manusia tetap perlu berusaha dan bertanggung jawab atas pilihannya.",
-
-        islam: "Islam mengajarkan manusia untuk berusaha kemudian menyerahkan hasilnya kepada Allah. Takdir bukan alasan untuk berhenti berusaha.",
-
-        reflection: "Apakah kamu sudah melakukan usaha terbaik sebelum menyerahkan hasilnya kepada Allah?"
+    "Bagaimana cara menghormati guru?": {
+        reason: "Menghormati guru dapat dilakukan dengan mendengarkan ketika guru menjelaskan, berbicara dengan sopan, dan menghargai nasihatnya.",
+        islam: "Islam mengajarkan umatnya untuk menghormati orang yang berilmu dan menghargai orang yang telah memberikan ilmu.",
+        reflection: "Apakah kamu sudah menghargai guru melalui perkataan dan tindakanmu?"
     },
 
-    "Kalau berkata jujur bisa menyakiti seseorang, apakah tetap harus jujur?": {
-        reason: "Kejujuran tetap penting, tetapi cara menyampaikannya juga perlu diperhatikan agar tidak sengaja menyakiti atau merendahkan orang lain.",
-
-        islam: "Islam mengajarkan kejujuran sekaligus akhlak yang baik. Kebenaran sebaiknya disampaikan dengan cara yang bijaksana.",
-
-        reflection: "Ketika mengatakan sebuah kebenaran, apakah cara penyampaianmu sudah mencerminkan akhlak yang baik?"
+    "Apa yang harus dilakukan ketika melihat teman dibully?": {
+        reason: "Jangan ikut mengejek atau menyebarkan kejadian tersebut. Berikan dukungan kepada teman yang mengalami perundungan dan mintalah bantuan guru atau orang dewasa yang dipercaya.",
+        islam: "Islam mengajarkan manusia untuk saling menghormati, tidak menyakiti orang lain, dan membantu sesama dalam kebaikan.",
+        reflection: "Jika melihat teman diperlakukan tidak baik, tindakan positif apa yang bisa kamu lakukan?"
     },
 
-    "Bagaimana Islam memandang berpikir kritis?": {
-        reason: "Berpikir kritis membantu manusia tidak menerima informasi begitu saja. Kita perlu memeriksa alasan, bukti, dan sumber informasi.",
-
-        islam: "Islam mendorong manusia menggunakan akalnya dan tidak mengikuti sesuatu tanpa pengetahuan. Sikap kritis dapat membantu mencari kebenaran dengan tetap berpegang pada nilai Islam.",
-
-        reflection: "Apakah kamu biasanya memeriksa kebenaran sebuah informasi sebelum mempercayainya?"
+    "Mengapa kejujuran penting bagi siswa?": {
+        reason: "Kejujuran membangun kepercayaan dan melatih tanggung jawab. Siswa yang jujur berani mengakui kesalahan dan tidak mengambil hak orang lain.",
+        islam: "Islam mengajarkan umatnya untuk berkata dan bertindak jujur dalam kehidupan sehari-hari.",
+        reflection: "Apakah kamu tetap berkata jujur ketika melakukan kesalahan?"
     },
 
-    "Bagaimana cara menyikapi informasi di media sosial?": {
-        reason: "Informasi di media sosial sangat beragam. Kita perlu memeriksa sumber dan kebenaran informasi sebelum mempercayai atau menyebarkannya.",
-
-        islam: "Islam mengajarkan pentingnya memeriksa berita sebelum mempercayai atau menyebarkannya kepada orang lain.",
-
-        reflection: "Sebelum membagikan informasi, apakah kamu sudah memastikan bahwa informasi tersebut benar?"
+    "Bagaimana cara menjaga adab di media sosial?": {
+        reason: "Gunakan bahasa yang sopan, hindari komentar yang merendahkan orang lain, dan pikirkan dampak sebelum mengunggah sesuatu.",
+        islam: "Islam mengajarkan manusia untuk menjaga lisan. Dalam kehidupan digital, prinsip tersebut juga perlu diterapkan dalam tulisan dan komentar.",
+        reflection: "Apakah komentar dan unggahanmu di media sosial sudah mencerminkan akhlak yang baik?"
     },
 
-    "Mengapa manusia sering merasa tidak puas dengan hidupnya?": {
-        reason: "Manusia memiliki keinginan dan harapan yang terus berkembang. Jika tidak disertai rasa syukur, keinginan tersebut dapat membuat seseorang terus merasa kurang.",
-
-        islam: "Islam mengajarkan manusia untuk berusaha memperbaiki kehidupan sekaligus mensyukuri nikmat yang telah diberikan Allah.",
-
-        reflection: "Apa yang sudah kamu miliki hari ini yang sering kali lupa kamu syukuri?"
+    "Bagaimana cara meminta maaf ketika melakukan kesalahan?": {
+        reason: "Akui kesalahan dengan jujur, sampaikan permintaan maaf dengan tulus, dan berusaha memperbaiki perilaku agar tidak mengulanginya.",
+        islam: "Islam mengajarkan pentingnya mengakui kesalahan, bertaubat kepada Allah, dan meminta maaf kepada orang yang telah dirugikan.",
+        reflection: "Apakah kamu berani mengakui kesalahan dan memperbaikinya?"
     }
 };
 
 
-// Memilih pertanyaan dari tombol
+/* =====================================
+   2. NAVIGASI DASHBOARD
+===================================== */
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const navLinks = document.querySelectorAll(".nav-link");
+    const pageViews = document.querySelectorAll(".page-view");
+    const navMenu = document.getElementById("navMenu");
+    const menuToggle = document.getElementById("menuToggle");
+
+    function showView(viewName) {
+
+        const targetView = document.getElementById("view-" + viewName);
+
+        if (!targetView) return;
+
+        // Sembunyikan seluruh halaman
+        pageViews.forEach(function (view) {
+            view.classList.remove("active");
+        });
+
+        // Tampilkan halaman pilihan
+        targetView.classList.add("active");
+
+        // Atur menu aktif
+        navLinks.forEach(function (link) {
+            link.classList.toggle(
+                "active",
+                link.dataset.view === viewName
+            );
+        });
+
+        // Tutup hamburger
+        if (navMenu) {
+            navMenu.classList.remove("show");
+        }
+
+        if (menuToggle) {
+            menuToggle.setAttribute("aria-expanded", "false");
+        }
+
+        // Kembali ke posisi paling atas
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+        // Ubah alamat hash tanpa reload
+        history.replaceState(null, "", "#" + viewName);
+    }
+
+
+    // Klik navbar
+    navLinks.forEach(function (link) {
+
+        link.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+            showView(this.dataset.view);
+
+        });
+
+    });
+
+
+    // Klik logo kembali ke beranda
+    const logoHome = document.getElementById("logoHome");
+
+    if (logoHome) {
+        logoHome.addEventListener("click", function (event) {
+            event.preventDefault();
+            showView("beranda");
+        });
+    }
+
+
+    // Klik tombol fitur di beranda
+    document.querySelectorAll("[data-go]").forEach(function (button) {
+
+        button.addEventListener("click", function () {
+            showView(this.dataset.go);
+        });
+
+    });
+
+
+    // Membaca halaman dari URL
+    const initialView = location.hash.replace("#", "");
+
+    const validViews = [
+        "beranda",
+        "kenali-akhlak",
+        "praktik-akhlak",
+        "studi-kasus",
+        "refleksi-diri"
+    ];
+
+    if (validViews.includes(initialView)) {
+        showView(initialView);
+    } else {
+        showView("beranda");
+    }
+
+
+    /* =====================================
+       3. MENU HAMBURGER
+    ===================================== */
+
+     
+/* =====================================
+   3. MENU HAMBURGER
+===================================== */
+
+if (menuToggle && navMenu) {
+
+    menuToggle.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        const isOpen = navMenu.classList.toggle("show");
+
+        menuToggle.textContent = isOpen ? "✕" : "☰";
+        menuToggle.setAttribute("aria-expanded", isOpen);
+
+        menuToggle.setAttribute(
+            "aria-label",
+            isOpen ? "Tutup menu" : "Buka menu"
+        );
+    });
+
+    navMenu.querySelectorAll("a").forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            navMenu.classList.remove("show");
+
+            menuToggle.textContent = "☰";
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Buka menu");
+
+        });
+
+    });
+
+    document.addEventListener("click", function (event) {
+
+        if (
+            !navMenu.contains(event.target) &&
+            !menuToggle.contains(event.target)
+        ) {
+
+            navMenu.classList.remove("show");
+
+            menuToggle.textContent = "☰";
+            menuToggle.setAttribute("aria-expanded", "false");
+            menuToggle.setAttribute("aria-label", "Buka menu");
+
+        }
+
+    });
+
+}
+
+
+
+    /* =====================================
+       4. PRAKTIK AKHLAK
+    ===================================== */
+
+    const practiceChecks = document.querySelectorAll(".practice-check");
+    const practiceCount = document.getElementById("practiceCount");
+    const practiceProgress = document.getElementById("practiceProgress");
+    const practiceMessage = document.getElementById("practiceMessage");
+
+    const practiceKey = "ruangNalarPractice";
+
+    function loadPractice() {
+
+        try {
+
+            const saved = JSON.parse(
+                localStorage.getItem(practiceKey)
+            ) || [];
+
+            practiceChecks.forEach(function (check) {
+                check.checked = saved.includes(check.value);
+            });
+
+        } catch (error) {
+            console.log("Data praktik belum tersedia.");
+        }
+
+        updatePractice();
+    }
+
+    function updatePractice() {
+
+        const checked = Array.from(practiceChecks).filter(
+            check => check.checked
+        );
+
+        const count = checked.length;
+        const total = practiceChecks.length;
+        const percentage = total ? (count / total) * 100 : 0;
+
+        if (practiceCount) {
+            practiceCount.textContent = count + "/" + total;
+        }
+
+        if (practiceProgress) {
+            practiceProgress.style.width = percentage + "%";
+        }
+
+        if (practiceMessage) {
+
+            if (count === total) {
+                practiceMessage.textContent =
+                    "Hebat! Kamu sudah menyelesaikan semua tantangan kebaikan hari ini.";
+            } else if (count > 0) {
+                practiceMessage.textContent =
+                    "Bagus! Terus biasakan perbuatan baik dalam kehidupan sehari-hari.";
+            } else {
+                practiceMessage.textContent =
+                    "Yuk, mulai biasakan satu kebaikan hari ini!";
+            }
+        }
+
+        const values = checked.map(check => check.value);
+
+        try {
+            localStorage.setItem(
+                practiceKey,
+                JSON.stringify(values)
+            );
+        } catch (error) {
+            console.log("Progres belum bisa disimpan.");
+        }
+    }
+
+    practiceChecks.forEach(function (check) {
+        check.addEventListener("change", updatePractice);
+    });
+
+    loadPractice();
+
+
+    /* =====================================
+       5. STUDI KASUS
+    ===================================== */
+
+    const checkCase = document.getElementById("checkCase");
+    const feedback = document.getElementById("caseFeedback");
+
+    if (checkCase && feedback) {
+
+        checkCase.addEventListener("click", function () {
+
+            const selected = document.querySelector(
+                'input[name="caseAnswer"]:checked'
+            );
+
+            if (!selected) {
+
+                feedback.textContent =
+                    "Pilih salah satu jawaban terlebih dahulu.";
+
+                feedback.className = "case-feedback incorrect";
+
+                return;
+            }
+
+            if (selected.value === "b") {
+
+                feedback.textContent =
+                    "Tepat! Menyerahkan dompet kepada guru merupakan tindakan jujur dan amanah.";
+
+                feedback.className = "case-feedback correct";
+
+            } else {
+
+                feedback.textContent =
+                    "Belum tepat. Coba pikirkan kembali tindakan yang menunjukkan kejujuran dan tanggung jawab.";
+
+                feedback.className = "case-feedback incorrect";
+
+            }
+
+        });
+
+    }
+
+
+    /* =====================================
+       6. REFLEKSI DIRI
+    ===================================== */
+
+    const reflectionForm = document.getElementById("reflectionForm");
+    const reflectionHistory = document.getElementById("reflectionHistory");
+
+    const reflectionKey = "ruangNalarReflections";
+
+    function getReflections() {
+
+        try {
+            return JSON.parse(
+                localStorage.getItem(reflectionKey)
+            ) || [];
+        } catch (error) {
+            return [];
+        }
+
+    }
+
+    function renderReflections() {
+
+        if (!reflectionHistory) return;
+
+        const records = getReflections();
+
+        reflectionHistory.replaceChildren();
+
+        if (records.length === 0) {
+
+            const empty = document.createElement("p");
+
+            empty.className = "empty-reflection";
+            empty.textContent = "Belum ada catatan refleksi.";
+
+            reflectionHistory.appendChild(empty);
+
+            return;
+        }
+
+        records.forEach(function (record) {
+
+            const card = document.createElement("article");
+            card.className = "reflection-record";
+
+            const date = document.createElement("small");
+            date.textContent = record.date;
+
+            const firstTitle = document.createElement("h4");
+            firstTitle.textContent = "Kebaikan hari ini";
+
+            const firstText = document.createElement("p");
+            firstText.textContent = record.good;
+
+            const secondTitle = document.createElement("h4");
+            secondTitle.textContent = "Rencana perbaikan";
+
+            const secondText = document.createElement("p");
+            secondText.textContent = record.plan;
+
+            card.append(
+                date,
+                firstTitle,
+                firstText,
+                secondTitle,
+                secondText
+            );
+
+            reflectionHistory.appendChild(card);
+
+        });
+
+    }
+
+    if (reflectionForm) {
+
+        reflectionForm.addEventListener("submit", function (event) {
+
+            event.preventDefault();
+
+            const good = document.getElementById(
+                "reflectionAnswer"
+            ).value.trim();
+
+            const plan = document.getElementById(
+                "reflectionPlan"
+            ).value.trim();
+
+            if (!good || !plan) return;
+
+            const records = getReflections();
+
+            records.unshift({
+                good: good,
+                plan: plan,
+                date: new Date().toLocaleDateString("id-ID", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                })
+            });
+
+            try {
+
+                localStorage.setItem(
+                    reflectionKey,
+                    JSON.stringify(records.slice(0, 30))
+                );
+
+                reflectionForm.reset();
+
+                renderReflections();
+
+                alert("Refleksi berhasil disimpan di perangkat ini.");
+
+            } catch (error) {
+
+                alert("Catatan belum bisa disimpan.");
+
+            }
+
+        });
+
+    }
+
+    renderReflections();
+
+});
+
+
+/* =====================================
+   7. TANYA AKHLAK
+===================================== */
+
 function selectQuestion(button) {
 
-    const question = button.textContent.trim();
+    const questionInput = document.getElementById("questionInput");
 
-    document.getElementById("questionInput").value = question;
+    if (!questionInput || !button) return;
+
+    const questionText = button.querySelector(".question-text");
+
+    questionInput.value = questionText
+        ? questionText.textContent.trim()
+        : button.textContent.trim();
 
     answerQuestion();
 }
 
 
-// Menampilkan jawaban
 function answerQuestion() {
 
-    const questionInput =
-        document.getElementById("questionInput");
+    const questionInput = document.getElementById("questionInput");
+    const answerBox = document.getElementById("answerBox");
 
-    const question =
-        questionInput.value.trim();
+    if (!questionInput || !answerBox) return;
 
-    if (question === "") {
+    const question = questionInput.value.trim();
+
+    if (!question) {
         alert("Silakan tulis atau pilih pertanyaan terlebih dahulu.");
         return;
     }
 
-
-    // KIRIM PERTANYAAN KE FIREBASE
-    if (typeof window.kirimKeFirebase === "function") {
-        window.kirimKeFirebase(question);
-    }
-
-
-    const answerBox =
-        document.getElementById("answerBox");
-
-
     let answer = answers[question];
 
-
-    // Jika pertanyaan belum tersedia
     if (!answer) {
 
         answer = {
-            reason: "Pertanyaan ini dapat dilihat dari berbagai sudut pandang. Cobalah memahami masalahnya dengan tenang dan mempertimbangkan alasan serta akibat dari setiap pilihan.",
+            reason: "Pertanyaan ini dapat dipahami dengan mempertimbangkan situasi, alasan, dan dampak dari tindakan yang dilakukan.",
 
-            islam: "Dalam Islam, manusia dianjurkan menggunakan akal sekaligus menjadikan nilai-nilai Islam sebagai pedoman dalam memahami kehidupan.",
+            islam: "Dalam Islam, setiap muslim dianjurkan untuk menjaga akhlak, menghormati sesama, dan menjadikan nilai-nilai Islam sebagai pedoman dalam bertindak.",
 
-            reflection: "Apa sebenarnya persoalan utama dari pertanyaanmu?"
+            reflection: "Apa tindakan terbaik yang dapat kamu lakukan agar tetap menjaga akhlak dalam situasi tersebut?"
         };
 
     }
 
+    const questionElement = document.getElementById("answerQuestion");
+    const reasonElement = document.getElementById("reasonAnswer");
+    const islamElement = document.getElementById("islamAnswer");
+    const reflectionElement = document.getElementById("reflectionAnswer");
 
-    // Masukkan jawaban ke HTML
-
-    document.getElementById("answerQuestion").textContent =
-        question;
-
-    document.getElementById("reasonAnswer").textContent =
-        answer.reason;
-
-    document.getElementById("islamAnswer").textContent =
-        answer.islam;
-
-    document.getElementById("reflectionAnswer").textContent =
-        answer.reflection;
-
-
-    // Tampilkan kotak jawaban
+    if (questionElement) questionElement.textContent = question;
+    if (reasonElement) reasonElement.textContent = answer.reason;
+    if (islamElement) islamElement.textContent = answer.islam;
+    if (reflectionElement) reflectionElement.textContent = answer.reflection;
 
     answerBox.classList.add("show");
 
+    if (typeof window.kirimKeFirebase === "function") {
 
-    // Scroll ke jawaban
+        try {
+            window.kirimKeFirebase(question);
+        } catch (error) {
+            console.error("Gagal mengirim pertanyaan ke Firebase:", error);
+        }
+
+    }
 
     answerBox.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
+
 }

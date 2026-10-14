@@ -1,311 +1,588 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f3ea">
 
-    <title>Ruang Nalar | Nalar Manusia dalam Islam</title>
+    <title>Ruang Nalar | Akhlak Siswa</title>
 
     <link rel="stylesheet" href="style.css">
-</head>
-<script>
-const menuToggle = document.getElementById("menuToggle");
-const navMenu = document.getElementById("navMenu");
 
-menuToggle.addEventListener("click", () => {
-    navMenu.classList.toggle("show");
-});
-</script>
+   
 
 <body>
 
-    <!-- NAVBAR -->
-   <header class="navbar">
-  <div class="logo">Ruang<span>Nalar</span></div>
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar">
+    <div class="nav-container">
 
-  <button class="menu-toggle" id="menuToggle">☰</button>
+        <a href="#beranda" class="logo" id="logoHome">
+            Ruang Nalar
+        </a>
 
-  <nav id="navMenu">
-    <a href="index.html" class="active">Beranda</a>
-    <a href="tanya.html">Tanya 'Aqli</a>
-    <a href="admin.html">Chat Admin</a>
-  </nav>
-</header>
+        <button
+            class="menu-toggle"
+            id="menuToggle"
+            aria-label="Buka menu"
+            aria-expanded="false">
+            ☰
+        </button>
 
-    <!-- HERO -->
-    <section class="hero">
+        <ul class="nav-menu" id="navMenu">
 
+            <li>
+                <a href="#beranda"
+                   class="nav-link active"
+                   data-view="beranda">
+                    Beranda
+                </a>
+            </li>
+
+            <li>
+                <a href="#kenali-akhlak"
+                   class="nav-link"
+                   data-view="kenali-akhlak">
+                    Kenali Akhlak
+                </a>
+            </li>
+
+            <li>
+                <a href="#praktik-akhlak"
+                   class="nav-link"
+                   data-view="praktik-akhlak">
+                    Praktik Akhlak
+                </a>
+            </li>
+
+            <li>
+                <a href="#studi-kasus"
+                   class="nav-link"
+                   data-view="studi-kasus">
+                    Studi Kasus
+                </a>
+            </li>
+
+            <li>
+                <a href="#refleksi-diri"
+                   class="nav-link"
+                   data-view="refleksi-diri">
+                    Refleksi Diri
+                </a>
+            </li>
+
+            <li>
+                <a href="tanya.html">
+                    Tanya Akhlak
+                </a>
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
+
+<main id="appContent">
+
+<!-- ================= BERANDA ================= -->
+<div class="page-view active" id="view-beranda">
+
+    <section class="hero-akhlak">
         <div class="hero-content">
 
-            <p class="eyebrow">
-                NALAR MANUSIA DALAM ISLAM
-            </p>
+            <span class="hero-label">
+                RUANG BELAJAR AKHLAK SISWA
+            </span>
 
             <h1>
-                Berpikir lebih dalam,
-                <span>memahami lebih luas.</span>
+                Cerdas dalam Berpikir,
+                <span>Baik dalam Berakhlak.</span>
             </h1>
 
             <p>
-                Ruang Nalar adalah ruang digital untuk memahami
-                bagaimana manusia menggunakan akal, berpikir,
-                bertanya, dan mencari jawaban melalui perspektif Islam.
+                Ruang Nalar merupakan ruang belajar digital yang
+                mengajak siswa mengenal, memahami, dan menerapkan
+                nilai-nilai akhlak Islam dalam kehidupan sehari-hari.
             </p>
 
-            <a href="tanya.html" class="button">
-                Mulai Tanya 'Aqli →
+            <div class="hero-buttons">
+                <button
+                    class="btn-primary dashboard-button"
+                    data-go="kenali-akhlak">
+                    Mulai Belajar
+                </button>
+
+                <button
+                    class="btn-secondary dashboard-button"
+                    data-go="tentang">
+                    Kenali Ruang Nalar
+                </button>
+            </div>
+
+        </div>
+
+        <div class="hero-visual">
+            <div class="hero-card">
+                <div class="hero-icon">🌱</div>
+
+                <h3>Mulai dari Diri Sendiri</h3>
+
+                <p>
+                    Akhlak yang baik tidak hanya dipahami,
+                    tetapi juga dibiasakan melalui tindakan
+                    sederhana setiap hari.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- TENTANG -->
+    <section class="home-section" id="tentang">
+
+        <div class="section-heading">
+            <span>TENTANG KAMI</span>
+
+            <h2>Mengapa Akhlak Itu Penting?</h2>
+
+            <p>
+                Pendidikan tidak hanya membentuk siswa yang
+                berpengetahuan, tetapi juga membentuk pribadi
+                yang memiliki sikap dan perilaku baik.
+            </p>
+        </div>
+
+        <div class="intro-grid">
+
+            <div class="intro-card">
+                <h3>🧠 Memahami Nilai Akhlak</h3>
+
+                <p>
+                    Mengenal nilai-nilai akhlak Islam seperti
+                    kejujuran, tanggung jawab, disiplin,
+                    kesopanan, dan kepedulian.
+                </p>
+            </div>
+
+            <div class="intro-card">
+                <h3>🌿 Membiasakan Perbuatan Baik</h3>
+
+                <p>
+                    Mengajak siswa menerapkan akhlak dalam
+                    hubungan dengan Allah, orang tua, guru,
+                    teman, dan lingkungan sekitar.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- PILIHAN FITUR -->
+    <section class="home-section feature-section">
+
+        <div class="section-heading">
+            <span>JELAJAHI RUANG NALAR</span>
+
+            <h2>Mulai Perjalanan Akhlakmu</h2>
+
+            <p>
+                Pilih fitur yang ingin kamu pelajari dan
+                kembangkan dalam kehidupan sehari-hari.
+            </p>
+        </div>
+
+        <div class="feature-grid">
+
+            <button class="feature-card dashboard-button"
+                    data-go="kenali-akhlak">
+                <h3>🌱 Kenali Akhlak</h3>
+                <p>Pelajari nilai dan adab dalam kehidupan.</p>
+            </button>
+
+            <button class="feature-card dashboard-button"
+                    data-go="praktik-akhlak">
+                <h3>⭐ Praktik Akhlak</h3>
+                <p>Biasakan tindakan baik setiap hari.</p>
+            </button>
+
+            <button class="feature-card dashboard-button"
+                    data-go="studi-kasus">
+                <h3>💡 Studi Kasus</h3>
+                <p>Belajar mengambil keputusan yang tepat.</p>
+            </button>
+
+            <button class="feature-card dashboard-button"
+                    data-go="refleksi-diri">
+                <h3>📝 Refleksi Diri</h3>
+                <p>Evaluasi dan perbaiki perilaku diri.</p>
+            </button>
+
+            <a href="tanya.html" class="feature-card">
+                <h3>💬 Tanya Akhlak</h3>
+                <p>Temukan jawaban atas pertanyaanmu.</p>
             </a>
 
         </div>
-
     </section>
 
 
-    <!-- PENGERTIAN NALAR -->
-    <section class="section">
+    <!-- CTA -->
+    <section class="cta-section">
 
-        <p class="eyebrow">
-            APA ITU NALAR?
-        </p>
-
-        <h2>
-            Manusia diberi akal untuk berpikir.
-        </h2>
-
-        <div class="content-box">
-
-            <p>
-                Nalar merupakan kemampuan manusia untuk berpikir,
-                memahami sesuatu, mempertimbangkan pilihan,
-                serta menarik kesimpulan dari berbagai informasi
-                yang diterima.
-            </p>
-
-            <p>
-                Dalam kehidupan sehari-hari, manusia menggunakan
-                nalar ketika menghadapi berbagai pertanyaan,
-                masalah, pilihan, maupun keadaan yang belum dipahami.
-            </p>
-
-            <p>
-                Dalam Islam, akal merupakan salah satu kemampuan
-                yang diberikan kepada manusia untuk memahami
-                kehidupan dan mengambil pelajaran dari berbagai
-                peristiwa.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- NALAR DALAM ISLAM -->
-    <section class="section islam-section">
-
-        <p class="eyebrow">
-            NALAR DALAM ISLAM
-        </p>
-
-        <h2>
-            Akal digunakan dengan tetap memiliki pedoman.
-        </h2>
-
-        <div class="islam-content">
-
-            <div class="islam-text">
-
-                <p>
-                    Islam mendorong manusia untuk berpikir,
-                    memperhatikan, memahami, dan mencari
-                    kebenaran.
-                </p>
-
-                <p>
-                    Namun, kemampuan manusia dalam berpikir
-                    juga memiliki batas. Karena itu, dalam Islam,
-                    akal digunakan bersama dengan petunjuk wahyu
-                    agar manusia dapat memahami kehidupan
-                    dengan lebih bijaksana.
-                </p>
-
-            </div>
-
-
-            <div class="quote-box">
-
-                <span>“</span>
-
-                <p>
-                    Berpikir bukan hanya tentang mencari jawaban,
-                    tetapi juga memahami alasan di balik jawaban.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- FITUR -->
-    <section class="section">
-
-        <div class="center">
-
-            <p class="eyebrow">
-                RUANG UNTUK BERPIKIR
-            </p>
-
-            <h2>
-                Apa yang bisa kamu lakukan?
-            </h2>
-
-            <p>
-                Ruang Nalar dibuat agar pengunjung tidak hanya
-                membaca, tetapi juga dapat bertanya dan berdiskusi.
-            </p>
-
-        </div>
-
-
-        <div class="cards">
-
-
-            <!-- TANYA NALAR -->
-            <div class="card">
-
-                <div class="card-icon">
-                    🧠
-                </div>
-
-                <h3>
-                    Tanya Nalar
-                </h3>
-
-                <p>
-                    Ajukan pertanyaan tentang akal, kehidupan,
-                    moral, dan berbagai persoalan yang sedang
-                    kamu pikirkan.
-                </p>
-
-                <a href="tanya.html">
-                    Mulai Bertanya →
-                </a>
-
-            </div>
-
-
-            <!-- PERSPEKTIF ISLAM -->
-            <div class="card">
-
-                <div class="card-icon">
-                    ☪️
-                </div>
-
-                <h3>
-                    Perspektif Islam
-                </h3>
-
-                <p>
-                    Pelajari berbagai persoalan melalui sudut
-                    pandang Islam dengan bahasa yang sederhana
-                    dan mudah dipahami.
-                </p>
-
-            </div>
-
-
-            <!-- REFLEKSI -->
-            <div class="card">
-
-                <div class="card-icon">
-                    💭
-                </div>
-
-                <h3>
-                    Refleksi
-                </h3>
-
-                <p>
-                    Setelah mendapatkan jawaban, luangkan waktu
-                    untuk memahami dan merenungkan maknanya.
-                </p>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- BAGIAN DIGITAL -->
-    <section class="digital-section">
-
-        <div class="digital-content">
-
-            <p class="eyebrow">
-                RUANG NALAR DIGITAL
-            </p>
-
-            <h2>
-                Tidak semua pertanyaan harus
-                langsung memiliki jawaban.
-            </h2>
-
-            <p>
-                Terkadang, sebuah pertanyaan justru menjadi
-                awal dari proses berpikir. Melalui Ruang Nalar,
-                pengguna dapat bertanya, mendapatkan perspektif,
-                kemudian menentukan bagaimana ia memahami
-                persoalan tersebut.
-            </p>
-
-        </div>
-
-    </section>
-
-
-    <!-- AJAKAN -->
-    <section class="explore-section">
-
-        <p class="eyebrow">
-            MULAI BERPIKIR
-        </p>
-
-        <h2>
-            Punya sesuatu yang sedang kamu pikirkan?
-        </h2>
+        <h2>Mulai Perubahan dari Dirimu Sendiri</h2>
 
         <p>
-            Sebuah pertanyaan bisa menjadi awal dari proses
-            berpikir dan memahami sesuatu dengan lebih luas.
+            Akhlak yang baik tumbuh dari pemahaman,
+            kebiasaan, dan kesadaran untuk terus memperbaiki diri.
         </p>
 
-        <a href="tanya.html" class="button">
-            Mulai Tanya 'Aqli →
+        <a href="tanya.html">
+            Kunjungi Tanya Akhlak
         </a>
 
     </section>
 
+</div>
 
-    <!-- FOOTER -->
-    <footer>
 
-        <div class="footer-logo">
-            Ruang<span>Nalar</span>
-        </div>
+<!-- ================= KENALI AKHLAK ================= -->
+<section class="home-section feature-section page-view"
+         id="view-kenali-akhlak">
+
+    <a class="back-home" data-go="beranda">
+        ← Kembali ke Beranda
+    </a>
+
+    <div class="section-heading">
+        <span>01 — KENALI AKHLAK</span>
+
+        <h2>Memahami Akhlak dalam Kehidupan</h2>
 
         <p>
-            Nalar Manusia dalam Islam
+            Pelajari nilai-nilai akhlak dan adab yang dapat
+            diterapkan dalam kehidupan seorang pelajar.
+        </p>
+    </div>
+
+    <div class="learning-grid">
+
+        <details class="learning-card">
+            <summary>
+                <span>🌱</span>
+                <strong>Pengertian Akhlak</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Akhlak adalah sifat atau karakter yang tercermin
+                dalam perilaku seseorang. Akhlak yang baik terlihat
+                melalui perkataan dan perbuatan yang terpuji.
+            </p>
+        </details>
+
+        <details class="learning-card">
+            <summary>
+                <span>⭐</span>
+                <strong>Akhlak Terpuji</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Akhlak terpuji antara lain jujur, amanah, sabar,
+                rendah hati, disiplin, bertanggung jawab, dan
+                peduli terhadap sesama.
+            </p>
+        </details>
+
+        <details class="learning-card">
+            <summary>
+                <span>⚠️</span>
+                <strong>Akhlak Tercela</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Contoh perilaku tercela adalah berbohong, sombong,
+                iri hati, mengejek, tidak menepati janji, dan
+                merendahkan orang lain.
+            </p>
+        </details>
+
+        <details class="learning-card">
+            <summary>
+                <span>👨‍🏫</span>
+                <strong>Adab kepada Guru</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Menghormati guru, mendengarkan penjelasan,
+                berbicara dengan sopan, dan menghargai ilmu
+                yang diberikan.
+            </p>
+        </details>
+
+        <details class="learning-card">
+            <summary>
+                <span>🤝</span>
+                <strong>Adab kepada Teman</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Menghargai perbedaan, membantu teman, tidak
+                merundung, menjaga perkataan, dan saling menghormati.
+            </p>
+        </details>
+
+        <details class="learning-card">
+            <summary>
+                <span>📱</span>
+                <strong>Adab Bermedia Sosial</strong>
+                <span class="detail-arrow">＋</span>
+            </summary>
+
+            <p>
+                Memeriksa informasi sebelum membagikannya,
+                menjaga privasi, tidak menghina, dan menggunakan
+                media sosial secara bertanggung jawab.
+            </p>
+        </details>
+
+    </div>
+</section>
+
+
+<!-- ================= PRAKTIK AKHLAK ================= -->
+<section class="home-section page-view"
+         id="view-praktik-akhlak">
+
+    <a class="back-home" data-go="beranda">
+        ← Kembali ke Beranda
+    </a>
+
+    <div class="section-heading">
+        <span>02 — PRAKTIK AKHLAK</span>
+
+        <h2>Mulai dari Kebiasaan Kecil</h2>
+
+        <p>
+            Pilih kegiatan baik yang sudah kamu lakukan.
+            Biasakan menerapkannya dalam kehidupan sehari-hari.
+        </p>
+    </div>
+
+    <div class="practice-panel">
+
+        <div class="practice-top">
+            <div>
+                <h3>Tantangan Kebaikan Hari Ini</h3>
+
+                <p>
+                    Setiap tindakan baik adalah langkah
+                    menuju perubahan.
+                </p>
+            </div>
+
+            <div class="practice-count" id="practiceCount">
+                0/6
+            </div>
+        </div>
+
+        <div class="practice-progress">
+            <div id="practiceProgress"></div>
+        </div>
+
+        <div class="practice-list">
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="1">
+                <span>Berbicara jujur dalam setiap keadaan.</span>
+            </label>
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="2">
+                <span>Menghormati guru dan orang tua.</span>
+            </label>
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="3">
+                <span>Membantu teman yang membutuhkan.</span>
+            </label>
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="4">
+                <span>Menjaga kebersihan lingkungan sekolah.</span>
+            </label>
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="5">
+                <span>Menghindari perkataan yang menyakiti orang lain.</span>
+            </label>
+
+            <label class="practice-item">
+                <input type="checkbox" class="practice-check" value="6">
+                <span>Menggunakan media sosial dengan bijak.</span>
+            </label>
+
+        </div>
+
+        <p class="practice-note" id="practiceMessage">
+            Yuk, mulai biasakan satu kebaikan hari ini!
         </p>
 
-        <small>
-            © 2026 Ruang Nalar
-        </small>
+    </div>
+</section>
 
-    </footer>
 
+<!-- ================= STUDI KASUS ================= -->
+<section class="home-section feature-section page-view"
+         id="view-studi-kasus">
+
+    <a class="back-home" data-go="beranda">
+        ← Kembali ke Beranda
+    </a>
+
+    <div class="section-heading">
+        <span>03 — STUDI KASUS</span>
+
+        <h2>Belajar Mengambil Keputusan</h2>
+
+        <p>
+            Bacalah situasi berikut dan pilih tindakan yang
+            paling mencerminkan akhlak baik.
+        </p>
+    </div>
+
+    <div class="case-panel">
+
+        <span class="case-label">
+            KASUS 01 · KEJUJURAN
+        </span>
+
+        <h3>Menemukan Barang Milik Teman</h3>
+
+        <p>
+            Ketika berada di kelas, kamu menemukan sebuah dompet
+            yang bukan milikmu. Tidak ada orang lain di sekitar.
+            Apa yang sebaiknya kamu lakukan?
+        </p>
+
+        <div class="case-options">
+
+            <label>
+                <input type="radio" name="caseAnswer" value="a">
+                <span>
+                    Menyimpan dompet tersebut karena tidak ada
+                    yang melihat.
+                </span>
+            </label>
+
+            <label>
+                <input type="radio" name="caseAnswer" value="b">
+                <span>
+                    Menyerahkannya kepada guru agar dikembalikan
+                    kepada pemiliknya.
+                </span>
+            </label>
+
+            <label>
+                <input type="radio" name="caseAnswer" value="c">
+                <span>
+                    Membiarkannya begitu saja.
+                </span>
+            </label>
+
+        </div>
+
+        <button type="button"
+                class="case-button"
+                id="checkCase">
+            Periksa Jawaban
+        </button>
+
+        <div class="case-feedback"
+             id="caseFeedback"
+             aria-live="polite">
+        </div>
+
+    </div>
+</section>
+
+
+<!-- ================= REFLEKSI DIRI ================= -->
+<section class="home-section page-view"
+         id="view-refleksi-diri">
+
+    <a class="back-home" data-go="beranda">
+        ← Kembali ke Beranda
+    </a>
+
+    <div class="section-heading">
+        <span>04 — REFLEKSI DIRI</span>
+
+        <h2>Kenali dan Perbaiki Diri</h2>
+
+        <p>
+            Luangkan waktu untuk mengevaluasi perilaku dan
+            menuliskan hal baik yang ingin kamu perbaiki.
+        </p>
+    </div>
+
+    <div class="reflection-panel">
+
+        <form id="reflectionForm">
+
+            <label for="reflectionAnswer">
+                Apa kebaikan yang sudah kamu lakukan hari ini?
+            </label>
+
+            <textarea
+                id="reflectionAnswer"
+                placeholder="Tuliskan refleksi dirimu di sini..."
+                required>
+            </textarea>
+
+            <label for="reflectionPlan">
+                Apa yang ingin kamu perbaiki ke depannya?
+            </label>
+
+            <textarea
+                id="reflectionPlan"
+                placeholder="Tuliskan rencana perbaikanmu..."
+                required>
+            </textarea>
+
+            <button type="submit" class="reflection-button">
+                Simpan Refleksi
+            </button>
+
+        </form>
+
+        <div class="reflection-history">
+            <h3>Catatan Refleksiku</h3>
+
+            <div id="reflectionHistory">
+                <p class="empty-reflection">
+                    Belum ada catatan refleksi.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+</main>
+
+
+<footer class="footer">
+    <p>
+        © 2026 Ruang Nalar.
+        Membangun Nalar, Membentuk Akhlak.
+    </p>
+</footer>
+
+<script src="script.js" defer></script>
 </body>
-
 </html>

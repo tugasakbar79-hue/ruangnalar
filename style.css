@@ -1,3 +1,8 @@
+
+/* =================================
+   1. RESET DAN PENGATURAN DASAR
+================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -15,383 +20,1279 @@ body {
     line-height: 1.7;
 }
 
-/* ================= NAVBAR ================= */
+a {
+    text-decoration: none;
+}
+
+/* =================================
+   2. NAVBAR
+================================= */
 
 .navbar {
+    width: 100%;
+    background: #ffffff;
+    padding: 16px 8%;
     position: sticky;
     top: 0;
     z-index: 1000;
-    width: 100%;
-    padding: 18px 8%;
+    box-shadow: 0 3px 15px rgba(23, 32, 51, 0.06);
+}
+
+.nav-container {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    background: rgba(247, 243, 234, 0.96);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(23, 32, 51, 0.08);
+    align-items: center;
+    max-width: 1300px;
+    margin: auto;
 }
 
 .logo {
-    font-size: 25px;
+    font-size: 23px;
     font-weight: 800;
-    letter-spacing: -1px;
+    color: #172033;
 }
 
-.logo span {
-    color: #8b6f47;
-}
-
-.navbar nav {
+.nav-menu {
     display: flex;
     align-items: center;
-    gap: 28px;
+    gap: 30px;
+    list-style: none;
 }
 
-.navbar nav a {
+.nav-menu a {
     color: #172033;
-    text-decoration: none;
     font-size: 14px;
     font-weight: 600;
     transition: 0.3s;
 }
 
-.navbar nav a:hover,
-.navbar nav a.active {
-    color: #8b6f47;
+.nav-menu a:hover {
+    color: #bd9139;
 }
-
-/* HAMBURGER */
 
 .menu-toggle {
     display: none;
     border: none;
     background: none;
-    font-size: 27px;
-    cursor: pointer;
     color: #172033;
+    font-size: 28px;
+    cursor: pointer;
 }
 
-/* ================= HERO ================= */
+/* =================================
+   3. HERO / BERANDA
+================================= */
 
-.hero {
-    min-height: 78vh;
-    padding: 90px 8%;
+.hero-akhlak {
+    min-height: 520px;
     display: flex;
     align-items: center;
+    padding: 70px 8%;
+    background: linear-gradient(120deg, #f7f3ea, #eee6d7);
+    gap: 40px;
 }
 
 .hero-content {
-    max-width: 850px;
+    max-width: 650px;
 }
 
-.eyebrow {
-    margin-bottom: 15px;
-    color: #8b6f47;
-    font-size: 13px;
-    font-weight: 800;
+.hero-label {
+    color: #b58a32;
+    font-weight: 700;
     letter-spacing: 2px;
+    font-size: 13px;
 }
 
-.hero h1 {
-    font-size: clamp(42px, 6vw, 76px);
-    line-height: 1.08;
-    letter-spacing: -2px;
+.hero-content h1 {
+    font-size: clamp(36px, 5vw, 58px);
+    line-height: 1.15;
+    color: #172033;
+    margin: 20px 0;
+}
+
+.hero-content h1 span {
+    color: #bd9139;
+}
+
+.hero-content p {
+    color: #626b78;
+    line-height: 1.8;
+    font-size: 17px;
+    max-width: 570px;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 30px;
+}
+
+.btn-primary,
+.btn-secondary {
+    display: inline-block;
+    padding: 14px 25px;
+    border-radius: 9px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn-primary {
+    background: #172033;
+    color: white;
+}
+
+.btn-secondary {
+    border: 1px solid #172033;
+    color: #172033;
+}
+
+.btn-primary:hover {
+    background: #bd9139;
+    color: #172033;
+}
+
+.btn-secondary:hover {
+    background: #172033;
+    color: white;
+}
+
+.hero-visual {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.hero-card {
+    background: #ffffff;
+    padding: 35px;
+    border-radius: 22px;
+    max-width: 320px;
+    box-shadow: 0 15px 40px rgba(23, 32, 51, 0.09);
+    text-align: center;
+}
+
+.hero-icon {
+    font-size: 65px;
+    margin-bottom: 15px;
+}
+
+.hero-card h3 {
+    color: #172033;
+    margin-bottom: 12px;
+}
+
+.hero-card p {
+    color: #687080;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+/* =================================
+   4. SECTION UMUM
+================================= */
+
+.home-section {
+    padding: 75px 8%;
+}
+
+.section-heading {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 40px;
+}
+
+.section-heading span {
+    color: #bd9139;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.section-heading h2 {
+    color: #172033;
+    font-size: 32px;
+    margin: 12px 0;
+}
+
+.section-heading p {
+    color: #687080;
+    line-height: 1.8;
+}
+
+/* =================================
+   5. KENALI AKHLAK
+================================= */
+
+.intro-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
+.intro-card {
+    padding: 30px;
+    background: #ffffff;
+    border: 1px solid #eee8dc;
+    border-radius: 16px;
+    transition: 0.3s;
+}
+
+.intro-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(23, 32, 51, 0.06);
+}
+
+.intro-card h3 {
+    color: #172033;
+    margin-bottom: 12px;
+}
+
+.intro-card p {
+    color: #687080;
+    line-height: 1.8;
+}
+
+/* =================================
+   6. FITUR WEBSITE
+================================= */
+
+.feature-section {
+    background: #eee8dc;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.feature-card {
+    background: #ffffff;
+    padding: 28px;
+    border-radius: 16px;
+    text-decoration: none;
+    border: 1px solid #e8dfd0;
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(23, 32, 51, 0.08);
+}
+
+.feature-icon {
+    font-size: 35px;
+    margin-bottom: 18px;
+}
+
+.feature-card h3 {
+    color: #172033;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    color: #687080;
+    line-height: 1.7;
+    font-size: 14px;
+}
+
+.feature-link {
+    display: inline-block;
+    color: #bd9139;
+    font-weight: 700;
+    margin-top: 18px;
+    font-size: 14px;
+}
+
+/* =================================
+   7. AJAKAN / CTA
+================================= */
+
+.cta-section {
+    padding: 75px 20px;
+    text-align: center;
+    background: #172033;
+    color: white;
+}
+
+.cta-section h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.cta-section p {
+    color: #d5d8df;
+    line-height: 1.8;
     margin-bottom: 25px;
 }
 
-.hero p,
-.hero-text {
-    max-width: 720px;
-    font-size: 18px;
-    color: #5e6573;
-}
-
-.button {
+.cta-section a {
     display: inline-block;
-    margin-top: 30px;
-    padding: 13px 23px;
-    border-radius: 10px;
-    background: #172033;
-    color: white;
-    text-decoration: none;
+    padding: 14px 27px;
+    background: #bd9139;
+    color: #172033;
+    border-radius: 9px;
     font-weight: 700;
     transition: 0.3s;
 }
 
-.button:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
+.cta-section a:hover {
+    background: #ffffff;
 }
 
-/* ================= SECTION ================= */
+/* =================================
+   8. FOOTER
+================================= */
 
-.section {
-    padding: 100px 8%;
-}
-
-.section h2 {
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.15;
-    margin: 10px 0 25px;
-    letter-spacing: -1px;
-}
-
-.section p {
-    color: #5e6573;
-}
-
-.content-box {
-    max-width: 900px;
-    padding: 35px;
-    background: white;
-    border-radius: 18px;
-    box-shadow: 0 10px 35px rgba(23, 32, 51, 0.06);
-}
-
-.content-box p {
-    font-size: 17px;
-}
-
-/* ================= ISLAM SECTION ================= */
-
-.islam-section {
-    padding: 100px 8%;
-}
-
-.islam-content {
-    display: grid;
-    grid-template-columns: 1.4fr 0.8fr;
-    gap: 50px;
-    align-items: center;
-}
-
-.islam-text h2 {
-    font-size: clamp(32px, 4vw, 52px);
-    line-height: 1.15;
-    margin: 10px 0 20px;
-}
-
-.islam-text p {
-    color: #5e6573;
-    font-size: 17px;
-}
-
-.quote-box {
-    padding: 30px;
-    border-radius: 18px;
-    background: #172033;
-    color: white;
-}
-
-.quote-box p {
-    color: white;
-}
-
-/* ================= CARDS ================= */
-
-.cards {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-    margin-top: 35px;
-}
-
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 18px;
-    box-shadow: 0 10px 35px rgba(23, 32, 51, 0.06);
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-}
-
-.card h3 {
-    margin-bottom: 10px;
-}
-
-.card p {
-    color: #5e6573;
-}
-
-/* ================= DIGITAL ================= */
-
-.digital-section {
-    padding: 100px 8%;
-    background: #172033;
-    color: white;
-}
-
-.digital-section h2 {
-    max-width: 800px;
-    font-size: clamp(34px, 4vw, 55px);
-    line-height: 1.15;
-    margin: 12px 0 20px;
-}
-
-.digital-section p {
-    max-width: 750px;
-    color: #d6d9df;
-}
-
-/* ================= EXPLORE ================= */
-
-.explore-section {
-    padding: 100px 8%;
-    text-align: center;
-}
-
-.explore-section h2 {
-    font-size: clamp(34px, 4vw, 55px);
-    margin-bottom: 20px;
-}
-
-.explore-section p {
-    color: #5e6573;
-}
-
-/* ================= FOOTER ================= */
-
-footer {
+.footer {
+    background: #111a2b;
+    color: #d5d8df;
     padding: 30px 8%;
     text-align: center;
-    background: #111827;
-    color: #cdd2da;
     font-size: 14px;
 }
 
-/* ================= MOBILE ================= */
+.footer p {
+    line-height: 1.8;
+}
 
-@media (max-width: 768px) {
+/* =================================
+   9. HALAMAN TANYA AKHLAK
+================================= */
 
+.tanya-container {
+    max-width: 900px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.tanya-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.tanya-header h1 {
+    color: #172033;
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.tanya-header p {
+    color: #687080;
+}
+
+.question-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 35px;
+}
+
+.question-button {
+    background: #ffffff;
+    border: 1px solid #e8dfd0;
+    border-radius: 10px;
+    padding: 15px;
+    text-align: left;
+    color: #172033;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.question-button:hover {
+    border-color: #bd9139;
+    background: #fbf8f1;
+}
+
+.ask-section {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 15px;
+    border: 1px solid #eee8dc;
+}
+
+.ask-section h3 {
+    margin-bottom: 15px;
+    color: #172033;
+}
+
+.ask-section input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #d9dce2;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+    margin-bottom: 15px;
+}
+
+.ask-section input:focus {
+    border-color: #bd9139;
+}
+
+.ask-section button {
+    background: #172033;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.ask-section button:hover {
+    background: #bd9139;
+    color: #172033;
+}
+
+.answer-card {
+    display: none;
+    background: #ffffff;
+    border: 1px solid #eee8dc;
+    border-left: 4px solid #bd9139;
+    border-radius: 12px;
+    padding: 25px;
+    margin-top: 25px;
+}
+
+.answer-card h3 {
+    color: #172033;
+    margin-bottom: 10px;
+}
+
+.answer-card p {
+    color: #626b78;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+/* =================================
+   10. RESPONSIVE TABLET DAN HP
+================================= */
+
+@media (max-width: 900px) {
     .navbar {
         padding: 15px 5%;
     }
 
-    .logo {
-        font-size: 22px;
+    .hero-akhlak {
+        padding: 60px 5%;
     }
+
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+
+    /* NAVBAR MOBILE */
 
     .menu-toggle {
         display: block;
     }
 
-    .navbar nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        display: none;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0;
-        padding: 8px 5% 15px;
-        background: #f7f3ea;
-        border-bottom: 1px solid rgba(23, 32, 51, 0.08);
+    .nav-container {
+        position: relative;
     }
 
-    .navbar nav.show {
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: calc(100% + 15px);
+        left: -5.5%;
+        width: 111%;
+        background: #ffffff;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 10px 5%;
+        box-shadow: 0 10px 20px rgba(23, 32, 51, 0.08);
+        border-top: 1px solid #eee8dc;
+    }
+
+    .nav-menu.show {
         display: flex;
     }
 
-    .navbar nav a {
-        padding: 12px 5px;
-        font-size: 14px;
-    }
-
-    .hero {
-        min-height: auto;
-        padding: 70px 5% 80px;
-    }
-
-    .hero h1 {
-        font-size: 43px;
-        letter-spacing: -1.5px;
-    }
-
-    .hero p,
-    .hero-text {
-        font-size: 16px;
-    }
-
-    .section,
-    .islam-section {
-        padding: 70px 5%;
-    }
-
-    .section h2,
-    .islam-text h2 {
-        font-size: 34px;
-    }
-
-    .content-box {
-        padding: 25px;
-    }
-
-    .content-box p,
-    .islam-text p {
-        font-size: 16px;
-    }
-
-    .islam-content {
-        grid-template-columns: 1fr;
-        gap: 30px;
-    }
-
-    .cards {
-        grid-template-columns: 1fr;
-    }
-
-    .card {
-        padding: 25px;
-    }
-
-    .digital-section {
-        padding: 70px 5%;
-    }
-
-    .digital-section h2 {
-        font-size: 34px;
-    }
-
-    .explore-section {
-        padding: 70px 5%;
-    }
-
-    .explore-section h2 {
-        font-size: 34px;
-    }
-
-    .button {
+    .nav-menu li {
         width: 100%;
-        text-align: center;
     }
 
-    footer {
-        padding: 25px 5%;
+    .nav-menu a {
+        display: block;
+        width: 100%;
+        padding: 13px 0;
+    }
+
+    /* HERO MOBILE */
+
+    .hero-akhlak {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 20px;
+        gap: 35px;
+    }
+
+    .hero-content {
+        width: 100%;
+    }
+
+    .hero-content p {
+        font-size: 15px;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+    }
+
+    .hero-visual {
+        width: 100%;
+    }
+
+    .hero-card {
+        width: 100%;
+    }
+
+    /* SECTION MOBILE */
+
+    .home-section {
+        padding: 55px 20px;
+    }
+
+    .intro-grid,
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-heading h2 {
+        font-size: 26px;
+    }
+
+    .cta-section h2 {
+        font-size: 26px;
+    }
+
+    /* TANYA AKHLAK MOBILE */
+
+    .tanya-container {
+        margin: 35px auto;
+    }
+
+    .tanya-header h1 {
+        font-size: 26px;
+    }
+
+    .question-list {
+        grid-template-columns: 1fr;
+    }
+
+    .ask-section {
+        padding: 20px;
     }
 }
 
-/* HP KECIL */
-
 @media (max-width: 400px) {
-
-    .hero h1 {
-        font-size: 37px;
+    .logo {
+        font-size: 20px;
     }
 
-    .section h2,
-    .islam-text h2,
-    .digital-section h2,
-    .explore-section h2 {
-        font-size: 30px;
+    .hero-content h1 {
+        font-size: 34px;
     }
 
-    .content-box,
-    .card,
-    .quote-box {
-        padding: 20px;
+    .btn-primary,
+    .btn-secondary {
+        padding: 12px 18px;
+        font-size: 14px;
     }
+}
+
+/* =====================================
+   TANYA AKHLAK - ELEGAN MINIMALIS
+===================================== */
+
+.akhlak-page {
+    max-width: 1120px;
+    margin: auto;
+    padding: 65px 25px 90px;
+}
+
+/* HEADER */
+
+.akhlak-heading {
+    max-width: 760px;
+    margin-bottom: 75px;
+}
+
+.akhlak-eyebrow {
+    display: inline-block;
+    color: #b58a32;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 17px;
+}
+
+.akhlak-heading h1 {
+    color: #172033;
+    font-size: clamp(38px, 5vw, 58px);
+    line-height: 1.15;
+    margin-bottom: 22px;
+}
+
+.akhlak-heading h1 span {
+    color: #bd9139;
+}
+
+.akhlak-heading p {
+    max-width: 610px;
+    color: #687080;
+    font-size: 16px;
+    line-height: 1.9;
+}
+
+/* JUDUL SECTION */
+
+.akhlak-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-bottom: 28px;
+}
+
+.akhlak-section-title h2,
+.akhlak-form-info h2,
+.akhlak-answer-heading h2 {
+    color: #172033;
+    font-size: 27px;
+    line-height: 1.4;
+    margin-bottom: 9px;
+}
+
+.akhlak-section-title p,
+.akhlak-form-info p,
+.akhlak-answer-heading p {
+    color: #687080;
+    font-size: 14px;
+}
+
+/* KARTU PERTANYAAN */
+
+.akhlak-question-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.akhlak-question {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    width: 100%;
+    min-height: 95px;
+    padding: 20px;
+    background: #ffffff;
+    border: 1px solid #e9e3d8;
+    border-radius: 12px;
+    text-align: left;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.akhlak-question:hover {
+    border-color: #bd9139;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(23, 32, 51, 0.05);
+}
+
+.question-number {
+    color: #bd9139;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.question-text {
+    flex: 1;
+    color: #172033;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+}
+
+.question-arrow {
+    color: #bd9139;
+    font-size: 18px;
+}
+
+/* FORM */
+
+.akhlak-form-section {
+    display: grid;
+    grid-template-columns: 0.8fr 1.2fr;
+    gap: 45px;
+    align-items: start;
+    margin-top: 85px;
+    padding: 40px;
+    background: #eee8dc;
+    border-radius: 18px;
+}
+
+.akhlak-form-info h2 {
+    font-size: 26px;
+}
+
+.akhlak-form-info p {
+    line-height: 1.8;
+}
+
+.akhlak-form label {
+    display: block;
+    color: #172033;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.akhlak-form textarea {
+    width: 100%;
+    min-height: 145px;
+    padding: 16px;
+    border: 1px solid #ddd5c8;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #172033;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+}
+
+.akhlak-form textarea:focus {
+    border-color: #bd9139;
+}
+
+.akhlak-form-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.akhlak-form-bottom span {
+    color: #687080;
+    font-size: 11px;
+}
+
+.akhlak-submit {
+    padding: 13px 19px;
+    border: none;
+    border-radius: 8px;
+    background: #172033;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+.akhlak-submit:hover {
+    background: #bd9139;
+    color: #172033;
+}
+
+/* HASIL JAWABAN */
+
+.akhlak-answer-section {
+    display: none;
+    margin-top: 80px;
+    scroll-margin-top: 100px;
+}
+
+.akhlak-answer-section.show {
+    display: block;
+}
+
+.akhlak-answer-heading {
+    margin-bottom: 25px;
+}
+
+.akhlak-answer-card {
+    padding: 25px;
+    background: #ffffff;
+    border: 1px solid #e9e3d8;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.answer-label {
+    display: block;
+    color: #bd9139;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+}
+
+.akhlak-answer-card h3,
+.akhlak-reflection-card h3 {
+    color: #172033;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.akhlak-answer-card p,
+.akhlak-reflection-card p {
+    color: #687080;
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+.akhlak-answer-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.akhlak-reflection-card {
+    padding: 28px;
+    background: #172033;
+    border-radius: 12px;
+    margin-top: 5px;
+}
+
+.akhlak-reflection-card h3 {
+    color: #ffffff;
+}
+
+.akhlak-reflection-card p {
+    color: #d5d8df;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    .akhlak-page {
+        padding: 45px 20px 65px;
+    }
+
+    .akhlak-heading {
+        margin-bottom: 55px;
+    }
+
+    .akhlak-heading h1 {
+        font-size: 39px;
+    }
+
+    .akhlak-question-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .akhlak-form-section {
+        grid-template-columns: 1fr;
+        gap: 25px;
+        padding: 25px 20px;
+        margin-top: 60px;
+    }
+
+    .akhlak-section-title h2,
+    .akhlak-form-info h2,
+    .akhlak-answer-heading h2 {
+        font-size: 23px;
+    }
+
+    .akhlak-answer-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .akhlak-form-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .akhlak-submit {
+        width: 100%;
+    }
+}
+.akhlak-answer-section.show {
+    display: block;
+}
+
+/* =====================================
+   FITUR PEMBELAJARAN RUANG NALAR
+===================================== */
+
+/* KENALI AKHLAK */
+#kenali-akhlak,
+#praktik-akhlak,
+#studi-kasus,
+#refleksi-diri {
+    scroll-margin-top: 90px;
+}
+
+.learning-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+}
+
+.learning-card {
+    background: #fff;
+    border: 1px solid #e8dfd0;
+    border-radius: 14px;
+    padding: 22px;
+    transition: .25s;
+}
+
+.learning-card:hover {
+    border-color: #bd9139;
+    box-shadow: 0 8px 22px rgba(23,32,51,.05);
+}
+
+.learning-card summary {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    cursor: pointer;
+    list-style: none;
+    color: #172033;
+}
+
+.learning-card summary::-webkit-details-marker {
+    display: none;
+}
+
+.learning-card summary > span:first-child {
+    font-size: 25px;
+}
+
+.learning-card summary strong {
+    flex: 1;
+}
+
+.detail-arrow {
+    color: #bd9139;
+    font-size: 21px;
+}
+
+.learning-card[open] .detail-arrow {
+    transform: rotate(45deg);
+}
+
+.learning-card p {
+    color: #687080;
+    font-size: 14px;
+    line-height: 1.8;
+    padding: 17px 0 2px;
+}
+
+/* PRAKTIK AKHLAK */
+.practice-panel,
+.case-panel,
+.reflection-panel {
+    max-width: 850px;
+    margin: auto;
+    padding: 32px;
+    background: #fff;
+    border: 1px solid #e8dfd0;
+    border-radius: 16px;
+}
+
+.practice-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.practice-top h3,
+.reflection-history h3 {
+    color: #172033;
+    margin-bottom: 5px;
+}
+
+.practice-top p {
+    color: #687080;
+    font-size: 13px;
+}
+
+.practice-count {
+    color: #bd9139;
+    font-size: 20px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.practice-progress {
+    width: 100%;
+    height: 9px;
+    background: #eee8dc;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 22px;
+}
+
+#practiceProgress {
+    width: 0;
+    height: 100%;
+    background: #bd9139;
+    border-radius: 20px;
+    transition: width .3s;
+}
+
+.practice-list {
+    display: grid;
+    gap: 12px;
+}
+
+.practice-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #faf8f3;
+    border: 1px solid #eee8dc;
+    border-radius: 9px;
+    color: #172033;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.practice-item input {
+    width: 17px;
+    height: 17px;
+    accent-color: #bd9139;
+    flex-shrink: 0;
+}
+
+.practice-item.completed span {
+    color: #758071;
+    text-decoration: line-through;
+}
+
+.practice-note {
+    margin-top: 20px;
+    color: #8b6928;
+    font-size: 13px;
+}
+
+/* STUDI KASUS */
+.case-panel h3 {
+    font-size: 24px;
+    color: #172033;
+    margin: 12px 0;
+}
+
+.case-panel > p {
+    color: #687080;
+    line-height: 1.8;
+    font-size: 14px;
+}
+
+.case-label {
+    color: #bd9139;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.case-options {
+    display: grid;
+    gap: 12px;
+    margin: 24px 0;
+}
+
+.case-options label {
+    display: flex;
+    gap: 12px;
+    padding: 15px;
+    background: #faf8f3;
+    border: 1px solid #eee8dc;
+    border-radius: 9px;
+    cursor: pointer;
+    color: #172033;
+    font-size: 14px;
+}
+
+.case-options input {
+    accent-color: #bd9139;
+    flex-shrink: 0;
+}
+
+.case-button,
+.reflection-button {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 8px;
+    background: #172033;
+    color: #fff;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: .25s;
+}
+
+.case-button:hover,
+.reflection-button:hover {
+    background: #bd9139;
+    color: #172033;
+}
+
+.case-feedback {
+    display: none;
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 9px;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.case-feedback.correct,
+.case-feedback.incorrect {
+    display: block;
+}
+
+.case-feedback.correct {
+    background: #edf5ed;
+    color: #285b32;
+}
+
+.case-feedback.incorrect {
+    background: #fbf1e7;
+    color: #89521d;
+}
+
+/* REFLEKSI DIRI */
+.reflection-panel form {
+    display: grid;
+    gap: 12px;
+}
+
+.reflection-panel form label {
+    color: #172033;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+.reflection-panel textarea {
+    width: 100%;
+    min-height: 105px;
+    resize: vertical;
+    border: 1px solid #ddd5c8;
+    border-radius: 9px;
+    padding: 14px;
+    font: inherit;
+    font-size: 14px;
+    outline: none;
+}
+
+.reflection-panel textarea:focus {
+    border-color: #bd9139;
+}
+
+.reflection-button {
+    justify-self: start;
+    margin-top: 8px;
+}
+
+.reflection-history {
+    border-top: 1px solid #eee8dc;
+    margin-top: 30px;
+    padding-top: 25px;
+}
+
+.reflection-history h3 {
+    margin-bottom: 16px;
+}
+
+.empty-reflection {
+    color: #687080;
+    font-size: 14px;
+}
+
+.reflection-record {
+    padding: 18px;
+    background: #faf8f3;
+    border: 1px solid #eee8dc;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.reflection-record small {
+    display: block;
+    color: #bd9139;
+    margin-bottom: 12px;
+}
+
+.reflection-record h4 {
+    color: #172033;
+    font-size: 14px;
+    margin: 10px 0 4px;
+}
+
+.reflection-record p {
+    color: #687080;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    .learning-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .practice-panel,
+    .case-panel,
+    .reflection-panel {
+        padding: 22px 18px;
+    }
+
+    .practice-top {
+        align-items: flex-start;
+    }
+
+    .case-panel h3 {
+        font-size: 21px;
+    }
+
+    .reflection-button,
+    .case-button {
+        width: 100%;
+    }
+}
+
+/* =====================================
+   SISTEM DASHBOARD RUANG NALAR
+===================================== */
+
+/* Semua halaman fitur disembunyikan */
+.page-view {
+    display: none !important;
+}
+
+/* Hanya halaman yang aktif ditampilkan */
+.page-view.active {
+    display: block !important;
+}
+
+/* Menu yang sedang dipilih */
+.nav-menu a.active {
+    color: #bd9139;
+}
+
+/* Tombol/kartu untuk berpindah fitur */
+[data-go] {
+    cursor: pointer;
 }
