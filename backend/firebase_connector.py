@@ -109,23 +109,40 @@ class FirebaseConnector:
             log.error(f"Firestore query failed: {e}")
     
     def start_polling(self, interval: float = 3.0):
-        """Start background polling thread."""
+        """Start background polling thread with auto-backoff on rate limit."""
         if self._thread and self._thread.is_alive():
             log.warning("Already polling")
             return
-        
+
         self.running = True
-        
+
         def _loop():
-            log.info(f"Polling started (every {interval}s)")
+            base_interval = interval
+            current_interval = base_interval
+            consecutive_429 = 0
+            log.info(f"Polling started (every {base_interval}s, auto-backoff on 429)")
             while self.running:
                 try:
                     self.check_new_questions()
+                    # Success — gradually recover interval
+                    if consecutive_429 > 0:
+                        consecutive_429 = max(0, consecutive_429 - 1)
+                        current_interval = max(base_interval, current_interval * 0.8)
                 except Exception as e:
-                    log.error(f"Poll error: {e}")
-                time.sleep(interval)
+                    err_str = str(e)
+                    if "429" in err_str or "Quota" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                        consecutive_429 += 1
+                        current_interval = min(300, base_interval * (2 ** consecutive_429))
+                        log.warning(
+                            f"⚠️ Firestore rate-limited (429). "
+                            f"Backoff: {current_interval:.0f}s "
+                            f"(hit #{consecutive_429})"
+                        )
+                    else:
+                        log.error(f"Poll error: {e}")
+                time.sleep(current_interval)
             log.info("Polling stopped")
-        
+
         self._thread = Thread(target=_loop, daemon=True)
         self._thread.start()
     

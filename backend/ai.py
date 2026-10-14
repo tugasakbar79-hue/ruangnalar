@@ -4,7 +4,13 @@ OpenRouter integration untuk menjawab pertanyaan
 """
 import os
 import json
+import sys
 import httpx
+
+# Allow importing rag/ submodule
+_BASE = os.path.dirname(os.path.abspath(__file__))
+if _BASE not in sys.path:
+    sys.path.insert(0, _BASE)
 
 # Default system prompt
 DEFAULT_SYSTEM_PROMPT = """Kamu adalah asisten Ruang Nalar, seorang ahli teologi dan filsafat Islam yang bertugas menjawab pertanyaan pengguna dengan pendekatan nalar (reasoning) yang bijaksana.
@@ -52,23 +58,57 @@ class RuangNalarAI:
             "X-Title": "Ruang Nalar AI",
         }
     
-    def answer(self, question: str, system_prompt: str = None) -> str:
-        """Generate an answer for a question using direct HTTP call."""
-        messages = [
-            {"role": "system", "content": system_prompt or DEFAULT_SYSTEM_PROMPT},
-            {"role": "user", "content": question}
-        ]
+    def answer(self, question: str, system_prompt: str = None, history: list = None) -> str:
+        """Generate an answer for a question using direct HTTP call.
+
+        If the RAG index is available, retrieves relevant Quran/Hadith
+        dalil and injects it as context so the model quotes real sources.
+        history: list of {"role": "user"|"assistant", "content": str}
+        """
+        if os.getenv("AI_PAUSED", "").lower() in ("true", "1", "yes"):
+            return (
+                "🧠 **'Aqli sedang istirahat**\n\n"
+                "Terima kasih sudah bertanya. Saat ini 'Aqli sedang tidak aktif "
+                "karena masih dalam pengembangan untuk riset murid-murid. "
+                "Insyaallah akan aktif kembali saat sesi presentasi nanti.\n\n"
+                "📚 Sementara itu, silakan lanjutkan diskusi dan eksplorasi "
+                "bersama teman-teman kelompokmu!"
+            )
+        system = system_prompt or DEFAULT_SYSTEM_PROMPT
+        messages = [{"role": "system", "content": system}]
+
+        # Insert conversation history (clean messages, no RAG)
+        if history:
+            for msg in history:
+                messages.append({"role": msg["role"], "content": msg["content"]})
+
+        # RAG: retrieve dalil (best-effort, never fatal)
+        user_content = question
+        self._rag_rows = []
+        try:
+            from rag import retriever
+            if retriever.is_ready():
+                rows = retriever.search(question, k=5)
+                self._rag_rows = rows
+                dalil_block = retriever.format_dalil(rows)
+                if dalil_block:
+                    # put dalil context first so the model anchors on it
+                    user_content = f"{dalil_block}\n\nTUGAS: Jawab pertanyaan ini dengan merujuk dalil di atas:\n{question}"
+        except Exception:
+            pass  # RAG unavailable — fall back to plain Q&A
+
+        messages.append({"role": "user", "content": user_content})
         
         payload = {
             "model": self.model,
             "messages": messages,
-            "max_tokens": 1024,
+            "max_tokens": 3072,
             "temperature": 0.7,
             "top_p": 0.9,
         }
         
         try:
-            with httpx.Client(timeout=30.0) as client:
+            with httpx.Client(timeout=60.0) as client:
                 resp = client.post(
                     f"{self.base_url}/chat/completions",
                     headers=self.headers,
@@ -76,19 +116,61 @@ class RuangNalarAI:
                 )
                 resp.raise_for_status()
                 data = resp.json()
-                return data["choices"][0]["message"]["content"].strip()
-        
+                msg = data["choices"][0]["message"]
+                raw = msg.get("content")
+                if raw is None:
+                    fallback = msg.get("reasoning") or "(model tidak memberikan jawaban langsung)"
+                    answer = str(fallback).strip()
+                else:
+                    answer = raw.strip()
+                # Append deterministic DALIL block from retrieval results
+                dalil_extra = self._build_dalil_section()
+                if dalil_extra:
+                    answer = answer.rstrip() + "\n\n📜 DALIL:\n" + dalil_extra
+                return answer
+
         except httpx.HTTPStatusError as e:
             raise RuntimeError(f"OpenRouter HTTP {e.response.status_code}: {e.response.text[:500]}")
         except Exception as e:
             raise RuntimeError(f"AI call failed: {str(e)[:300]}")
     
+    def _build_dalil_section(self, max_items: int = 3) -> str:
+        """Build the 📜 DALIL block from the last retrieval (deterministic)."""
+        rows = getattr(self, "_rag_rows", []) or []
+        if not rows:
+            return ""
+        lines = []
+        for r in rows[:max_items]:
+            if r["type"] == "quran":
+                t = r.get("tafsir", {})
+                name = t.get("surah_name", "")
+                terjemah = (r.get("id_text") or "").strip()
+                line = f"- QS. {r['ref']}"
+                if name:
+                    line += f" ({name})"
+                if terjemah:
+                    line += f" — {terjemah[:220]}"
+                lines.append(line)
+            else:
+                imam = r.get("imam", "").title()
+                nomor = r.get("nomor", "")
+                terjemah = (r.get("id_text") or "").strip()
+                arab = (r.get("arab") or "").strip()
+                line = f"- HR. {imam} no. {nomor}"
+                if arab:
+                    line += f" — {arab[:120]}"
+                if terjemah:
+                    line += f"\n  ({terjemah[:220]})"
+                lines.append(line)
+        return "\n".join(lines)
+
     def verify_format(self, answer: str) -> bool:
         """Check if answer has the required sections."""
         has_reason = "🧠" in answer or "PENJELASAN" in answer
         has_islam = "☪️" in answer or "DALAM ISLAM" in answer
+        has_dalil = "📜" in answer or "DALIL" in answer
         has_reflection = "💭" in answer or "REFLEKSI" in answer
-        return has_reason and has_islam and has_reflection
+        return has_reason and has_islam and has_dalil and has_reflection
 
 
 # Simple test

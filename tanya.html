@@ -252,6 +252,122 @@
         }
 
         /* =========================
+           PERKENALAN RESPONDEN
+        ========================= */
+
+        .responden-panel {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin: 10px 0;
+            box-shadow: 0 2px 12px rgba(23, 32, 51, 0.05);
+        }
+
+        .responden-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .responden-sub {
+            font-size: 12px;
+            color: #687080;
+            margin: 4px 0 10px;
+            line-height: 1.4;
+        }
+
+        .responden-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .responden-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d8dde5;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .responden-input:focus {
+            border-color: #c89b3c;
+        }
+
+        .responden-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .responden-save-btn {
+            padding: 9px 22px;
+            border: none;
+            border-radius: 10px;
+            background: #c89b3c;
+            color: #172033;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .responden-save-btn:hover {
+            background: #b18632;
+        }
+
+        .responden-skip-btn {
+            padding: 9px 14px;
+            border: 1px solid #d8dde5;
+            border-radius: 10px;
+            background: #fff;
+            color: #687080;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .responden-skip-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .responden-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f7f3ea;
+            border: 1px solid #e5dfd2;
+            border-radius: 999px;
+            padding: 6px 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #5b4a26;
+            font-weight: 600;
+        }
+
+        .responden-badge button {
+            background: none;
+            border: none;
+            color: #c89b3c;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (min-width: 600px) {
+            .responden-fields {
+                flex-direction: row;
+            }
+            .responden-input {
+                flex: 1;
+            }
+        }
+
+        /* =========================
            FOOTER — minimal
         ========================= */
 
@@ -335,6 +451,50 @@
     <section class="chat-section">
 
         <div class="chat-container">
+
+            <!-- PERKENALAN RESPONDEN -->
+            <div id="respondenPanel" class="responden-panel">
+                <div class="responden-title">👋 Halo! Kenalan dulu yuk</div>
+                <p class="responden-sub">Perkenalan ini dicatat sebagai sumber riset. Jawabanmu anonim untuk publik.</p>
+                <div class="responden-fields">
+                    <input
+                        type="text"
+                        id="respondenNama"
+                        placeholder="Nama kamu (boleh inisial)"
+                        class="responden-input"
+                        maxlength="60"
+                    />
+                    <input
+                        type="text"
+                        id="respondenAsal"
+                        placeholder="Asal / kelas (contoh: XI MIPA 2)"
+                        class="responden-input"
+                        maxlength="80"
+                    />
+                </div>
+                <div class="responden-actions">
+                    <button
+                        id="respondenSaveBtn"
+                        class="responden-save-btn"
+                        type="button"
+                    >
+                        Mulai Ngobrol
+                    </button>
+                    <button
+                        id="respondenSkipBtn"
+                        class="responden-skip-btn"
+                        type="button"
+                    >
+                        Lewati (anonim)
+                    </button>
+                </div>
+            </div>
+
+            <!-- BADGE IDENTITAS (setelah simpan) -->
+            <div id="respondenBadge" class="responden-badge" style="display:none;">
+                <span id="respondenLabel"></span>
+                <button id="respondenEditBtn" type="button">Ganti</button>
+            </div>
 
             <!-- PESAN -->
             <div id="chatMessages">
@@ -433,6 +593,76 @@
         const statusBox = document.getElementById("statusBox");
         const errorBox = document.getElementById("errorBox");
         const chatMessages = document.getElementById("chatMessages");
+
+        // Elemen perkenalan responden
+        const respondenPanel = document.getElementById("respondenPanel");
+        const respondenBadge = document.getElementById("respondenBadge");
+        const respondenLabel = document.getElementById("respondenLabel");
+        const respondenNama = document.getElementById("respondenNama");
+        const respondenAsal = document.getElementById("respondenAsal");
+        const respondenSaveBtn = document.getElementById("respondenSaveBtn");
+        const respondenSkipBtn = document.getElementById("respondenSkipBtn");
+        const respondenEditBtn = document.getElementById("respondenEditBtn");
+
+        // ==========================================
+        // IDENTITAS RESPONDEN (localStorage)
+        // ==========================================
+
+        function getResponden() {
+            try {
+                return JSON.parse(localStorage.getItem("rn_responden") || "null");
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function setResponden(data) {
+            localStorage.setItem("rn_responden", JSON.stringify(data));
+            renderResponden();
+        }
+
+        function renderResponden() {
+            const r = getResponden();
+            if (r && r.nama) {
+                respondenPanel.style.display = "none";
+                respondenBadge.style.display = "flex";
+                const asalPart = r.asal ? " · " + r.asal : "";
+                respondenLabel.textContent = "👤 Responden: " + r.nama + asalPart;
+            } else if (r && r.anonim) {
+                respondenPanel.style.display = "none";
+                respondenBadge.style.display = "flex";
+                respondenLabel.textContent = "👤 Responden anonim (tanpa nama)";
+            } else {
+                respondenPanel.style.display = "block";
+                respondenBadge.style.display = "none";
+            }
+        }
+
+        respondenSaveBtn.addEventListener("click", () => {
+            const nama = respondenNama.value.trim();
+            const asal = respondenAsal.value.trim();
+            if (!nama) {
+                respondenNama.focus();
+                respondenNama.style.borderColor = "#c89b3c";
+                return;
+            }
+            setResponden({ nama: nama, asal: asal });
+        });
+
+        respondenSkipBtn.addEventListener("click", () => {
+            setResponden({ anonim: true });
+        });
+
+        respondenEditBtn.addEventListener("click", () => {
+            const r = getResponden() || {};
+            respondenNama.value = r.nama || "";
+            respondenAsal.value = r.asal || "";
+            respondenPanel.style.display = "block";
+            respondenBadge.style.display = "none";
+        });
+
+        // Render identitas saat halaman dimuat
+        renderResponden();
 
 
         // ==========================================
@@ -583,7 +813,9 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         question: question,
-                        conversation_id: conversationId
+                        conversation_id: conversationId,
+                        responden_nama: (getResponden() || {}).nama || "",
+                        responden_asal: (getResponden() || {}).asal || ""
                     })
                 }
                 );
