@@ -8,11 +8,394 @@
     <title>Tanya Akhlak | Ruang Nalar</title>
 
     <link rel="stylesheet" href="style.css">
+
+
+    <style>
+        /* =========================
+           OVERRIDE / CHAT LAYOUT
+        ========================= */
+
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #f8fafc;
+        }
+
+        /* navbar jadi relative supaya gak konflik sticky */
+        .navbar {
+            position: relative !important;
+            top: auto !important;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* =========================
+           HERO — minimal
+        ========================= */
+
+        .hero {
+            text-align: center;
+            padding: 16px 16px 4px;
+            flex-shrink: 0;
+        }
+
+        .hero .eyebrow {
+            font-size: 11px;
+            color: #c89b3c;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
+        }
+
+        .hero h1 {
+            font-size: clamp(18px, 3.5vw, 30px);
+            margin: 6px auto;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: #c89b3c;
+        }
+
+        .hero p {
+            font-size: 13px;
+            color: #687080;
+            max-width: 600px;
+            margin: 4px auto 0;
+            line-height: 1.4;
+        }
+
+        /* =========================
+           CHAT — isi utama
+        ========================= */
+
+        .chat-section {
+            padding: 0 16px;
+        }
+
+        .chat-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #chatMessages {
+            min-height: 150px;
+            padding: 8px 0;
+        }
+
+        .msg {
+            margin-bottom: 12px;
+        }
+
+        .msg-header {
+            font-size: 11px;
+            font-weight: 700;
+            color: #8b6f47;
+            margin-bottom: 2px;
+        }
+
+        .msg-bubble {
+            padding: 10px 14px;
+            border-radius: 12px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .user-bubble {
+            background: #c89b3c;
+            color: #172033;
+        }
+
+        .user-bubble .msg-text {
+            white-space: pre-wrap;
+            font-weight: 500;
+        }
+
+        .ai-bubble {
+            background: #f7f3ea;
+            border: 1px solid #e5dfd2;
+            color: #333;
+        }
+
+        .ai-bubble .ai-section {
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #e8e2d6;
+        }
+
+        .ai-bubble .ai-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-bubble .section-icon {
+            font-size: 12px;
+            font-weight: 800;
+            color: #c89b3c;
+            margin-bottom: 3px;
+        }
+
+        .ai-bubble .section-content {
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 14px;
+        }
+
+        .ai-bubble .msg-text {
+            line-height: 1.6;
+            color: #333;
+            white-space: pre-wrap;
+        }
+
+        /* =========================
+           INPUT — sticky bawah
+        ========================= */
+
+        .input-area {
+            flex-shrink: 0;
+            background: white;
+            border-radius: 14px 14px 0 0;
+            border-top: 1px solid #e5e7eb;
+            padding: 10px 14px;
+            box-shadow: 0 -2px 12px rgba(23, 32, 51, 0.04);
+        }
+
+        #questionInput {
+            width: 100%;
+            min-height: 44px;
+            resize: none;
+            padding: 10px 12px;
+            border: 1px solid #d8dde5;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        #questionInput:focus {
+            border-color: #c89b3c;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            align-items: center;
+        }
+
+        .send-button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #c89b3c;
+            color: #172033;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .send-button:hover {
+            background: #b18632;
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .new-chat-btn {
+            background: none;
+            border: 1px solid #d8dde5;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: #687080;
+            cursor: pointer;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .new-chat-btn:hover {
+            background: #f0f0f0;
+        }
+
+        #statusBox {
+            display: none;
+            margin-top: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #fff8e7;
+            border: 1px solid #ead8a6;
+            color: #66501c;
+            font-size: 12px;
+        }
+
+        #errorBox {
+            display: none;
+            margin-top: 4px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            font-size: 12px;
+        }
+
+        /* =========================
+           PERKENALAN RESPONDEN
+        ========================= */
+
+        .responden-panel {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin: 10px 0;
+            box-shadow: 0 2px 12px rgba(23, 32, 51, 0.05);
+        }
+
+        .responden-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: #172033;
+        }
+
+        .responden-sub {
+            font-size: 12px;
+            color: #687080;
+            margin: 4px 0 10px;
+            line-height: 1.4;
+        }
+
+        .responden-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .responden-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d8dde5;
+            border-radius: 10px;
+            outline: none;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .responden-input:focus {
+            border-color: #c89b3c;
+        }
+
+        .responden-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .responden-save-btn {
+            padding: 9px 22px;
+            border: none;
+            border-radius: 10px;
+            background: #c89b3c;
+            color: #172033;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .responden-save-btn:hover {
+            background: #b18632;
+        }
+
+        .responden-skip-btn {
+            padding: 9px 14px;
+            border: 1px solid #d8dde5;
+            border-radius: 10px;
+            background: #fff;
+            color: #687080;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .responden-skip-btn:hover {
+            background: #f0f0f0;
+        }
+
+        .responden-badge {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f7f3ea;
+            border: 1px solid #e5dfd2;
+            border-radius: 999px;
+            padding: 6px 14px;
+            margin: 8px 0;
+            font-size: 13px;
+            color: #5b4a26;
+            font-weight: 600;
+        }
+
+        .responden-badge button {
+            background: none;
+            border: none;
+            color: #c89b3c;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        @media (min-width: 600px) {
+            .responden-fields {
+                flex-direction: row;
+            }
+            .responden-input {
+                flex: 1;
+            }
+        }
+
+        /* =========================
+           FOOTER — minimal
+        ========================= */
+
+        footer {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            text-align: center;
+            background: #172033;
+            color: white;
+            font-size: 11px;
+        }
+
+        footer .footer-logo {
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        footer .footer-logo span {
+            color: #c89b3c;
+        }
+    </style>
+
 </head>
 
 <body>
 
-    <!-- NAVBAR -->
+    <!-- NAVBAR -
     <nav class="navbar">
         <div class="nav-container">
 
