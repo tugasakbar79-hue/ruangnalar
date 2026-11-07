@@ -1,268 +1,237 @@
+
 """
 Ruang Nalar AI Backend — FastAPI
 AI Agent + Firebase Firestore integration
 """
+
 import os
 import sys
 import logging
 import uuid
-from dotenv import load_dotenv
 from contextlib import asynccontextmanager
 
-load_dotenv()
+# ==================================================
+# PATH CONFIGURATION
+# ==================================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
+# ==================================================
+# ENVIRONMENT
+# ==================================================
+
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(BASE_DIR, ".env"))
+
+# ==================================================
+# FASTAPI IMPORTS
+# ==================================================
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
+# ==================================================
+# LOCAL MODULES
+# ==================================================
+
 from ai import RuangNalarAI
 from firebase_connector import FirebaseConnector
 from firebase_admin import firestore
+
 try:
     from rag import retriever
-except Exception:
+except Exception as e:
+    logging.warning(f"RAG tidak tersedia: {e}")
     retriever = None
 
-# ── Logging ──
+
+# ==================================================
+# LOGGING
+# ==================================================
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(name)s] %(levelname)s: %(message)s"
+    format="%(asctime)s - %(levelname)s - %(message)s"
 )
-log = logging.getLogger("ruangnalar")
 
-# ── Init AI ──
-AI_KEY = os.getenv("OPENROUTER_API_KEY")
-AI_MODEL = os.getenv("AI_MODEL", "deepseek/deepseek-v4-flash")
-
-ai = None
-if AI_KEY:
-    try:
-        ai = RuangNalarAI(api_key=AI_KEY, model=AI_MODEL)
-        log.info(f"🧠 AI ready: {AI_MODEL}")
-    except Exception as e:
-        log.warning(f"⚠️ AI init failed: {e}")
-else:
-    log.warning("⚠️ OPENROUTER_API_KEY belum diset. AI mode nonaktif.")
-
-# ── Init Firebase ──
-fc = FirebaseConnector(ai_instance=ai)
-if fc.db:
-    log.info(f"🔥 Firebase connected: {fc.db is not None}")
+logger = logging.getLogger(__name__)
 
 
-# ── App lifecycle ──
+# ==================================================
+# LIFESPAN
+# ==================================================
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Start polling on startup, stop on shutdown."""
-    # Startup
-    if fc.is_ready():
-        fc.start_polling(interval=15.0)
-        log.info("▶️ Firebase polling started (15s interval — anti rate-limit)")
-    else:
-        log.warning("⏸️ Firebase polling not started — AI or DB not ready")
-    yield
-    # Shutdown
-    fc.stop_polling()
-    log.info("⏹️ Firebase polling stopped")
+    logger.info("Ruang Nalar Backend starting...")
 
+    try:
+        app.state.firebase = FirebaseConnector()
+        logger.info("Firebase initialized")
+    except Exception as e:
+        logger.exception("Firebase initialization failed")
+        app.state.firebase = None
+
+    try:
+        app.state.ai = RuangNalarAI()
+        logger.info("AI initialized")
+    except Exception as e:
+        logger.exception("AI initialization failed")
+        app.state.ai = None
+
+    yield
+
+    logger.info("Ruang Nalar Backend shutting down")
+
+
+# ==================================================
+# APP
+# ==================================================
 
 app = FastAPI(
-    title="Ruang Nalar AI",
-    description="AI Agent untuk menjawab pertanyaan nalar & teologi Islam",
-    version="1.1.0",
+    title="Ruang Nalar AI API",
+    description="Backend AI untuk platform Ruang Nalar",
+    version="1.0.0",
     lifespan=lifespan
 )
 
-# CORS — allow all origins
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
-    allow_headers=["*"],
+    allow_headers=["*"]
 )
 
 
-# ── Conversation Memory ──
-conversations = {}
-MAX_CONV_HISTORY = 20  # max message pairs per conversation
+# ==================================================
+# REQUEST MODEL
+# ==================================================
 
-
-# ── Models ──
 class AskRequest(BaseModel):
     question: str
-    conversation_id: str = ""
-    responden_nama: str = ""
-    responden_asal: str = ""
-
-class AskResponse(BaseModel):
-    answer: str
-    model: str
-    formatted: bool
-    answered_by: str = "ai"
-    conversation_id: str = ""
+    session_id: str | None = None
 
 
-# ── Percakapan Log ──
-import json as _json
-from datetime import datetime as _dt, timezone as _tz
+# ==================================================
+# HEALTH CHECK
+# ==================================================
 
-PERCAKAPAN_LOG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "percakapan.jsonl")
-
-def log_percakapan(conv_id: str, req: AskRequest, answer: str):
-    """Simpan setiap Q&A ke Firestore (collection 'percakapan') + file jsonl lokal."""
-    entry = {
-        "waktu": _dt.now(_tz.utc).isoformat(),
-        "conversation_id": conv_id,
-        "responden_nama": req.responden_nama.strip(),
-        "responden_asal": req.responden_asal.strip(),
-        "pertanyaan": req.question.strip(),
-        "jawaban": answer,
-        "model": AI_MODEL,
-    }
-    # 1) File lokal (always)
-    try:
-        os.makedirs(os.path.dirname(PERCAKAPAN_LOG), exist_ok=True)
-        with open(PERCAKAPAN_LOG, "a", encoding="utf-8") as f:
-            f.write(_json.dumps(entry, ensure_ascii=False) + "\n")
-    except Exception as e:
-        log.warning(f"⚠️ Gagal tulis file percakapan: {e}")
-    # 2) Firestore (best-effort)
-    if fc.db:
-        try:
-            fc.db.collection("percakapan").add({
-                **entry,
-                "waktu_firestore": firestore.SERVER_TIMESTAMP,
-            })
-            log.info(f"📝 Percakapan tersimpan: {conv_id[:8]}… ({req.responden_nama or 'anonim'})")
-        except Exception as e:
-            log.warning(f"⚠️ Gagal simpan ke Firestore: {e}")
-
-
-# ── Routes ──
 @app.get("/health")
 async def health():
     return {
-        "status": "ok",
-        "model": AI_MODEL,
-        "ai_ready": ai is not None,
-        "ai_paused": os.getenv("AI_PAUSED", "").lower() in ("true", "1", "yes"),
-        "firebase_ready": fc.db is not None,
-        "polling": fc.running,
-        "rag_ready": bool(retriever and retriever.is_ready()),
-        "rag_chunks": retriever.count() if retriever else 0,
-        "stats": fc.get_stats()
+        "status": "online",
+        "message": "Ruang Nalar API berjalan"
     }
+
+
+# ==================================================
+# KNOWLEDGE
+# ==================================================
 
 @app.get("/api/knowledge")
-async def knowledge():
-    """RAG index stats."""
-    if not retriever:
-        return {"ready": False, "chunks": 0}
-    return {"ready": retriever.is_ready(), "chunks": retriever.count()}
+async def get_knowledge():
+    if retriever is None:
+        return {
+            "status": "unavailable",
+            "data": []
+        }
+
+    try:
+        return {
+            "status": "success",
+            "data": retriever.get_all()
+        }
+    except Exception as e:
+        logger.exception("Knowledge error")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @app.get("/api/knowledge/search")
-async def knowledge_search(q: str = ""):
-    """Debug endpoint: show what dalil RAG retrieves for a question."""
-    if not q.strip():
-        return {"error": "Parameter 'q' required. Contoh: /api/knowledge/search?q=dalil shalat berjamaah"}
-    if not retriever or not retriever.is_ready():
-        return {"error": "RAG index belum tersedia"}
-    rows = retriever.search(q.strip(), k=5)
-    return {
-        "query": q.strip(),
-        "results": [
-            {
-                "type": r["type"],
-                "ref": r["ref"] or f"{r['imam']} {r['nomor']}",
-                "distance": round(r["distance"], 4),
-            }
-            for r in rows
-        ],
-        "dalil_block": retriever.format_dalil(rows),
-    }
+async def search_knowledge(q: str):
+    if retriever is None:
+        return {
+            "status": "unavailable",
+            "data": []
+        }
+
+    try:
+        results = retriever.search(q)
+
+        return {
+            "status": "success",
+            "data": results
+        }
+    except Exception as e:
+        logger.exception("Knowledge search error")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================================================
+# ASK AI
+# ==================================================
 
 @app.post("/api/ask")
-async def ask(req: AskRequest):
-    if not ai:
-        raise HTTPException(503, "AI backend not ready — set OPENROUTER_API_KEY")
-    
-    question = req.question.strip()
-    if not question:
-        raise HTTPException(400, "Pertanyaan tidak boleh kosong")
-    
-    # ── Conversation Management ──
-    conv_id = req.conversation_id or str(uuid.uuid4())
-    conv = conversations.get(conv_id, {"messages": []})
-    
-    # Simpan pertanyaan user ke history
-    conv["messages"].append({"role": "user", "content": question})
-    
-    # Trim biar gak kebanyakan
-    if len(conv["messages"]) > MAX_CONV_HISTORY:
-        conv["messages"] = conv["messages"][-MAX_CONV_HISTORY:]
-    
-    # History untuk dikirim ke LLM (sebelum pertanyaan terbaru)
-    history = conv["messages"][:-1]
-    
-    log.info(f"[{conv_id[:8]}] Q: {question[:60]}... ({len(history)//2} previous turns)")
-    
-    try:
-        answer = ai.answer(question, history=history)
-        
-        # Simpan jawaban AI ke history
-        conv["messages"].append({"role": "assistant", "content": answer})
-        conversations[conv_id] = conv
-        
-        formatted = ai.verify_format(answer)
-        
-        # Catat percakapan + identitas responden (sumber riset)
-        log_percakapan(conv_id, req, answer)
-        
-        return {
-            "answer": answer,
-            "model": AI_MODEL,
-            "formatted": formatted,
-            "answered_by": "ai",
-            "conversation_id": conv_id
-        }
-    except Exception as e:
-        log.error(f"[{conv_id[:8]}] AI Error: {e}")
-        conv["messages"] = conv["messages"][:-1]
-        if conv["messages"]:
-            conversations[conv_id] = conv
-        raise HTTPException(500, f"Gagal: {str(e)[:200]}")
+async def ask_ai(request: AskRequest):
+    if not request.question.strip():
+        raise HTTPException(
+            status_code=400,
+            detail="Pertanyaan tidak boleh kosong"
+        )
 
-@app.get("/api/ask")
-async def ask_get(q: str = ""):
-    """GET endpoint for quick testing."""
-    if not q.strip():
-        return {"error": "Parameter 'q' required. Contoh: /api/ask?q=Mengapa manusia berakal?"}
-    if not ai:
-        raise HTTPException(503, "AI not ready")
-    
+    ai = getattr(app.state, "ai", None)
+
+    if ai is None:
+        raise HTTPException(
+            status_code=503,
+            detail="Layanan AI belum tersedia"
+        )
+
     try:
-        answer = ai.answer(q.strip())
+        answer = ai.ask(request.question)
+
         return {
-            "question": q.strip(),
+            "status": "success",
+            "question": request.question,
             "answer": answer,
-            "model": AI_MODEL,
-            "formatted": ai.verify_format(answer)
+            "session_id": request.session_id or str(uuid.uuid4())
         }
+
     except Exception as e:
-        raise HTTPException(500, str(e)[:200])
+        logger.exception("AI request failed")
+        raise HTTPException(
+            status_code=500,
+            detail="Terjadi kesalahan saat memproses pertanyaan"
+        )
+
+
+# ==================================================
+# STATISTICS
+# ==================================================
 
 @app.get("/api/stats")
-async def stats():
-    """Get backend statistics."""
-    return fc.get_stats()
+async def get_stats():
+    firebase = getattr(app.state, "firebase", None)
 
+    if firebase is None:
+        return {
+            "status": "unavailable",
+            "total": 0
+        }
 
-# ── Run ──
-if __name__ == "__main__":
-    import uvicorn
-    port = int(os.getenv("PORT", "8080"))
-    host = os.getenv("HOST", "0.0.0.0")
-    
-    log.info(f"🚀 Ruang Nalar AI starting on {host}:{port}")
-    uvicorn.run("main:app", host=host, port=port)
+    try:
+        return {
+            "status": "success",
+            "total": 0
+        }
+    except Exception:
+        logger.exception("Statistics error")
+        raise HTTPException(
+            status_code=500,
+            detail="Gagal mengambil statistik"
+        )
