@@ -1,15 +1,35 @@
-
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "version": 2,
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.js",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "backend/main.py"
+    },
+    {
+      "src": "/health",
+      "dest": "backend/main.py"
+    },
+    {
+      "handle": "filesystem"
     }
   ]
 }

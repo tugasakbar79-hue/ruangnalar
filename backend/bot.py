@@ -1,241 +1,487 @@
-"""
-Ruang Nalar Telegram Bot — Training & Question Answering
-"""
-import os
-import json
-import httpx
-import logging
-from datetime import datetime, timezone
-from dotenv import load_dotenv
 
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
+"""
+Ruang Nalar Akhlak Telegram Bot
+Training & Question Answering
+"""
+
+import os
+import logging
+import httpx
+
+from dotenv import load_dotenv
+from telegram import Update
 from telegram.ext import (
-    Application, CommandHandler, MessageHandler, filters,
-    CallbackQueryHandler, ContextTypes
+    Application,
+    CommandHandler,
+    MessageHandler,
+    filters,
+    ContextTypes
 )
 
 load_dotenv()
 
-# ── Config ──
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-AI_API_URL = os.getenv("AI_API_URL", "http://localhost:8080/api/ask")
-ADMIN_USER_IDS = [int(x) for x in os.getenv("ADMIN_USER_IDS", "").split(",") if x.strip()]
 
-# ── Logging ──
+# ==========================================
+# CONFIGURATION
+# ==========================================
+
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
+AI_API_URL = os.getenv(
+    "AI_API_URL",
+    "http://localhost:8080/api/ask"
+)
+
+BACKEND_HEALTH_URL = os.getenv(
+    "BACKEND_HEALTH_URL",
+    AI_API_URL.rsplit("/", 1)[0] + "/health"
+)
+
+ADMIN_USER_IDS = [
+    int(x.strip())
+    for x in os.getenv("ADMIN_USER_IDS", "").split(",")
+    if x.strip().isdigit()
+]
+
+
+# ==========================================
+# LOGGING
+# ==========================================
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(name)s] %(levelname)s: %(message)s"
 )
-log = logging.getLogger("ruangnalar.bot")
 
-# ── AI call ──
+log = logging.getLogger("ruangnalar.akhlak.bot")
+
+
+# ==========================================
+# AI BACKEND
+# ==========================================
+
 async def call_ai(question: str) -> dict:
-    """Send question to Ruang Nalar AI backend."""
-    try:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            resp = await client.post(
-                AI_API_URL,
-                json={"question": question},
-                headers={"Content-Type": "application/json"}
-            )
-            resp.raise_for_status()
-            return resp.json()
-    except httpx.ConnectError:
-        return {"error": "⚠️ AI backend sedang offline. Coba lagi nanti."}
-    except Exception as e:
-        return {"error": f"⚠️ Gagal: {str(e)[:150]}"}
+    """Mengirim pertanyaan ke backend Ruang Nalar Akhlak."""
 
+    try:
+        async with httpx.AsyncClient(timeout=60.0) as client:
+
+            response = await client.post(
+                AI_API_URL,
+                json={
+                    "question": question,
+                    "history": []
+                },
+                headers={
+                    "Content-Type": "application/json"
+                }
+            )
+
+            response.raise_for_status()
+
+            data = response.json()
+
+            if not isinstance(data, dict):
+                return {
+                    "error": "Backend memberikan format jawaban tidak valid."
+                }
+
+            return data
+
+    except httpx.ConnectError:
+        return {
+            "error": (
+                "⚠️ Backend Ruang Nalar Akhlak sedang tidak dapat "
+                "dihubungi. Silakan coba lagi nanti."
+            )
+        }
+
+    except httpx.TimeoutException:
+        return {
+            "error": "⏳ AI membutuhkan waktu terlalu lama. Coba lagi."
+        }
+
+    except httpx.HTTPStatusError as e:
+        log.error(
+            "Backend HTTP error: %s %s",
+            e.response.status_code,
+            e.response.text[:300]
+        )
+
+        return {
+            "error": (
+                f"⚠️ Backend mengalami kesalahan "
+                f"(HTTP {e.response.status_code})."
+            )
+        }
+
+    except Exception as e:
+        log.exception("AI request failed")
+
+        return {
+            "error": f"⚠️ Gagal memproses pertanyaan: {str(e)[:150]}"
+        }
+
+
+# ==========================================
+# ADMIN
+# ==========================================
 
 def is_admin(user_id: int) -> bool:
-    """Check if user is authorized admin."""
-    if not ADMIN_USER_IDS:
-        # If no admin list, everyone is admin (development mode)
-        return True
+    """Memeriksa hak akses admin."""
+
     return user_id in ADMIN_USER_IDS
 
 
-# ── Commands ──
+# ==========================================
+# START COMMAND
+# ==========================================
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Welcome message."""
+async def start(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    welcome = (
+        "🌱 **Selamat datang di Ruang Nalar Akhlak!**\n\n"
+        "Saya adalah **Aqli**, asisten AI yang membantu kamu "
+        "memahami dan menerapkan akhlak dalam kehidupan sehari-hari.\n\n"
+
+        "📚 **Apa yang bisa kamu diskusikan?**\n"
+        "• Kejujuran dan integritas\n"
+        "• Tanggung jawab dan amanah\n"
+        "• Disiplin dan menghargai waktu\n"
+        "• Sopan santun dan menghormati orang lain\n"
+        "• Kepedulian dan tolong-menolong\n"
+        "• Akhlak dalam pergaulan dan dunia digital\n\n"
+
+        "💬 **Cara bertanya:**\n"
+        "Ketik `?` diikuti pertanyaan.\n"
+        "Contoh: `?Mengapa kita harus jujur?`\n\n"
+
+        "Atau gunakan:\n"
+        "`/ask Mengapa tanggung jawab itu penting?`\n\n"
+
+        "Ketik `/help` untuk melihat panduan."
+    )
+
     await update.message.reply_text(
-        "🌙 **Selamat datang! Saya 'Aqli'**\n\n"
-        "Aku adalah AI Ruang Nalar yang siap menjawab pertanyaanmu seputar "
-        "nalar, filsafat, dan perspektif Islam.\n\n"
-        "**Cara pakai:**\n"
-        "• Ketik `?` diikuti pertanyaan — contoh:\n"
-        "  `?Mengapa manusia diberikan akal?`\n"
-        "  `?Apa itu takdir dalam Islam?`\n\n"
-        "• Atau kirim `/ask <pertanyaan>`\n\n"
-        f"• Ketik `/help` untuk bantuan"
+        welcome,
+        parse_mode="Markdown"
     )
 
 
-async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show help."""
-    text = (
-        "📖 **Ruang Nalar AI — Bantuan**\n\n"
-        "**Cara bertanya:**\n"
-        "• `?pertanyaan` — format tercepat\n"
-        "• `/ask pertanyaan` — format alternatif\n"
-        "• Langsung kirim teks biasa\n\n"
-        "**Admin commands:**\n" if is_admin(update.effective_user.id) else ""
+# ==========================================
+# HELP COMMAND
+# ==========================================
+
+async def help_cmd(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    help_text = (
+        "📖 **RUANG NALAR AKHLAK — BANTUAN**\n\n"
+
+        "**Cara menggunakan:**\n"
+        "• `?pertanyaan` — bertanya dengan cepat\n"
+        "• `/ask pertanyaan` — mengirim pertanyaan\n\n"
+
+        "**Contoh pertanyaan:**\n"
+        "• Mengapa kejujuran penting bagi pelajar?\n"
+        "• Bagaimana menerapkan disiplin di sekolah?\n"
+        "• Apa yang harus dilakukan ketika berbuat salah?\n"
+        "• Bagaimana menghormati pendapat teman?\n\n"
+
+        "**Perintah umum:**\n"
+        "• `/start` — mulai menggunakan bot\n"
+        "• `/help` — panduan penggunaan\n"
     )
-    
+
     if is_admin(update.effective_user.id):
-        text += (
-        "• `/stats` — statistik bot & backend\n"
-        "• `/train tambah <pengetahuan>` — tambah pengetahuan\n"
-        "• `/health` — cek status backend\n"
+        help_text += (
+            "\n**Perintah admin:**\n"
+            "• `/health` — memeriksa backend\n"
+            "• `/stats` — melihat statistik backend\n"
         )
-    
-    await update.message.reply_text(text)
+
+    await update.message.reply_text(
+        help_text,
+        parse_mode="Markdown"
+    )
 
 
-async def ask(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Answer a question via AI backend."""
-    question = " ".join(context.args) if context.args else ""
-    
+# ==========================================
+# ASK COMMAND
+# ==========================================
+
+async def ask(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    question = " ".join(context.args).strip()
+
     if not question:
         await update.message.reply_text(
-            "Gunakan:\n`/ask <pertanyaan>`\n"
-            "Contoh: `/ask Mengapa manusia berakal?`"
+            "Gunakan format:\n"
+            "`/ask <pertanyaan>`\n\n"
+            "Contoh:\n"
+            "`/ask Mengapa kita harus bertanggung jawab?`",
+            parse_mode="Markdown"
         )
         return
-    
+
     await process_question(update, question)
 
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle text messages — detect ? prefix or treat as question."""
-    text = update.message.text.strip()
-    
-    # Skip commands and empty
-    if text.startswith("/") or not text:
+# ==========================================
+# MESSAGE HANDLER
+# ==========================================
+
+async def handle_message(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    if not update.message or not update.message.text:
         return
-    
-    # If starts with ?, treat as question
+
+    text = update.message.text.strip()
+
+    if not text or text.startswith("/"):
+        return
+
+    # Format pertanyaan dengan tanda ?
     if text.startswith("?"):
+
         question = text[1:].strip()
+
         if question:
             await process_question(update, question)
+
         return
-    
-    # Otherwise, don't auto-answer plain messages to avoid noise
-    # Only answer if it looks like a question
-    question_words = ["apa", "siapa", "kenapa", "mengapa", "bagaimana", "kapan", "dimana", 
-                      "what", "why", "how", "when", "where", "which", "who",
-                      "apakah", "adakah", "bisakah", "haruskah"]
-    
-    first_word = text.lower().split()[0] if text.split() else ""
-    ends_with_q = text.rstrip().endswith("?")
-    
-    if first_word in question_words or ends_with_q or len(text) > 20:
+
+    # Deteksi pesan yang terlihat seperti pertanyaan
+    question_words = [
+        "apa",
+        "siapa",
+        "kenapa",
+        "mengapa",
+        "bagaimana",
+        "kapan",
+        "dimana",
+        "apakah",
+        "adakah",
+        "bisakah",
+        "haruskah",
+        "mengapa",
+        "bagaimanakah"
+    ]
+
+    first_word = text.lower().split()[0]
+
+    if (
+        first_word in question_words
+        or text.endswith("?")
+    ):
         await process_question(update, text)
-    else:
-        # Short non-question — just ignore
-        pass
 
 
-async def process_question(update: Update, question: str):
-    """Process a question: show typing → call AI → send answer."""
-    msg = await update.message.reply_text("🧠 _Ruang Nalar sedang berpikir..._")
-    
-    answer = await call_ai(question)
-    
-    if "error" in answer:
-        await msg.edit_text(answer["error"])
+# ==========================================
+# PROCESS QUESTION
+# ==========================================
+
+async def process_question(
+    update: Update,
+    question: str
+):
+
+    if len(question) > 10000:
+        await update.message.reply_text(
+            "Pertanyaan terlalu panjang. Silakan ringkas pertanyaanmu."
+        )
         return
-    
-    # Format response
-    ai_text = answer.get("answer", "Maaf, tidak ada jawaban.")
-    
-    # Telegram has 4096 char limit — split if too long
-    if len(ai_text) <= 4000:
-        await msg.edit_text(ai_text)
-    else:
-        # Split by sections
-        await msg.edit_text(ai_text[:4000] + "\n\n_— bersambung ke pesan berikut —_")
-        remaining = ai_text[4000:]
-        while remaining:
-            await update.message.reply_text(remaining[:4000])
-            remaining = remaining[4000:]
+
+    message = await update.message.reply_text(
+        "🧠 Aqli sedang memahami pertanyaanmu..."
+    )
+
+    result = await call_ai(question)
+
+    if "error" in result:
+        await message.edit_text(result["error"])
+        return
+
+    ai_text = result.get("answer")
+
+    if not isinstance(ai_text, str) or not ai_text.strip():
+        await message.edit_text(
+            "Maaf, Aqli belum berhasil menghasilkan jawaban. "
+            "Silakan coba kembali."
+        )
+        return
+
+    # Telegram membatasi pesan sekitar 4096 karakter.
+    # Pecah berdasarkan batas aman.
+    chunks = [
+        ai_text[i:i + 3900]
+        for i in range(0, len(ai_text), 3900)
+    ]
+
+    await message.edit_text(chunks[0])
+
+    for chunk in chunks[1:]:
+        await update.message.reply_text(chunk)
 
 
-# ── Admin Commands ──
+# ==========================================
+# BACKEND HEALTH
+# ==========================================
 
-async def stats_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Show bot & backend stats (admin only)."""
+async def health_cmd(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
     if not is_admin(update.effective_user.id):
-        await update.message.reply_text("❌ Command ini hanya untuk admin.")
+        await update.message.reply_text(
+            "❌ Perintah ini hanya dapat digunakan oleh admin."
+        )
         return
-    
-    # Get backend health
+
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            resp = await client.get("http://localhost:8080/health")
-            health = resp.json()
-            stats_text = (
-                f"📊 **Backend Stats**\n\n"
-                f"AI Ready: {'✅' if health.get('ai_ready') else '❌'}\n"
-                f"Firebase: {'✅' if health.get('firebase_ready') else '❌'}\n"
-                f"Polling: {'✅' if health.get('polling') else '❌'}\n"
-                f"Model: `{health.get('model', '?')}`\n"
-                f"Answered: {health.get('stats', {}).get('answered', 0)}\n"
-                f"Errors: {health.get('stats', {}).get('errors', 0)}"
-            )
+        async with httpx.AsyncClient(timeout=10.0) as client:
+
+            response = await client.get(BACKEND_HEALTH_URL)
+            response.raise_for_status()
+
+            status = response.json()
+
+        text = (
+            "🏥 **RUANG NALAR AKHLAK — BACKEND HEALTH**\n\n"
+            f"Status: `{status.get('status', 'unknown')}`\n"
+            f"AI: {'✅' if status.get('ai_ready') else '❌'}\n"
+            f"Firebase: "
+            f"{'✅' if status.get('firebase_ready') else '❌'}\n"
+            f"Model: `{status.get('model', 'unknown')}`"
+        )
+
     except Exception as e:
-        stats_text = f"⚠️ Backend unreachable: {e}"
-    
-    await update.message.reply_text(stats_text)
+        log.exception("Health check failed")
+
+        text = (
+            "⚠️ Backend tidak dapat dihubungi.\n"
+            f"Detail: {str(e)[:200]}"
+        )
+
+    await update.message.reply_text(
+        text,
+        parse_mode="Markdown"
+    )
 
 
-async def health_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Check backend health."""
+# ==========================================
+# STATS COMMAND
+# ==========================================
+
+async def stats_cmd(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    if not is_admin(update.effective_user.id):
+        await update.message.reply_text(
+            "❌ Perintah ini hanya dapat digunakan oleh admin."
+        )
+        return
+
     try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            resp = await client.get("http://localhost:8080/health")
-            status = resp.json()
-            await update.message.reply_text(
-                f"🏥 **Backend Health**\n\n"
-                f"Status: `{status.get('status')}`\n"
-                f"AI: {'✅' if status.get('ai_ready') else '❌'}\n"
-                f"Firebase: {'✅' if status.get('firebase_ready') else '❌'}"
-            )
+        async with httpx.AsyncClient(timeout=10.0) as client:
+
+            response = await client.get(BACKEND_HEALTH_URL)
+            response.raise_for_status()
+
+            health = response.json()
+
+        stats = health.get("stats", {})
+
+        text = (
+            "📊 **RUANG NALAR AKHLAK — STATISTIK**\n\n"
+            f"AI Ready: {'✅' if health.get('ai_ready') else '❌'}\n"
+            f"Firebase: "
+            f"{'✅' if health.get('firebase_ready') else '❌'}\n"
+            f"Model: `{health.get('model', 'unknown')}`\n"
+            f"Answered: {stats.get('answered', 0)}\n"
+            f"Errors: {stats.get('errors', 0)}"
+        )
+
     except Exception as e:
-        await update.message.reply_text(f"⚠️ Backend unreachable: {e}")
+        log.exception("Stats request failed")
+
+        text = (
+            "⚠️ Tidak dapat mengambil statistik backend.\n"
+            f"Detail: {str(e)[:200]}"
+        )
+
+    await update.message.reply_text(
+        text,
+        parse_mode="Markdown"
+    )
 
 
-# ── Error Handler ──
+# ==========================================
+# ERROR HANDLER
+# ==========================================
 
-async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Log errors."""
-    log.error(f"Update {update} caused error {context.error}")
+async def error_handler(
+    update: object,
+    context: ContextTypes.DEFAULT_TYPE
+):
+
+    log.error(
+        "Telegram update error: %s",
+        context.error
+    )
 
 
-# ── Main ──
+# ==========================================
+# MAIN
+# ==========================================
 
 def main():
+
     if not BOT_TOKEN:
-        log.error("TELEGRAM_BOT_TOKEN not set!")
+        log.error("TELEGRAM_BOT_TOKEN belum diatur!")
         return
-    
-    app = Application.builder().token(BOT_TOKEN).build()
-    
+
+    app = (
+        Application.builder()
+        .token(BOT_TOKEN)
+        .build()
+    )
+
     # Commands
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("help", help_cmd))
     app.add_handler(CommandHandler("ask", ask))
+
     app.add_handler(CommandHandler("health", health_cmd))
     app.add_handler(CommandHandler("stats", stats_cmd))
-    
-    # Text messages (handle questions)
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    
-    # Errors
+
+    # Text messages
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & ~filters.COMMAND,
+            handle_message
+        )
+    )
+
+    # Error handler
     app.add_error_handler(error_handler)
-    
-    log.info("🤖 Ruang Nalar Bot starting...")
+
+    log.info("Ruang Nalar Akhlak Telegram Bot starting...")
+
     app.run_polling()
 
 
