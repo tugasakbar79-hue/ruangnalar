@@ -1,14 +1,10 @@
-
 {
-<<<<<<< HEAD
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-=======
->>>>>>> origin/main
   "builds": [
     {
       "src": "backend/main.py",
       "use": "@vercel/python"
-<<<<<<< HEAD
     },
     {
       "src": "*.html",
@@ -21,22 +17,19 @@
     {
       "src": "*.js",
       "use": "@vercel/static"
-=======
->>>>>>> origin/main
     }
   ],
   "routes": [
     {
-<<<<<<< HEAD
+      "src": "/api/(.*)",
+      "dest": "backend/main.py"
+    },
+    {
       "src": "/health",
       "dest": "backend/main.py"
     },
     {
-      "src": "/api/(.*)",
-=======
-      "src": "/(.*)",
->>>>>>> origin/main
-      "dest": "backend/main.py"
+      "handle": "filesystem"
     }
   ]
 }
