@@ -2,43 +2,6 @@
    1. DATA JAWABAN TANYA AKHLAK
 ===================================== */
 
-const answers = {
-    "Mengapa siswa harus memiliki akhlak yang baik?": {
-        reason: "Akhlak membantu siswa membangun hubungan yang baik dengan orang lain, menjaga perilaku, dan bertanggung jawab atas tindakannya.",
-        islam: "Islam mengajarkan bahwa akhlak mulia merupakan bagian penting dari kehidupan seorang muslim. Ilmu dan kecerdasan sebaiknya disertai perilaku yang baik.",
-        reflection: "Apakah perilakumu di sekolah sudah mencerminkan akhlak yang baik?"
-    },
-
-    "Bagaimana cara menghormati guru?": {
-        reason: "Menghormati guru dapat dilakukan dengan mendengarkan ketika guru menjelaskan, berbicara dengan sopan, dan menghargai nasihatnya.",
-        islam: "Islam mengajarkan umatnya untuk menghormati orang yang berilmu dan menghargai orang yang telah memberikan ilmu.",
-        reflection: "Apakah kamu sudah menghargai guru melalui perkataan dan tindakanmu?"
-    },
-
-    "Apa yang harus dilakukan ketika melihat teman dibully?": {
-        reason: "Jangan ikut mengejek atau menyebarkan kejadian tersebut. Berikan dukungan kepada teman yang mengalami perundungan dan mintalah bantuan guru atau orang dewasa yang dipercaya.",
-        islam: "Islam mengajarkan manusia untuk saling menghormati, tidak menyakiti orang lain, dan membantu sesama dalam kebaikan.",
-        reflection: "Jika melihat teman diperlakukan tidak baik, tindakan positif apa yang bisa kamu lakukan?"
-    },
-
-    "Mengapa kejujuran penting bagi siswa?": {
-        reason: "Kejujuran membangun kepercayaan dan melatih tanggung jawab. Siswa yang jujur berani mengakui kesalahan dan tidak mengambil hak orang lain.",
-        islam: "Islam mengajarkan umatnya untuk berkata dan bertindak jujur dalam kehidupan sehari-hari.",
-        reflection: "Apakah kamu tetap berkata jujur ketika melakukan kesalahan?"
-    },
-
-    "Bagaimana cara menjaga adab di media sosial?": {
-        reason: "Gunakan bahasa yang sopan, hindari komentar yang merendahkan orang lain, dan pikirkan dampak sebelum mengunggah sesuatu.",
-        islam: "Islam mengajarkan manusia untuk menjaga lisan. Dalam kehidupan digital, prinsip tersebut juga perlu diterapkan dalam tulisan dan komentar.",
-        reflection: "Apakah komentar dan unggahanmu di media sosial sudah mencerminkan akhlak yang baik?"
-    },
-
-    "Bagaimana cara meminta maaf ketika melakukan kesalahan?": {
-        reason: "Akui kesalahan dengan jujur, sampaikan permintaan maaf dengan tulus, dan berusaha memperbaiki perilaku agar tidak mengulanginya.",
-        islam: "Islam mengajarkan pentingnya mengakui kesalahan, bertaubat kepada Allah, dan meminta maaf kepada orang yang telah dirugikan.",
-        reflection: "Apakah kamu berani mengakui kesalahan dan memperbaikinya?"
-    }
-};
 
 
 /* =====================================
@@ -469,6 +432,29 @@ if (menuToggle && navMenu) {
    7. TANYA AKHLAK
 ===================================== */
 
+
+/* =====================================
+   7. TANYA AKHLAK — AI AQLI
+===================================== */
+
+// Endpoint backend FastAPI di Vercel
+const AI_API_URL = "https://ruangnalar-tau.vercel.app/api/ask";
+
+// ID percakapan agar Aqli dapat memahami konteks sebelumnya
+let conversationId = "";
+
+try {
+    conversationId =
+        sessionStorage.getItem("ruangNalarConversationId") || "";
+} catch (error) {
+    console.warn("Session storage tidak tersedia.");
+}
+
+// Mencegah pengiriman pertanyaan berulang
+let isAsking = false;
+
+
+// Memilih pertanyaan yang tersedia
 function selectQuestion(button) {
 
     const questionInput = document.getElementById("questionInput");
@@ -485,7 +471,8 @@ function selectQuestion(button) {
 }
 
 
-function answerQuestion() {
+// Mengirim pertanyaan ke AI Aqli
+async function answerQuestion() {
 
     const questionInput = document.getElementById("questionInput");
     const answerBox = document.getElementById("answerBox");
@@ -495,49 +482,127 @@ function answerQuestion() {
     const question = questionInput.value.trim();
 
     if (!question) {
-        alert("Silakan tulis atau pilih pertanyaan terlebih dahulu.");
+        alert("Silakan tulis pertanyaan terlebih dahulu.");
         return;
     }
 
-    let answer = answers[question];
+    if (isAsking) return;
 
-    if (!answer) {
+    isAsking = true;
 
-        answer = {
-            reason: "Pertanyaan ini dapat dipahami dengan mempertimbangkan situasi, alasan, dan dampak dari tindakan yang dilakukan.",
+    // Tampilkan loading
+    answerBox.replaceChildren();
 
-            islam: "Dalam Islam, setiap muslim dianjurkan untuk menjaga akhlak, menghormati sesama, dan menjadikan nilai-nilai Islam sebagai pedoman dalam bertindak.",
+    const loading = document.createElement("p");
+    loading.textContent = "Aqli sedang memikirkan jawaban...";
+    loading.className = "ai-loading";
 
-            reflection: "Apa tindakan terbaik yang dapat kamu lakukan agar tetap menjaga akhlak dalam situasi tersebut?"
-        };
-
-    }
-
-    const questionElement = document.getElementById("answerQuestion");
-    const reasonElement = document.getElementById("reasonAnswer");
-    const islamElement = document.getElementById("islamAnswer");
-    const reflectionElement = document.getElementById("reflectionAnswer");
-
-    if (questionElement) questionElement.textContent = question;
-    if (reasonElement) reasonElement.textContent = answer.reason;
-    if (islamElement) islamElement.textContent = answer.islam;
-    if (reflectionElement) reflectionElement.textContent = answer.reflection;
-
+    answerBox.appendChild(loading);
     answerBox.classList.add("show");
-
-    if (typeof window.kirimKeFirebase === "function") {
-
-        try {
-            window.kirimKeFirebase(question);
-        } catch (error) {
-            console.error("Gagal mengirim pertanyaan ke Firebase:", error);
-        }
-
-    }
 
     answerBox.scrollIntoView({
         behavior: "smooth",
         block: "start"
     });
+
+    try {
+
+        const response = await fetch(AI_API_URL, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                question: question,
+                conversation_id: conversationId
+            })
+
+        });
+
+        // Membaca respons backend
+        const data = await response.json();
+
+        if (!response.ok) {
+
+            const errorMessage =
+                data.detail || data.error || "Terjadi kesalahan pada server.";
+
+            throw new Error(errorMessage);
+        }
+
+        if (!data.answer || !data.answer.trim()) {
+            throw new Error("Aqli tidak memberikan jawaban.");
+        }
+
+        // Simpan ID percakapan
+        if (data.conversation_id) {
+
+            conversationId = data.conversation_id;
+
+            try {
+                sessionStorage.setItem(
+                    "ruangNalarConversationId",
+                    conversationId
+                );
+            } catch (error) {
+                console.warn("ID percakapan tidak dapat disimpan.");
+            }
+        }
+
+        // Buat judul pertanyaan
+        const questionTitle = document.createElement("h3");
+
+        questionTitle.textContent = question;
+        questionTitle.className = "ai-question-title";
+
+        // Buat area jawaban AI
+        const answerContent = document.createElement("div");
+
+        answerContent.className = "ai-answer-content";
+
+        // Gunakan textContent agar jawaban aman ditampilkan
+        answerContent.textContent = data.answer;
+
+        // Atur tampilan jawaban
+        answerContent.style.whiteSpace = "pre-wrap";
+        answerContent.style.lineHeight = "1.8";
+        answerContent.style.overflowWrap = "anywhere";
+
+        // Tampilkan jawaban asli Aqli
+        answerBox.replaceChildren(
+            questionTitle,
+            answerContent
+        );
+
+    } catch (error) {
+
+        console.error("Kesalahan AI Aqli:", error);
+
+        answerBox.replaceChildren();
+
+        const errorTitle = document.createElement("h3");
+        errorTitle.textContent = "Aqli belum dapat menjawab.";
+
+        const errorText = document.createElement("p");
+        errorText.textContent = error.message;
+
+        const retryText = document.createElement("p");
+        retryText.textContent =
+            "Silakan periksa koneksi dan coba kirim pertanyaan kembali.";
+
+        answerBox.append(
+            errorTitle,
+            errorText,
+            retryText
+        );
+
+    } finally {
+
+        isAsking = false;
+
+    }
 
 }
