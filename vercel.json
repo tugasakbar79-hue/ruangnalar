@@ -1,3 +1,4 @@
+
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
@@ -26,6 +27,14 @@
     },
     {
       "src": "/health",
+      "dest": "backend/main.py"
+    },
+    {
+      "src": "/docs",
+      "dest": "backend/main.py"
+    },
+    {
+      "src": "/openapi.json",
       "dest": "backend/main.py"
     },
     {

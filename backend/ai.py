@@ -47,20 +47,36 @@ class RuangNalarAI:
         """
 
         keywords = [
-            "dalil",
-            "ayat al-qur'an",
-            "ayat alquran",
-            "ayat al quran",
-            "hadis",
-            "hadits",
-            "surah",
-            "surat",
-            "menurut islam",
-            "hukum islam",
-            "ajaran islam",
-            "landasan islam",
-            "dasar islam"
-        ]
+    # Referensi Al-Qur'an dan hadis
+    "dalil",
+    "ayat al-qur'an",
+    "ayat alquran",
+    "ayat al quran",
+    "hadis",
+    "hadits",
+    "surah",
+    "surat",
+
+    # Referensi ajaran Islam
+    "menurut islam",
+    "hukum islam",
+    "ajaran islam",
+    "landasan islam",
+    "dasar islam",
+    "pandangan islam",
+
+    # Referensi akhlak dalam Islam
+    "dalil tentang akhlak",
+    "dalil kejujuran",
+    "dalil kesopanan",
+    "dalil menghormati guru",
+    "akhlak menurut islam",
+    "akhlak dalam al-qur'an",
+    "akhlak dalam hadis",
+    "ayat tentang kejujuran",
+    "ayat tentang kesabaran",
+    "hadis tentang akhlak"
+]
 
         text = question.lower()
 
