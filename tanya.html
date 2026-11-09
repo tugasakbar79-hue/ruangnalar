@@ -1,353 +1,832 @@
+
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanya 'Aqli | Ruang Nalar</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#172033">
+
+    <title>Tanya Akhlak | Ruang Nalar</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* =========================
-           OVERRIDE / CHAT LAYOUT
-        ========================= */
-        html, body {
+        :root {
+            --cream: #f7f3ea;
+            --white: #fffdf8;
+            --navy: #172033;
+            --navy-light: #26334a;
+            --gold: #c89b3c;
+            --gold-light: #ead9b3;
+            --text: #283246;
+            --muted: #858b96;
+            --border: #e9e2d5;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            height: 100%;
+            box-sizing: border-box;
         }
+
         body {
-            background: #f8fafc;
-            display: flex;
-            flex-direction: column;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: var(--text);
+            min-height: 100vh;
         }
+
+        button, textarea {
+            font: inherit;
+        }
+
+        /* NAVBAR */
+
         .navbar {
-            position: relative !important;
-            top: auto !important;
+            height: 76px;
+            padding: 0 7%;
+            background: var(--navy);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
             z-index: 100;
         }
 
-        /* =========================
-           HERO — compact
-        ========================= */
-        .hero {
-            text-align: center;
-            padding: 16px 16px 8px;
-            flex-shrink: 0;
-            background: linear-gradient(180deg, #fff 0%, #fdfbf7 100%);
-            border-bottom: 1px solid #f0ebe0;
-        }
-        .hero .eyebrow {
-            font-size: 11px;
-            color: #c89b3c;
-            font-weight: 800;
-            letter-spacing: 2px;
-            margin-bottom: 6px;
-        }
-        .hero h1 {
-            font-size: clamp(20px, 4vw, 32px);
-            margin: 8px auto;
-            line-height: 1.2;
-            color: #172033;
-            font-weight: 800;
-        }
-        .hero h1 span { color: #c89b3c; }
-        .hero .subtitle {
-            font-size: 13px;
-            color: #687080;
-            max-width: 600px;
-            margin: 4px auto 0;
-            line-height: 1.5;
-        }
-
-        /* =========================
-           CHAT AREA — flex 1, scrollable
-        ========================= */
-        .chat-wrapper {
-            flex: 1;
+        .brand {
             display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            max-width: 800px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 0 16px 16px;
-        }
-        #chatMessages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px 0 8px;
-            display: flex;
-            flex-direction: column;
+            align-items: center;
             gap: 12px;
-            scroll-behavior: smooth;
-        }
-        #chatMessages::-webkit-scrollbar { width: 6px; }
-        #chatMessages::-webkit-scrollbar-thumb { background: #d8c9b0; border-radius: 3px; }
-
-        /* =========================
-           MESSAGE BUBBLES
-        ========================= */
-        .msg { display: flex; flex-direction: column; max-width: 85%; animation: fadeIn 0.25s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .msg.user { align-self: flex-end; }
-        .msg.ai { align-self: flex-start; }
-
-        .msg-header { font-size: 11px; font-weight: 700; margin-bottom: 4px; color: #8b6f47; }
-        .msg.user .msg-header { text-align: right; color: #172033; opacity: 0.7; }
-
-        .msg-bubble {
-            padding: 12px 16px;
-            border-radius: 16px;
-            line-height: 1.6;
-            word-break: break-word;
-            box-shadow: 0 2px 8px rgba(23, 32, 51, 0.06);
-        }
-        .msg.user .msg-bubble {
-            background: linear-gradient(135deg, #c89b3c 0%, #b18632 100%);
-            color: #172033;
-            border-bottom-right-radius: 4px;
-        }
-        .msg.ai .msg-bubble {
-            background: #fff;
-            border: 1px solid #e5dfd2;
-            color: #333;
-            border-bottom-left-radius: 4px;
-        }
-        .msg.ai .msg-bubble .section-icon { color: #c89b3c; }
-        .msg.ai .msg-bubble .section-content { color: #333; }
-        .msg.ai .msg-bubble .section-divider { border-top: 1px solid #f0ebe0; margin: 10px 0; }
-
-        .user-bubble .msg-text { white-space: pre-wrap; font-weight: 500; font-size: 14px; }
-
-        .ai-bubble .ai-section { margin-bottom: 10px; }
-        .ai-bubble .ai-section:last-child { margin-bottom: 0; }
-        .ai-bubble .section-icon {
-            font-size: 12px; font-weight: 800; margin-bottom: 6px; display: flex; align-items: center; gap: 6px;
-        }
-        .ai-bubble .section-content {
-            line-height: 1.7; color: #333; white-space: pre-wrap; word-break: break-word; font-size: 14px;
+            color: white;
+            text-decoration: none;
         }
 
-        /* =========================
-           TYPING INDICATOR
-        ========================= */
-        .typing-indicator {
-            display: flex; align-items: center; gap: 6px; padding: 8px 16px; color: #8b6f47; font-size: 13px;
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            border: 1px solid var(--gold);
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            color: var(--gold);
+            font-size: 21px;
         }
-        .typing-indicator .dots { display: flex; gap: 3px; }
-        .typing-indicator .dots span {
-            width: 6px; height: 6px; background: #c89b3c; border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        .typing-indicator .dots span:nth-child(1) { animation-delay: -0.32s; }
-        .typing-indicator .dots span:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* =========================
-           QUICK QUESTIONS (chips)
-        ========================= */
-        .quick-questions {
-            display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0 16px;
-            border-bottom: 1px solid #f0ebe0; margin-bottom: 8px;
+        .brand-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
         }
-        .quick-q {
-            background: #fff; border: 1px solid #e5dfd2; border-radius: 20px;
-            padding: 8px 14px; font-size: 12px; color: #5b4a26; cursor: pointer;
-            transition: all 0.2s; white-space: nowrap;
-        }
-        .quick-q:hover { background: #f7f3ea; border-color: #c89b3c; color: #c89b3c; }
 
-        /* =========================
-           INPUT AREA — sticky bottom
-        ========================= */
-        .input-area {
+        .brand-name span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #d5d8df;
+            font-size: 13px;
+            transition: .3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--gold);
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 27px;
+            cursor: pointer;
+        }
+
+        /* MAIN */
+
+        .container {
+            width: min(1100px, 90%);
+            margin: auto;
+            padding: 55px 0 70px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+            padding: 8px 16px;
+            border: 1px solid var(--gold-light);
+            border-radius: 30px;
+            color: #a47a28;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            margin-bottom: 18px;
+        }
+
+        .intro h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(32px, 5vw, 46px);
+            color: var(--navy);
+            margin-bottom: 13px;
+        }
+
+        .intro h1 span {
+            color: var(--gold);
+        }
+
+        .intro p {
+            color: var(--muted);
+            max-width: 570px;
+            margin: auto;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        /* CHAT PANEL */
+
+        .chat-panel {
+            max-width: 850px;
+            margin: auto;
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 15px 45px rgba(23, 32, 51, .06);
+        }
+
+        .chat-header {
+            background: var(--navy);
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-profile {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .ai-avatar {
+            width: 44px;
+            height: 44px;
+            background: rgba(200, 155, 60, .15);
+            border: 1px solid var(--gold);
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            color: var(--gold);
+            font-size: 20px;
+        }
+
+        .ai-info h3 {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .ai-info p {
+            color: #c5cbd5;
+            font-size: 11px;
+        }
+
+        .online {
+            width: 7px;
+            height: 7px;
+            background: #70c79b;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .chat-content {
+            padding: 28px;
+            min-height: 390px;
+        }
+
+        .welcome-message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
             flex-shrink: 0;
+            background: var(--gold-light);
+            color: var(--navy);
+            border-radius: 11px;
+            display: grid;
+            place-items: center;
+        }
+
+        .message-bubble {
+            background: #f4f0e7;
+            padding: 16px 19px;
+            border-radius: 4px 16px 16px 16px;
+            max-width: 580px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .message-bubble strong {
+            color: var(--navy);
+        }
+
+        .message-bubble p + p {
+            margin-top: 8px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.user .message-bubble {
+            background: var(--navy);
+            color: white;
+            border-radius: 16px 4px 16px 16px;
+        }
+
+        .message.user .message-avatar {
+            display: none;
+        }
+
+        /* EXAMPLE QUESTIONS */
+
+        .examples {
+            margin-left: 47px;
+        }
+
+        .examples-title {
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 13px;
+        }
+
+        .question-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 11px;
+        }
+
+        .question-card {
+            text-align: left;
+            padding: 15px;
             background: white;
-            border-radius: 16px 16px 0 0;
-            border-top: 1px solid #e5e7eb;
-            padding: 12px 16px;
-            box-shadow: 0 -4px 20px rgba(23, 32, 51, 0.05);
-            position: sticky; bottom: 0; z-index: 50;
-        }
-        #questionInput {
-            width: 100%; min-height: 48px; max-height: 120px; resize: none;
-            padding: 12px 14px; border: 1px solid #d8dde5; border-radius: 12px;
-            outline: none; font-family: inherit; font-size: 14px; line-height: 1.5;
-            box-sizing: border-box; box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        }
-        #questionInput:focus { border-color: #c89b3c; box-shadow: 0 0 0 3px rgba(200,155,60,0.15); }
-        #questionInput::placeholder { color: #a0a8b8; }
-        .input-row { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
-        .send-button {
-            padding: 10px 24px; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #c89b3c 0%, #b18632 100%);
-            color: #172033; font-size: 14px; font-weight: 700; cursor: pointer;
-            flex-shrink: 0; transition: transform 0.1s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(200,155,60,0.3);
-        }
-        .send-button:hover { background: linear-gradient(135deg, #b18632 0%, #9a742c 100%); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,155,60,0.4); }
-        .send-button:active { transform: translateY(0); }
-        .send-button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
-        .new-chat-btn {
-            background: none; border: 1px solid #d8dde5; border-radius: 10px;
-            padding: 8px 14px; font-size: 13px; color: #687080; cursor: pointer;
-            flex-shrink: 0; white-space: nowrap; transition: all 0.2s;
-        }
-        .new-chat-btn:hover { background: #f7f3ea; border-color: #c89b3c; color: #c89b3c; }
-        .status-bar { display: none; margin-top: 8px; padding: 8px 12px; border-radius: 8px; font-size: 12px; }
-        .status-bar.info { display: block; background: #fff8e7; border: 1px solid #ead8a6; color: #66501c; }
-        .status-bar.error { display: block; background: #fee2e2; border: 1px solid #fecaca; color: #991b1b; }
-        .status-bar.success { display: block; background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; }
-
-        /* =========================
-           RESPONDEN PANEL (onboarding)
-        ========================= */
-        .responden-overlay {
-            position: fixed; inset: 0; background: rgba(23, 32, 51, 0.5); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center; z-index: 200;
-            padding: 16px; animation: fadeIn 0.3s ease;
-        }
-        .responden-overlay.hidden { display: none; }
-        .responden-panel {
-            background: #fff; border-radius: 20px; padding: 28px 24px; max-width: 420px; width: 100%;
-            box-shadow: 0 20px 60px rgba(23, 32, 51, 0.15); animation: slideUp 0.4s ease;
-        }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .responden-title { font-size: 20px; font-weight: 800; color: #172033; text-align: center; margin-bottom: 4px; }
-        .responden-sub { font-size: 13px; color: #687080; text-align: center; margin-bottom: 20px; line-height: 1.5; }
-        .responden-fields { display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px; }
-        .responden-input {
-            width: 100%; padding: 14px 16px; border: 1px solid #d8dde5; border-radius: 12px;
-            outline: none; font-family: inherit; font-size: 14px; box-sizing: border-box; transition: all 0.2s;
-        }
-        .responden-input:focus { border-color: #c89b3c; box-shadow: 0 0 0 3px rgba(200,155,60,0.15); }
-        .responden-actions { display: flex; gap: 10px; }
-        .responden-save-btn {
-            flex: 1; padding: 12px 24px; border: none; border-radius: 12px;
-            background: linear-gradient(135deg, #c89b3c 0%, #b18632 100%);
-            color: #172033; font-size: 15px; font-weight: 700; cursor: pointer;
-            box-shadow: 0 2px 8px rgba(200,155,60,0.3); transition: all 0.2s;
-        }
-        .responden-save-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(200,155,60,0.4); }
-        .responden-skip-btn {
-            padding: 12px 20px; border: 1px solid #d8dde5; border-radius: 12px;
-            background: #fff; color: #687080; font-size: 14px; font-weight: 600; cursor: pointer;
-            transition: all 0.2s;
-        }
-        .responden-skip-btn:hover { background: #f7f3ea; border-color: #c89b3c; color: #c89b3c; }
-
-        .responden-badge {
-            display: none; align-items: center; justify-content: space-between;
-            background: #f7f3ea; border: 1px solid #e5dfd2; border-radius: 999px;
-            padding: 8px 16px; margin: 12px auto 0; max-width: 420px;
-            font-size: 13px; color: #5b4a26; font-weight: 600; animation: fadeIn 0.3s ease;
-        }
-        .responden-badge button {
-            background: none; border: none; color: #c89b3c; font-size: 12px; font-weight: 700; cursor: pointer; padding: 4px 8px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 12px;
+            line-height: 1.6;
+            cursor: pointer;
+            transition: .25s;
         }
 
-        /* =========================
-           FOOTER
-        ========================= */
-        footer { flex-shrink: 0; padding: 12px 16px; text-align: center; background: #172033; color: white; font-size: 11px; }
-        footer .footer-logo { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-        footer .footer-logo span { color: #c89b3c; }
-        footer p { margin: 2px 0; opacity: 0.7; }
+        .question-card:hover {
+            border-color: var(--gold);
+            background: #fbf7ee;
+            transform: translateY(-2px);
+        }
 
-        @media (max-width: 480px) {
-            .hero { padding: 12px 12px 4px; }
-            .hero h1 { font-size: 22px; }
-            .chat-wrapper { padding: 0 12px 12px; }
-            .msg { max-width: 90%; }
-            .responden-panel { padding: 24px 20px; }
-            .input-area { padding: 10px 12px; border-radius: 12px 12px 0 0; }
-            .send-button { padding: 10px 20px; }
+        .question-card span {
+            display: block;
+            color: #b68a36;
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        /* INPUT */
+
+        .chat-input-area {
+            padding: 18px 25px 22px;
+            border-top: 1px solid var(--border);
+            background: #fffefa;
+        }
+
+        .input-box {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            padding: 10px 11px 10px 17px;
+            border: 1px solid #ddd6c9;
+            border-radius: 15px;
+            background: white;
+            transition: .2s;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(200, 155, 60, .09);
+        }
+
+        .input-box textarea {
+            flex: 1;
+            resize: none;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: var(--text);
+            min-height: 38px;
+            max-height: 110px;
+            padding: 9px 0;
+            font-size: 13px;
+        }
+
+        .input-box textarea::placeholder {
+            color: #a3a5aa;
+        }
+
+        .send-btn {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border: none;
+            border-radius: 12px;
+            background: var(--navy);
+            color: var(--gold);
+            font-size: 19px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .send-btn:hover {
+            background: var(--gold);
+            color: var(--navy);
+        }
+
+        .input-note {
+            text-align: center;
+            color: #a1a1a1;
+            font-size: 10px;
+            margin-top: 12px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #99958b;
+            font-size: 11px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 700px) {
+            .navbar {
+                height: 68px;
+                padding: 0 5%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 68px;
+                left: 0;
+                width: 100%;
+                background: var(--navy);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 22px 6%;
+                gap: 23px;
+                border-top: 1px solid #354056;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .container {
+                width: 92%;
+                padding-top: 38px;
+            }
+
+            .intro {
+                margin-bottom: 28px;
+            }
+
+            .intro p {
+                font-size: 12px;
+            }
+
+            .chat-panel {
+                border-radius: 17px;
+            }
+
+            .chat-header {
+                padding: 17px;
+            }
+
+            .chat-content {
+                padding: 19px 14px;
+                min-height: 420px;
+            }
+
+            .message-bubble {
+                font-size: 12px;
+                padding: 13px;
+            }
+
+            .examples {
+                margin-left: 0;
+            }
+
+            .question-list {
+                grid-template-columns: 1fr;
+            }
+
+            .question-card {
+                padding: 13px;
+            }
+
+            .chat-input-area {
+                padding: 14px;
+            }
+
+            footer {
+                padding: 20px 10px;
+            }
         }
     </style>
 </head>
 
 <body>
+
     <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="logo">Ruang<span>Nalar</span></div>
-        <button class="menu-toggle" id="menuToggle">☰</button>
-        <nav id="navMenu">
+    <nav class="navbar">
+        <a href="index.html" class="brand">
+            <div class="brand-icon">✦</div>
+            <div class="brand-name">Ruang <span>Nalar.</span></div>
+        </a>
+
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">
+            ☰
+        </button>
+
+        <div class="nav-links" id="navMenu">
             <a href="index.html">Beranda</a>
-            <a href="tanya.html" class="active">Tanya 'Aqli</a>
-            <a href="admin.html">Chat Admin</a>
-        </nav>
-    </header>
-
-    <!-- HERO -->
-    <section class="hero">
-        <div class="eyebrow">TANYA 'AQLI</div>
-        <h1>Apa yang sedang<br><span>kamu pikirkan?</span></h1>
-        <p class="subtitle">Ngobrol dengan <b>'Aqli</b> — Ruang Nalar AI. Dia menjawab dengan nalar kritis, dalil Quran & Hadits, dan pertanyaan reflektif untukmu.</p>
-        <p class="branding-def" style="margin: 12px auto 0; max-width: 700px; font-size: 13px; line-height: 1.6; color: #4a5568; text-align: center;">
-            Aqli (dari Arab <em>'aql / عقل</em> = akal, budi, rasionalitas, intelektual) adalah AI Agent khusus yang dirancang untuk menjawab pertanyaan-pertanyaan fundamental kehidupan siswa dengan pendekatan nalar kritis yang terintegrasi dengan nilai-nilai Islam.
-        </p>
-    </section>
-
-    <!-- RESPONDEN ONBOARDING OVERLAY -->
-    <div id="respondenOverlay" class="responden-overlay">
-        <div class="responden-panel">
-            <div class="responden-title">👋 Halo! Kenalan dulu yuk</div>
-            <p class="responden-sub">Perkenalan ini dicatat sebagai sumber riset anonir. Kamu bisa lewati kalau mau langsung ngobrol.</p>
-            <div class="responden-fields">
-                <input type="text" id="respondenNama" placeholder="Nama kamu (boleh inisial)" class="responden-input" maxlength="60" autocomplete="name">
-                <input type="text" id="respondenAsal" placeholder="Asal / kelas (contoh: XI MIPA 2)" class="responden-input" maxlength="80" autocomplete="organization">
-            </div>
-            <div class="responden-actions">
-                <button id="respondenSaveBtn" class="responden-save-btn" type="button">Mulai Ngobrol</button>
-                <button id="respondenSkipBtn" class="responden-skip-btn" type="button">Lewati (anonim)</button>
-            </div>
+            <a href="index.html#kenali">Kenali Akhlak</a>
+            <a href="index.html#praktik">Praktik Akhlak</a>
+            <a href="index.html#studi-kasus">Studi Kasus</a>
+            <a href="index.html#refleksi">Refleksi Diri</a>
+            <a href="tanya.html" class="active">Tanya Akhlak</a>
         </div>
-    </div>
+    </nav>
 
-    <!-- RESPONDEN BADGE (after save) -->
-    <div id="respondenBadge" class="responden-badge">
-        <span id="respondenLabel"></span>
-        <button id="respondenEditBtn" type="button" aria-label="Ganti identitas">Ganti</button>
-    </div>
+    <main class="container">
 
-    <!-- CHAT WRAPPER -->
-    <div class="chat-wrapper">
-        <!-- QUICK QUESTIONS -->
-        <div id="quickQuestions" class="quick-questions" role="list" aria-label="Pertanyaan cepat"></div>
+        <!-- INTRO -->
+        <section class="intro">
+            <div class="eyebrow">RUANG DISKUSI & REFLEKSI</div>
 
-        <!-- MESSAGES -->
-        <div id="chatMessages" role="log" aria-live="polite" aria-label="Riwayat obrolan"></div>
+            <h1>Temukan Jawaban,<br>
+                <span>Bangun Akhlak.</span>
+            </h1>
 
-        <!-- TYPING INDICATOR -->
-        <div id="typingIndicator" class="typing-indicator" style="display:none; align-self: flex-start;">
-            <div class="dots"><span></span><span></span><span></span></div>
-            <span>'Aqli sedang mengetik...</span>
-        </div>
+            <p>
+                Setiap pertanyaan adalah langkah untuk memahami diri.
+                Diskusikan persoalan akhlak, temukan sudut pandang,
+                dan jadikan ilmu sebagai pedoman dalam kehidupan.
+            </p>
+        </section>
 
-        <!-- INPUT AREA -->
-        <div class="input-area">
-            <textarea id="questionInput" placeholder="Tulis pertanyaanmu di sini... (Enter untuk kirim, Shift+Enter untuk baris baru)" aria-label="Pertanyaan"></textarea>
-            <div class="input-row">
-                <button id="sendBtn" class="send-button" type="button" aria-label="Kirim pertanyaan">Kirim</button>
-                <button id="newChatBtn" class="new-chat-btn" type="button" aria-label="Mulai obrolan baru">Obrolan Baru</button>
+        <!-- CHAT -->
+        <section class="chat-panel">
+
+            <div class="chat-header">
+                <div class="ai-profile">
+                    <div class="ai-avatar">✦</div>
+
+                    <div class="ai-info">
+                        <h3>Aqli — Asisten Ruang Nalar</h3>
+                        <p><span class="online"></span>Asisten pembelajaran akhlak</p>
+                    </div>
+                </div>
             </div>
-            <div id="statusBar" class="status-bar" role="status" aria-live="polite"></div>
-        </div>
-    </div>
 
-    <!-- FOOTER -->
+            <div class="chat-content" id="chatContent">
+
+                <div class="welcome-message">
+                    <div class="message-avatar">✦</div>
+
+                    <div class="message-bubble">
+                        <strong>Assalamu'alaikum! Selamat datang di Tanya Akhlak.</strong>
+
+                        <p>
+                            Saya Aqli, teman diskusimu dalam memahami nilai-nilai akhlak.
+                            Kamu bisa memilih pertanyaan di bawah atau menuliskan
+                            pertanyaanmu sendiri.
+                        </p>
+
+                        <p>
+                            Mari belajar memahami akhlak dan menerapkannya
+                            dalam kehidupan sehari-hari.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="examples">
+                    <div class="examples-title">
+                        ✦ Mulai dengan pertanyaan
+                    </div>
+
+                    <div class="question-list">
+
+                        <button class="question-card" data-question="Mengapa kita harus selalu berkata jujur?">
+                            <span>01</span>
+                            Mengapa kita harus selalu berkata jujur?
+                        </button>
+
+                        <button class="question-card" data-question="Bagaimana cara menghormati orang tua dalam kehidupan sehari-hari?">
+                            <span>02</span>
+                            Bagaimana cara menghormati orang tua?
+                        </button>
+
+                        <button class="question-card" data-question="Apa yang harus dilakukan ketika melihat teman melakukan kesalahan?">
+                            <span>03</span>
+                            Apa yang harus dilakukan ketika melihat teman melakukan kesalahan?
+                        </button>
+
+                        <button class="question-card" data-question="Bagaimana cara menjaga akhlak di media sosial?">
+                            <span>04</span>
+                            Bagaimana cara menjaga akhlak di media sosial?
+                        </button>
+
+                        <button class="question-card" data-question="Mengapa meminta maaf dan memaafkan itu penting?">
+                            <span>05</span>
+                            Mengapa meminta maaf dan memaafkan itu penting?
+                        </button>
+
+                        <button class="question-card" data-question="Bagaimana cara mengendalikan emosi ketika sedang marah?">
+                            <span>06</span>
+                            Bagaimana cara mengendalikan emosi?
+                        </button>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- INPUT -->
+            <div class="chat-input-area">
+                <div class="input-box">
+                    <textarea
+                        id="questionInput"
+                        placeholder="Tuliskan pertanyaan tentang akhlak..."
+                        rows="1"
+                    ></textarea>
+
+                    <button class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">
+                        ➤
+                    </button>
+                </div>
+
+                <p class="input-note">
+                    Ruang Nalar Akhlak · Belajar, memahami, dan menerapkan.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
     <footer>
-        <div class="footer-logo">Ruang<span>Nalar</span></div>
-        <p>Dibangun untuk OMI 2026 — MAN 5 Kediri</p>
-        <p>'Aqli — Nalar Kritis, Berlandaskan Nilai Islam</p>
+        © 2026 Ruang Nalar Akhlak · Nalar Manusia dalam Islam
     </footer>
 
-    <script src="script.js"></script>
     <script>
-        const menuToggle = document.getElementById("menuToggle");
-        const navMenu = document.getElementById("navMenu");
-        menuToggle.addEventListener("click", () => { navMenu.classList.toggle("show"); });
-    </script>
-</body>
-</html>
+  
+
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    // =====================================
+    // 1. ELEMENT WEBSITE
+    // =====================================
+
+    const menuToggle = document.getElementById("menuToggle");
+    const navMenu = document.getElementById("navMenu");
+    const questionInput = document.getElementById("questionInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const chatContent = document.getElementById("chatContent");
+
+    const AI_API_URL = "https://ruangnalar-tau.vercel.app/api/ask";
+
+    let sessionId = null;
+    let history = [];
+    let isLoading = false;
+
+    // Pastikan elemen utama tersedia
+    if (!questionInput || !sendBtn || !chatContent) {
+        console.error("Elemen Tanya Akhlak tidak ditemukan. Periksa ID HTML.");
+        return;
+    }
+
+    // =====================================
+    // 2. MENU NAVIGASI
+    // =====================================
+
+    if (menuToggle && navMenu) {
+        menuToggle.addEventListener("click", function () {
+            navMenu.classList.toggle("show");
+        });
+
+        document.querySelectorAll(".nav-links a").forEach(function (link) {
+            link.addEventListener("click", function () {
+                navMenu.classList.remove("show");
+            });
+        });
+    }
+
+    // =====================================
+    // 3. FUNGSI MENAMPILKAN PESAN
+    // =====================================
+
+    function addMessage(role, content) {
+        const message = document.createElement("div");
+
+        message.className =
+            role === "user" ? "message user" : "message";
+
+        if (role !== "user") {
+            const avatar = document.createElement("div");
+            avatar.className = "message-avatar";
+            avatar.textContent = "✦";
+            message.appendChild(avatar);
+        }
+
+        const bubble = document.createElement("div");
+        bubble.className = "message-bubble";
+        bubble.textContent = content;
+
+        message.appendChild(bubble);
+        chatContent.appendChild(message);
+
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        return message;
+    }
+
+    // =====================================
+    // 4. MENGIRIM PERTANYAAN KE AI
+    // =====================================
+
+    async function sendQuestion() {
+        const question = questionInput.value.trim();
+
+        if (!question || isLoading) return;
+
+        isLoading = true;
+        sendBtn.disabled = true;
+        sendBtn.textContent = "…";
+
+        addMessage("user", question);
+
+        questionInput.value = "";
+        questionInput.style.height = "38px";
+
+        const loadingMessage = addMessage(
+            "assistant",
+            "Aqli sedang menyusun jawaban..."
+        );
+
+        try {
+            const response = await fetch(AI_API_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    question: question,
+                    session_id: sessionId,
+                    history: history
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.detail || "Layanan AI belum tersedia."
+                );
+            }
+
+            if (!data.answer) {
+                throw new Error("Jawaban Aqli kosong.");
+            }
+
+            sessionId = data.session_id || data.conversation_id || sessionId;
+
+            loadingMessage.remove();
+
+            addMessage("assistant", data.answer);
+
+            history.push(
+                { role: "user", content: question },
+                { role: "assistant", content: data.answer }
+            );
+
+            history = history.slice(-10);
+
+        } catch (error) {
+            console.error("AQLI ERROR:", error);
+
+            loadingMessage.remove();
+
+            addMessage(
+                "assistant",
+                "Maaf, Aqli belum dapat menjawab. " + error.message
+            );
+
+        } finally {
+            isLoading = false;
+            sendBtn.disabled = false;
+            sendBtn.textContent = "➤";
+            questionInput.focus();
+        }
+    }
+
+    // =====================================
+    // 5. TOMBOL KIRIM
+    // =====================================
+
+    sendBtn.addEventListener("click", function () {
+        sendQuestion();
+    });
+
+    // =====================================
+    // 6. KIRIM DENGAN ENTER
+    // =====================================
+
+    questionInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            sendQuestion();
+        }
+    });
+
+    // =====================================
+    // 7. TOMBOL CONTOH PERTANYAAN
+    // =====================================
+
+    document.querySelectorAll(".question-card").forEach(function (card) {
+
+        card.addEventListener("click", function () {
+
+            const question = card.getAttribute("data-question");
+
+            if (!question) return;
+
+            questionInput.value = question;
+            questionInput.dispatchEvent(
+                new Event("input", { bubbles: true })
+            );
+
+            questionInput.focus();
+        });
+
+    });
+
+    // =====================================
+    // 8. OTOMATIS MENYESUAIKAN TINGGI INPUT
+    // =====================================
+
+    questionInput.addEventListener("input", function () {
+        questionInput.style.height = "auto";
+
+        questionInput.style.height =
+            Math.min(questionInput.scrollHeight, 110) + "px";
+    });
+
+    console.log("Tanya Akhlak berhasil dimuat.");
+
+});
+</script>
