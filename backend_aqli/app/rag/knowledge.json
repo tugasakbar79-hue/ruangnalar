@@ -1,0 +1,67 @@
+
+[
+  {
+    "id": "akhlak-001",
+    "topic": "Kejujuran",
+    "title": "Pengertian Kejujuran",
+    "content": "Kejujuran adalah sikap menyampaikan sesuatu sesuai dengan kenyataan, menjaga kepercayaan, dan menghindari kebohongan. Dalam kehidupan pelajar, kejujuran dapat diterapkan dengan mengerjakan ujian secara mandiri, mengakui kesalahan, dan tidak memanipulasi hasil pekerjaan.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["jujur", "kejujuran", "bohong", "ujian", "amanah"]
+  },
+  {
+    "id": "akhlak-002",
+    "topic": "Tanggung Jawab",
+    "title": "Pengertian Tanggung Jawab",
+    "content": "Tanggung jawab merupakan kesadaran seseorang untuk melaksanakan kewajiban dan menerima konsekuensi dari tindakan yang dilakukan. Pelajar dapat menerapkannya dengan menyelesaikan tugas, menaati kesepakatan, menjaga fasilitas sekolah, dan mengakui kesalahan.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["tanggung jawab", "kewajiban", "tugas", "disiplin"]
+  },
+  {
+    "id": "akhlak-003",
+    "topic": "Menghormati Orang Lain",
+    "title": "Adab Menghormati Sesama",
+    "content": "Menghormati orang lain adalah sikap menghargai martabat, pendapat, hak, dan perbedaan setiap manusia. Penerapannya meliputi berbicara dengan sopan, mendengarkan ketika orang lain berbicara, tidak merendahkan teman, dan menghargai perbedaan pendapat.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["menghormati", "sopan santun", "adab", "teman", "perbedaan"]
+  },
+  {
+    "id": "akhlak-004",
+    "topic": "Amanah",
+    "title": "Menjaga Amanah",
+    "content": "Amanah adalah sikap dapat dipercaya dalam menjaga titipan, menjalankan tugas, dan memenuhi tanggung jawab. Pelajar dapat menerapkannya dengan menjaga rahasia yang dipercayakan secara tepat, mengembalikan barang pinjaman, dan menyelesaikan tugas yang diberikan.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["amanah", "kepercayaan", "titipan", "tanggung jawab"]
+  },
+  {
+    "id": "akhlak-005",
+    "topic": "Kesabaran",
+    "title": "Menerapkan Kesabaran",
+    "content": "Sabar merupakan kemampuan mengendalikan diri dan tetap berusaha melakukan hal yang baik ketika menghadapi kesulitan. Dalam kehidupan pelajar, kesabaran dapat diterapkan dengan tidak mudah menyerah ketika belajar, mengendalikan emosi, dan menyelesaikan konflik melalui komunikasi yang baik.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["sabar", "kesabaran", "emosi", "kesulitan", "mengendalikan diri"]
+  },
+  {
+    "id": "akhlak-006",
+    "topic": "Rendah Hati",
+    "title": "Pengertian Tawadhu",
+    "content": "Tawadhu adalah sikap rendah hati, tidak menyombongkan kelebihan, dan tetap menghargai orang lain. Pelajar dapat menerapkannya dengan tidak meremehkan teman, menerima kritik, serta bersedia belajar dari siapa pun.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["tawadhu", "rendah hati", "sombong", "menghargai"]
+  },
+  {
+    "id": "akhlak-007",
+    "topic": "Menjaga Lisan",
+    "title": "Etika Berkomunikasi",
+    "content": "Menjaga lisan berarti menggunakan perkataan secara bertanggung jawab dan menghindari ucapan yang menyakiti, memfitnah, atau merendahkan orang lain. Dalam komunikasi digital, hal ini juga berarti memeriksa informasi sebelum membagikannya dan tidak menulis komentar yang menghina.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["lisan", "perkataan", "komunikasi", "media sosial", "fitnah"]
+  },
+  {
+    "id": "akhlak-008",
+    "topic": "Menghargai Waktu",
+    "title": "Disiplin dalam Kehidupan Pelajar",
+    "content": "Menghargai waktu adalah menggunakan waktu secara terencana dan tidak menyia-nyiakan kesempatan. Penerapannya antara lain datang tepat waktu, membuat jadwal belajar, menyelesaikan pekerjaan sesuai tenggat, dan menyeimbangkan kegiatan belajar dengan istirahat.",
+    "source": "Materi pendidikan akhlak",
+    "keywords": ["waktu", "disiplin", "tepat waktu", "belajar", "jadwal"]
+  }
+]

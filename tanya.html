@@ -42,6 +42,11 @@
             font: inherit;
         }
 
+        button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
         /* NAVBAR */
 
         .navbar {
@@ -216,6 +221,9 @@
         .chat-content {
             padding: 28px;
             min-height: 390px;
+            max-height: 650px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
         }
 
         .welcome-message {
@@ -242,6 +250,8 @@
             max-width: 580px;
             font-size: 13px;
             line-height: 1.8;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
         }
 
         .message-bubble strong {
@@ -256,6 +266,7 @@
             display: flex;
             gap: 12px;
             margin: 20px 0;
+            align-items: flex-start;
         }
 
         .message.user {
@@ -270,6 +281,15 @@
 
         .message.user .message-avatar {
             display: none;
+        }
+
+        .message.assistant .message-bubble {
+            max-width: 90%;
+        }
+
+        .message-bubble.loading {
+            color: var(--muted);
+            font-style: italic;
         }
 
         /* EXAMPLE QUESTIONS */
@@ -487,7 +507,7 @@
             <div class="brand-name">Ruang <span>Nalar.</span></div>
         </a>
 
-        <button class="menu-toggle" id="menuToggle" aria-label="Buka menu">
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka menu" aria-expanded="false">
             ☰
         </button>
 
@@ -507,7 +527,8 @@
         <section class="intro">
             <div class="eyebrow">RUANG DISKUSI & REFLEKSI</div>
 
-            <h1>Temukan Jawaban,<br>
+            <h1>
+                Temukan Jawaban,<br>
                 <span>Bangun Akhlak.</span>
             </h1>
 
@@ -532,7 +553,7 @@
                 </div>
             </div>
 
-            <div class="chat-content" id="chatContent">
+            <div class="chat-content" id="chatContent" aria-live="polite">
 
                 <div class="welcome-message">
                     <div class="message-avatar">✦</div>
@@ -553,39 +574,39 @@
                     </div>
                 </div>
 
-                <div class="examples">
+                <div class="examples" id="examples">
                     <div class="examples-title">
                         ✦ Mulai dengan pertanyaan
                     </div>
 
                     <div class="question-list">
 
-                        <button class="question-card" data-question="Mengapa kita harus selalu berkata jujur?">
+                        <button type="button" class="question-card" data-question="Mengapa kita harus selalu berkata jujur?">
                             <span>01</span>
                             Mengapa kita harus selalu berkata jujur?
                         </button>
 
-                        <button class="question-card" data-question="Bagaimana cara menghormati orang tua dalam kehidupan sehari-hari?">
+                        <button type="button" class="question-card" data-question="Bagaimana cara menghormati orang tua dalam kehidupan sehari-hari?">
                             <span>02</span>
                             Bagaimana cara menghormati orang tua?
                         </button>
 
-                        <button class="question-card" data-question="Apa yang harus dilakukan ketika melihat teman melakukan kesalahan?">
+                        <button type="button" class="question-card" data-question="Apa yang harus dilakukan ketika melihat teman melakukan kesalahan?">
                             <span>03</span>
                             Apa yang harus dilakukan ketika melihat teman melakukan kesalahan?
                         </button>
 
-                        <button class="question-card" data-question="Bagaimana cara menjaga akhlak di media sosial?">
+                        <button type="button" class="question-card" data-question="Bagaimana cara menjaga akhlak di media sosial?">
                             <span>04</span>
                             Bagaimana cara menjaga akhlak di media sosial?
                         </button>
 
-                        <button class="question-card" data-question="Mengapa meminta maaf dan memaafkan itu penting?">
+                        <button type="button" class="question-card" data-question="Mengapa meminta maaf dan memaafkan itu penting?">
                             <span>05</span>
                             Mengapa meminta maaf dan memaafkan itu penting?
                         </button>
 
-                        <button class="question-card" data-question="Bagaimana cara mengendalikan emosi ketika sedang marah?">
+                        <button type="button" class="question-card" data-question="Bagaimana cara mengendalikan emosi ketika sedang marah?">
                             <span>06</span>
                             Bagaimana cara mengendalikan emosi?
                         </button>
@@ -602,9 +623,11 @@
                         id="questionInput"
                         placeholder="Tuliskan pertanyaan tentang akhlak..."
                         rows="1"
+                        maxlength="2000"
+                        aria-label="Tulis pertanyaan tentang akhlak"
                     ></textarea>
 
-                    <button class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">
+                    <button type="button" class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">
                         ➤
                     </button>
                 </div>
@@ -623,210 +646,249 @@
     </footer>
 
     <script>
-  
+    document.addEventListener("DOMContentLoaded", function () {
 
+       let isLoading = false;
 
-document.addEventListener("DOMContentLoaded", function () {
+// =====================================
+// 2. KONFIGURASI API
+// =====================================
+const AI_API_URL = "https://symmetrical-telegram-5v4vgpx4669x3vjvp-8000.app.github.dev/api/ask";
 
-    // =====================================
-    // 1. ELEMENT WEBSITE
-    // =====================================
+// =====================================
+// 3. VALIDASI ELEMEN
+// =====================================
+if (!questionInput || !sendBtn || !chatContent) {
+    console.error("Elemen Tanya Akhlak tidak ditemukan.");
+    return;
+}
 
-    const menuToggle = document.getElementById("menuToggle");
-    const navMenu = document.getElementById("navMenu");
-    const questionInput = document.getElementById("questionInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const chatContent = document.getElementById("chatContent");
+        // =====================================
+        // 3. MENU NAVIGASI
+        // =====================================
 
-   const AI_API_URL = "https://symmetrical-telegram-5v4vgpx4669x3vjvp-8000.app.github.dev/api/ask";
+        if (menuToggle && navMenu) {
+            menuToggle.addEventListener("click", function () {
+                const isOpen = navMenu.classList.toggle("show");
 
-    let sessionId = null;
-    let history = [];
-    let isLoading = false;
-
-    // Pastikan elemen utama tersedia
-    if (!questionInput || !sendBtn || !chatContent) {
-        console.error("Elemen Tanya Akhlak tidak ditemukan. Periksa ID HTML.");
-        return;
-    }
-
-    // =====================================
-    // 2. MENU NAVIGASI
-    // =====================================
-
-    if (menuToggle && navMenu) {
-        menuToggle.addEventListener("click", function () {
-            navMenu.classList.toggle("show");
-        });
-
-        document.querySelectorAll(".nav-links a").forEach(function (link) {
-            link.addEventListener("click", function () {
-                navMenu.classList.remove("show");
+                menuToggle.setAttribute("aria-expanded", String(isOpen));
+                menuToggle.textContent = isOpen ? "✕" : "☰";
             });
-        });
-    }
 
-    // =====================================
-    // 3. FUNGSI MENAMPILKAN PESAN
-    // =====================================
-
-    function addMessage(role, content) {
-        const message = document.createElement("div");
-
-        message.className =
-            role === "user" ? "message user" : "message";
-
-        if (role !== "user") {
-            const avatar = document.createElement("div");
-            avatar.className = "message-avatar";
-            avatar.textContent = "✦";
-            message.appendChild(avatar);
+            document.querySelectorAll(".nav-links a").forEach(function (link) {
+                link.addEventListener("click", function () {
+                    navMenu.classList.remove("show");
+                    menuToggle.setAttribute("aria-expanded", "false");
+                    menuToggle.textContent = "☰";
+                });
+            });
         }
 
-        const bubble = document.createElement("div");
-        bubble.className = "message-bubble";
-        bubble.textContent = content;
+        // =====================================
+        // 4. MENAMPILKAN PESAN
+        // =====================================
 
-        message.appendChild(bubble);
-        chatContent.appendChild(message);
+        function addMessage(role, content) {
+            const message = document.createElement("div");
 
-        chatContent.scrollTop = chatContent.scrollHeight;
+            message.className = role === "user"
+                ? "message user"
+                : "message assistant";
 
-        return message;
-    }
+            if (role !== "user") {
+                const avatar = document.createElement("div");
+                avatar.className = "message-avatar";
+                avatar.textContent = "✦";
+                message.appendChild(avatar);
+            }
 
-    // =====================================
-    // 4. MENGIRIM PERTANYAAN KE AI
-    // =====================================
+            const bubble = document.createElement("div");
+            bubble.className = "message-bubble";
+            bubble.textContent = content;
 
-    async function sendQuestion() {
-        const question = questionInput.value.trim();
+            message.appendChild(bubble);
+            chatContent.appendChild(message);
 
-        if (!question || isLoading) return;
+            chatContent.scrollTop = chatContent.scrollHeight;
 
-        isLoading = true;
-        sendBtn.disabled = true;
-        sendBtn.textContent = "…";
+            return {
+                element: message,
+                bubble: bubble
+            };
+        }
 
-        addMessage("user", question);
+        // =====================================
+        // 5. MENGIRIM PERTANYAAN KE AQLI
+        // =====================================
 
-        questionInput.value = "";
-        questionInput.style.height = "38px";
+        async function sendQuestion(questionText = null) {
 
-        const loadingMessage = addMessage(
-            "assistant",
-            "Aqli sedang menyusun jawaban..."
-        );
+            const question = (
+                questionText !== null
+                    ? questionText
+                    : questionInput.value
+            ).trim();
 
-        try {
-            const response = await fetch(AI_API_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    question: question,
-                    session_id: sessionId,
-                    history: history
-                })
+            if (!question || isLoading) return;
+
+            if (question.length < 2) {
+                addMessage("assistant", "Silakan tuliskan pertanyaan yang lebih jelas.");
+                return;
+            }
+
+            if (question.length > 2000) {
+                addMessage("assistant", "Pertanyaan terlalu panjang. Maksimal 2.000 karakter.");
+                return;
+            }
+
+            isLoading = true;
+            sendBtn.disabled = true;
+            sendBtn.textContent = "…";
+
+            document.querySelectorAll(".question-card").forEach(function (card) {
+                card.disabled = true;
             });
 
-            const data = await response.json();
+            addMessage("user", question);
 
-            if (!response.ok) {
-                throw new Error(
-                    data.detail || "Layanan AI belum tersedia."
-                );
+            questionInput.value = "";
+            questionInput.style.height = "38px";
+
+            if (examples) {
+                examples.style.display = "none";
             }
 
-            if (!data.answer) {
-                throw new Error("Jawaban Aqli kosong.");
-            }
-
-            sessionId = data.session_id || data.conversation_id || sessionId;
-
-            loadingMessage.remove();
-
-            addMessage("assistant", data.answer);
-
-            history.push(
-                { role: "user", content: question },
-                { role: "assistant", content: data.answer }
-            );
-
-            history = history.slice(-10);
-
-        } catch (error) {
-            console.error("AQLI ERROR:", error);
-
-            loadingMessage.remove();
-
-            addMessage(
+            const loading = addMessage(
                 "assistant",
-                "Maaf, Aqli belum dapat menjawab. " + error.message
+                "Aqli sedang memahami pertanyaan dan menyusun jawaban..."
             );
 
-        } finally {
-            isLoading = false;
-            sendBtn.disabled = false;
-            sendBtn.textContent = "➤";
-            questionInput.focus();
+            loading.bubble.classList.add("loading");
+
+            try {
+
+                const response = await fetch(AI_API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        question: question
+                    })
+                });
+
+                let data;
+
+                try {
+                    data = await response.json();
+                } catch {
+                    throw new Error("Server memberikan respons yang tidak dapat dibaca.");
+                }
+
+                if (!response.ok) {
+                    throw new Error(
+                        data.detail || "Server AQLI sedang mengalami gangguan."
+                    );
+                }
+
+                if (!data.answer || typeof data.answer !== "string") {
+                    throw new Error("AQLI belum memberikan jawaban.");
+                }
+
+                loading.element.remove();
+
+                addMessage("assistant", data.answer);
+
+            } catch (error) {
+
+                console.error("AQLI ERROR:", error);
+
+                loading.element.remove();
+
+                let errorMessage = error.message;
+
+                if (error instanceof TypeError) {
+                    errorMessage =
+                        "Tidak dapat menghubungi server AQLI. Periksa koneksi atau konfigurasi backend.";
+                }
+
+                addMessage(
+                    "assistant",
+                    "Maaf, Aqli belum dapat menjawab saat ini.\n\n" +
+                    errorMessage +
+                    "\n\nSilakan coba kembali beberapa saat lagi."
+                );
+
+            } finally {
+
+                isLoading = false;
+                sendBtn.disabled = false;
+                sendBtn.textContent = "➤";
+
+                document.querySelectorAll(".question-card").forEach(function (card) {
+                    card.disabled = false;
+                });
+
+                questionInput.focus();
+            }
         }
-    }
 
-    // =====================================
-    // 5. TOMBOL KIRIM
-    // =====================================
+        // =====================================
+        // 6. TOMBOL KIRIM
+        // =====================================
 
-    sendBtn.addEventListener("click", function () {
-        sendQuestion();
-    });
-
-    // =====================================
-    // 6. KIRIM DENGAN ENTER
-    // =====================================
-
-    questionInput.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" && !event.shiftKey) {
-            event.preventDefault();
+        sendBtn.addEventListener("click", function () {
             sendQuestion();
-        }
-    });
-
-    // =====================================
-    // 7. TOMBOL CONTOH PERTANYAAN
-    // =====================================
-
-    document.querySelectorAll(".question-card").forEach(function (card) {
-
-        card.addEventListener("click", function () {
-
-            const question = card.getAttribute("data-question");
-
-            if (!question) return;
-
-            questionInput.value = question;
-            questionInput.dispatchEvent(
-                new Event("input", { bubbles: true })
-            );
-
-            questionInput.focus();
         });
 
+        // =====================================
+        // 7. ENTER UNTUK MENGIRIM
+        // =====================================
+
+        questionInput.addEventListener("keydown", function (event) {
+
+            if (event.key === "Enter" && !event.shiftKey) {
+                event.preventDefault();
+                sendQuestion();
+            }
+
+        });
+
+        // =====================================
+        // 8. PERTANYAAN CONTOH
+        // =====================================
+
+        document.querySelectorAll(".question-card").forEach(function (card) {
+
+            card.addEventListener("click", function () {
+
+                const question = card.getAttribute("data-question");
+
+                if (!question || isLoading) return;
+
+                sendQuestion(question);
+
+            });
+
+        });
+
+        // =====================================
+        // 9. AUTO RESIZE TEXTAREA
+        // =====================================
+
+        questionInput.addEventListener("input", function () {
+
+            questionInput.style.height = "auto";
+
+            questionInput.style.height =
+                Math.min(questionInput.scrollHeight, 110) + "px";
+
+        });
+
+        console.log("Tanya Akhlak berhasil dimuat.");
+
     });
+    </script>
 
-    // =====================================
-    // 8. OTOMATIS MENYESUAIKAN TINGGI INPUT
-    // =====================================
-
-    questionInput.addEventListener("input", function () {
-        questionInput.style.height = "auto";
-
-        questionInput.style.height =
-            Math.min(questionInput.scrollHeight, 110) + "px";
-    });
-
-    console.log("Tanya Akhlak berhasil dimuat.");
-
-});
-</script>
+</body>
+</html>
