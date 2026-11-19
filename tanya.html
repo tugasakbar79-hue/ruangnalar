@@ -1,4 +1,4 @@
-
+﻿
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -503,12 +503,12 @@
     <!-- NAVBAR -->
     <nav class="navbar">
         <a href="index.html" class="brand">
-            <div class="brand-icon">✦</div>
+            <div class="brand-icon">âœ¦</div>
             <div class="brand-name">Ruang <span>Nalar.</span></div>
         </a>
 
         <button class="menu-toggle" id="menuToggle" aria-label="Buka menu" aria-expanded="false">
-            ☰
+            â˜°
         </button>
 
         <div class="nav-links" id="navMenu">
@@ -544,10 +544,10 @@
 
             <div class="chat-header">
                 <div class="ai-profile">
-                    <div class="ai-avatar">✦</div>
+                    <div class="ai-avatar">âœ¦</div>
 
                     <div class="ai-info">
-                        <h3>Aqli — Asisten Ruang Nalar</h3>
+                        <h3>Aqli â€” Asisten Ruang Nalar</h3>
                         <p><span class="online"></span>Asisten pembelajaran akhlak</p>
                     </div>
                 </div>
@@ -556,7 +556,7 @@
             <div class="chat-content" id="chatContent" aria-live="polite">
 
                 <div class="welcome-message">
-                    <div class="message-avatar">✦</div>
+                    <div class="message-avatar">âœ¦</div>
 
                     <div class="message-bubble">
                         <strong>Assalamu'alaikum! Selamat datang di Tanya Akhlak.</strong>
@@ -576,7 +576,7 @@
 
                 <div class="examples" id="examples">
                     <div class="examples-title">
-                        ✦ Mulai dengan pertanyaan
+                        âœ¦ Mulai dengan pertanyaan
                     </div>
 
                     <div class="question-list">
@@ -628,12 +628,12 @@
                     ></textarea>
 
                     <button type="button" class="send-btn" id="sendBtn" aria-label="Kirim pertanyaan">
-                        ➤
+                        âž¤
                     </button>
                 </div>
 
                 <p class="input-note">
-                    Ruang Nalar Akhlak · Belajar, memahami, dan menerapkan.
+                    Ruang Nalar Akhlak Â· Belajar, memahami, dan menerapkan.
                 </p>
             </div>
 
@@ -642,7 +642,7 @@
     </main>
 
     <footer>
-        © 2026 Ruang Nalar Akhlak · Nalar Manusia dalam Islam
+        Â© 2026 Ruang Nalar Akhlak Â· Nalar Manusia dalam Islam
     </footer>
 
     <script>
@@ -653,7 +653,7 @@
 // =====================================
 // 2. KONFIGURASI API
 // =====================================
-const AI_API_URL = "https://symmetrical-telegram-5v4vgpx4669x3vjvp-8000.app.github.dev/api/ask";
+const AI_API_URL = "https://ruangnalar-fg5h.vercel.app/api/ask";
 
 // =====================================
 // 3. VALIDASI ELEMEN
@@ -672,14 +672,14 @@ if (!questionInput || !sendBtn || !chatContent) {
                 const isOpen = navMenu.classList.toggle("show");
 
                 menuToggle.setAttribute("aria-expanded", String(isOpen));
-                menuToggle.textContent = isOpen ? "✕" : "☰";
+                menuToggle.textContent = isOpen ? "âœ•" : "â˜°";
             });
 
             document.querySelectorAll(".nav-links a").forEach(function (link) {
                 link.addEventListener("click", function () {
                     navMenu.classList.remove("show");
                     menuToggle.setAttribute("aria-expanded", "false");
-                    menuToggle.textContent = "☰";
+                    menuToggle.textContent = "â˜°";
                 });
             });
         }
@@ -698,7 +698,7 @@ if (!questionInput || !sendBtn || !chatContent) {
             if (role !== "user") {
                 const avatar = document.createElement("div");
                 avatar.className = "message-avatar";
-                avatar.textContent = "✦";
+                avatar.textContent = "âœ¦";
                 message.appendChild(avatar);
             }
 
@@ -743,7 +743,7 @@ if (!questionInput || !sendBtn || !chatContent) {
 
             isLoading = true;
             sendBtn.disabled = true;
-            sendBtn.textContent = "…";
+            sendBtn.textContent = "â€¦";
 
             document.querySelectorAll(".question-card").forEach(function (card) {
                 card.disabled = true;
@@ -823,7 +823,7 @@ if (!questionInput || !sendBtn || !chatContent) {
 
                 isLoading = false;
                 sendBtn.disabled = false;
-                sendBtn.textContent = "➤";
+                sendBtn.textContent = "âž¤";
 
                 document.querySelectorAll(".question-card").forEach(function (card) {
                     card.disabled = false;
@@ -892,3 +892,4 @@ if (!questionInput || !sendBtn || !chatContent) {
 
 </body>
 </html>
+
